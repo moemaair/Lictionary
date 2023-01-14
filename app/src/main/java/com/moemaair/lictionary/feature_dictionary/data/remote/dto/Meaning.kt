@@ -5,4 +5,13 @@ data class Meaning(
     val definitions: List<Definition>,
     val partOfSpeech: String,
     val synonyms: List<String>
-)
+){
+    fun toMeaning(): Meaning{
+        return Meaning(
+            antonyms = antonyms,
+            definitions = definitions,
+            partOfSpeech = partOfSpeech,
+            synonyms = synonyms
+        )
+    }
+}
