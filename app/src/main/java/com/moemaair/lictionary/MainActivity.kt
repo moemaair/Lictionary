@@ -1,16 +1,24 @@
 package com.moemaair.lictionary
 
+import MainViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +29,9 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    //color = MaterialTheme.colors.background
                 ) {
-
+                    HomeScreen()
                 }
             }
         }
@@ -33,18 +41,40 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeScreen() {
     Scaffold(
-        topBar = { TopAppBar() {
-            OutlinedTf()
+        topBar = { TopAppBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Transparent)
+
+        ) {
+            Box(modifier = Modifier
+                .fillMaxWidth()) {
+                OutlinedTf()
+            }
         }}
-    ) {}
+    ) {
+
+    }
 }
 
 @Composable
-fun OutlinedTf(text: String) {
-    var value = remember {
-        mutableStateOf("")
-    }
+fun OutlinedTf() {
+          val viewModel: MainViewModel = MainViewModel()
 
+        var _state by remember {
+            mutableStateOf("")
+        }
+          OutlinedTextField(
+              value = _state,
+              onValueChange = { newIt ->
+                  _state = newIt
+              },
+              modifier = Modifier.background(Color.Transparent)
+                  .fillMaxWidth(),
+              trailingIcon ={
+                  Icon(Icons.Outlined.Search, contentDescription = "")
+              }
+          )
 
 
 }
