@@ -45,7 +45,7 @@ fun OutlinedTf(text: String) {
         mutableStateOf("")
     }
 
-    TextField(value = value, onValueChange = {value = value})
+
 
 }
 
