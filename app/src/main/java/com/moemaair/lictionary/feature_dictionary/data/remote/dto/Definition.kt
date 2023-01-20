@@ -5,4 +5,13 @@ data class Definition(
     val definition: String,
     val example: String?,
     val synonyms: List<String>
-)
+){
+    fun toDefination():Definition{
+        return Definition(
+            antonyms = antonyms,
+            definition = definition,
+            example = example,
+            synonyms = synonyms
+        )
+    }
+}
