@@ -10,7 +10,7 @@ import com.moemaair.lictionary.feature_dictionary.data.remote.dto.WordInfoDto
 @Dao
 interface WordInfoDao {
 
-    @Query("SELECT * FROM LICTIONARY_TABLE WHERE word LIKE '%' || :words || '%'")
+    @Query("SELECT * FROM lictionary_table WHERE word LIKE '%' || :words || '%'")
     suspend fun getWordInfo(words: List<WordInfoEntry>)
 
 
