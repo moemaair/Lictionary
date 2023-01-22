@@ -5,7 +5,7 @@ import com.moemaair.lictionary.feature_dictionary.data.remote.dto.Meaning
 import com.moemaair.lictionary.feature_dictionary.data.util.JsonParser
 
 @ProvidedTypeConverter
-class Converter (
+class Converters (
     private val jsonParser: JsonParser
 ){
     @TypeConverter

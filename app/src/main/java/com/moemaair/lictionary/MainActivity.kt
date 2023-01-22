@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +63,10 @@ fun HomeScreen() {
 
 @Composable
 fun OutlinedTf() {
-          val viewModel: MainViewModel = MainViewModel()
+    val viewModel: MainViewModel = MainViewModel()
+    val coroutinScope = rememberCoroutineScope()
+
+    val snackbarHostState = remember {SnackbarHostState()}
         var context = LocalContext.current
         var _state by remember {
             mutableStateOf("")
@@ -76,13 +80,21 @@ fun OutlinedTf() {
                   .background(Color.Transparent)
                   .fillMaxWidth(),
               trailingIcon ={
-                  IconButton(onClick = { Toast.makeText(context, "", Toast.LENGTH_SHORT).show() }) {
+                  IconButton(onClick = {
+                      coroutinScope.launch {
+                          snackbarHostState.showSnackbar("Testing Button")
+                      }
+                  }
+                  ){
                       Icon(Icons.Outlined.Search, contentDescription = "")
                   }
 
               },
               singleLine = true
           )
+    Box() {
+        SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
+    }
 
 
 }

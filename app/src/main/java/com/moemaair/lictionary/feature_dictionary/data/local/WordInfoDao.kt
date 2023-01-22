@@ -10,7 +10,7 @@ import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEnti
 interface WordInfoDao {
 
     @Query("SELECT * FROM lictionary_table WHERE word LIKE '%' || :words || '%'")
-    suspend fun getWordInfo(words: List<WordInfoEntity>)
+    suspend fun getWordInfo(words: String): List<WordInfoEntity>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -18,7 +18,7 @@ interface WordInfoDao {
 
 
     @Query("DELETE FROM lictionary_table WHERE word IN (:words)")
-    suspend fun deteleWprdInfo(words: List<String>)
+    suspend fun deteleWordInfo(words: List<String>)
 
 
 
