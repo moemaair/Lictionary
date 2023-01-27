@@ -1,7 +1,10 @@
+package com.moemaair.lictionary.feature_dictionary.data.local
+
+
+import com.moemaair.lictionary.feature_dictionary.domain.model.Meaning
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.google.gson.reflect.TypeToken
-import com.moemaair.lictionary.feature_dictionary.data.remote.dto.Meaning
 import com.moemaair.lictionary.feature_dictionary.data.util.JsonParser
 
 @ProvidedTypeConverter

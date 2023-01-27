@@ -1,4 +1,5 @@
-import com.moemaair.lictionary.feature_dictionary.data.remote.dto.Definition
+package com.moemaair.lictionary.feature_dictionary.domain.model
+
 data class Defination(   // mapper class for Defination Dto
     val antonyms: List<String>,
     val definition: String,

@@ -1,13 +1,13 @@
 package com.moemaair.lictionary.feature_dictionary.data.remote.dto
 
-data class Definition(
+data class DefinitionDto(
     val antonyms: List<String>,
     val definition: String,
     val example: String?,
     val synonyms: List<String>
 ){
-    fun toDefination():Definition{
-        return Definition(
+    fun toDefination():DefinitionDto{
+        return DefinitionDto(
             antonyms = antonyms,
             definition = definition,
             example = example,

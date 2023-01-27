@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel(){
 
-    //state for input TextField
+
 
 
 

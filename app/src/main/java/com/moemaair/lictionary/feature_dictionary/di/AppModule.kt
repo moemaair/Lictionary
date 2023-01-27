@@ -1,12 +1,12 @@
 package com.moemaair.lictionary.feature_dictionary.di
 
-import Converters
 import GetWordInfo
 import GsonParser
 import WordInfoRepoImpl
 import android.app.Application
 import androidx.room.Room
 import com.google.gson.Gson
+import com.moemaair.lictionary.feature_dictionary.data.local.Converters
 import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDatabase
 import com.moemaair.lictionary.feature_dictionary.data.remote.LictionaryApi
 import com.moemaair.lictionary.feature_dictionary.domain.repository.WordInfoRepo
@@ -20,7 +20,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+class AppModule {
+
     @Provides
     @Singleton
     fun provideGetWordInfoUseCase(repository: WordInfoRepo): GetWordInfo {
