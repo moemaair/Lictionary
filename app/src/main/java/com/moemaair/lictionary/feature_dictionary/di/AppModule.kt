@@ -1,6 +1,5 @@
 package com.moemaair.lictionary.feature_dictionary.di
 
-import GetWordInfo
 import GsonParser
 import WordInfoRepoImpl
 import android.app.Application
@@ -10,6 +9,7 @@ import com.moemaair.lictionary.feature_dictionary.data.local.Converters
 import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDatabase
 import com.moemaair.lictionary.feature_dictionary.data.remote.LictionaryApi
 import com.moemaair.lictionary.feature_dictionary.domain.repository.WordInfoRepo
+import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetWordInfo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
