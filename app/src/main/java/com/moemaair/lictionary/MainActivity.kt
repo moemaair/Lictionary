@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun HomeScreen() {
+     val mainViewModel = viewModel<MainViewModel>()
     Scaffold(
         topBar = { TopAppBar(
             modifier = Modifier

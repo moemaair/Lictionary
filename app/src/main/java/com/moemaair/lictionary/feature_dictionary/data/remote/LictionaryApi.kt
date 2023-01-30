@@ -1,6 +1,5 @@
 package com.moemaair.lictionary.feature_dictionary.data.remote
 
-import com.moemaair.lictionary.feature_dictionary.data.remote.dto.WordInfoDto
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,7 +12,6 @@ interface LictionaryApi {
     suspend fun getWordInfo(
         @Path("word") word: String
     ): List<WordInfoDto>
-
 
     companion object {
         const val BASE_URL = "https://api.dictionaryapi.dev/"

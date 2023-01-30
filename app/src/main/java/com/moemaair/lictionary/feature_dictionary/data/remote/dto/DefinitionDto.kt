@@ -1,4 +1,4 @@
-package com.moemaair.lictionary.feature_dictionary.data.remote.dto
+package com.moemaair.lictionary.feature_dictionary.data.remote
 
 data class DefinitionDto(
     val antonyms: List<String>,
