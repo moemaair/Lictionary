@@ -11,6 +11,5 @@ import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEnti
 )
 @TypeConverters(Converters::class)
 abstract class WordInfoDatabase: RoomDatabase() {
-
     abstract val dao: WordInfoDao
 }

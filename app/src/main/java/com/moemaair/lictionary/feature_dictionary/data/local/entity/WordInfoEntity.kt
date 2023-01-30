@@ -2,6 +2,7 @@ package com.moemaair.lictionary.feature_dictionary.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.moemaair.lictionary.feature_dictionary.data.remote.MeaningDto
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import com.moemaair.lictionary.feature_dictionary.domain.model.Meaning
 

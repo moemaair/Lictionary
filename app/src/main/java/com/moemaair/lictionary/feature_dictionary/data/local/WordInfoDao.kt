@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEntity
+import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 
 @Dao
 interface WordInfoDao {
@@ -17,7 +18,5 @@ interface WordInfoDao {
 
     @Query("SELECT * FROM wordinfoentity WHERE word LIKE '%' || :word || '%'")
     suspend fun getWordInfos(word: String): List<WordInfoEntity>
-
-
 
 }

@@ -1,4 +1,4 @@
-package com.moemaair.lictionary.feature_dictionary.domain
+package com.moemaair.lictionary.feature_dictionary.domain.repository
 
 
 import com.moemaair.lictionary.core.util.Resource

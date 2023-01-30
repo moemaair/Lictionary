@@ -1,6 +1,8 @@
-package com.moemaair.lictionary.feature_dictionary.data.remote
+package com.moemaair.lictionary.feature_dictionary.data.remote.dto
 
-import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
+import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEntity
+import com.moemaair.lictionary.feature_dictionary.data.remote.MeaningDto
+import com.moemaair.lictionary.feature_dictionary.data.remote.PhoneticDto
 
 
 data class WordInfoDto(
@@ -9,11 +11,13 @@ data class WordInfoDto(
     val phonetics: List<PhoneticDto>,
     val word: String
 ) {
-    fun toWordInfo(): WordInfo {
-        return WordInfo(
+    fun toWordInfoEntity(): WordInfoEntity {
+        return WordInfoEntity(
             meanings = meanings.map { it.toMeaning() },
             phonetic = phonetic,
             word = word
         )
     }
+
+
 }

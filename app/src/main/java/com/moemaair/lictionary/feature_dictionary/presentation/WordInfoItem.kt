@@ -2,6 +2,7 @@ package com.moemaair.lictionary.feature_dictionary.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,11 +15,9 @@ import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 
 @Composable
 fun WordInfoItem(
-    wordInfo: WordInfo,
-    modifier: Modifier
+    wordInfo: WordInfo
 ) {
-
-    Column(modifier = modifier) {
+    Column(modifier = Modifier) {
         Text(
             text = wordInfo.word,
             fontSize = 24.sp,
@@ -27,7 +26,7 @@ fun WordInfoItem(
         )
         Text(text = wordInfo.phonetic, fontWeight = FontWeight.Light)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = wordInfo.word)
+        //Text(text = wordInfo.word)
 
         wordInfo.meanings.forEach { meaning ->
             Text(text = meaning.partOfSpeech, fontWeight = FontWeight.Bold)

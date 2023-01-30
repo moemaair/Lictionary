@@ -1,3 +1,5 @@
+package com.moemaair.lictionary.feature_dictionary.presentation
+
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +24,7 @@ class MainViewModel @Inject constructor(
     private val getWordInfo: GetWordInfo
 ) : ViewModel(){
 
-    private val _searchQuery = mutableStateOf("")
+    val _searchQuery = mutableStateOf("")
     val searchQuery: State<String> = _searchQuery
 
     private val _state = mutableStateOf(WordInfoState())
@@ -37,7 +39,7 @@ class MainViewModel @Inject constructor(
         _searchQuery.value = query
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(500L)
+            //delay(500L)
             getWordInfo(query)
                 .onEach { result ->
                     when(result) {
