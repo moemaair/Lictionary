@@ -31,6 +31,7 @@ import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -55,6 +56,8 @@ fun MainScreen() {
     var txt by remember { mutableStateOf("") }
     val localFocusManager = LocalFocusManager.current
 
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
@@ -70,7 +73,14 @@ fun MainScreen() {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            AppBar("Lictionary", backgroundColor = MaterialTheme.colors.primaryVariant)
+            AppBar("Lictionary",
+                backgroundColor = MaterialTheme.colors.primaryVariant
+
+            ) {
+                coroutineScope.launch {
+                    scaffoldState.drawerState.open()
+                }
+            }
         },
         drawerContent = {
             DrawerContent()
@@ -78,41 +88,6 @@ fun MainScreen() {
 
     ){
         Column{
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(90.dp)
-                .background(MaterialTheme.colors.primary)
-            ){
-                OutlinedTextField(
-                    value = viewModel.searchQuery.value,
-                    onValueChange = viewModel::onSearch,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .offset(0.dp, (30).dp)
-                        .padding(10.dp, 0.dp)
-                        .shadow(5.dp),
-                    placeholder = { Text(text = "Search for words...", color = Color.DarkGray)},
-                    trailingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "")},
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White,
-                        textColor = Color.Black,
-                        trailingIconColor = MaterialTheme.colors.primaryVariant,
-                        focusedIndicatorColor = Color.Transparent
-
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Search
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            localFocusManager.clearFocus()
-                            txt = "" + textState.text
-                        }
-                    )
-                )
-
-            }
             Box(modifier = Modifier
                 .fillMaxSize()
                 .background(if (isSystemInDarkTheme()) Color.Black else Color.LightGray.copy(alpha = 0.1f)))
@@ -145,8 +120,41 @@ fun MainScreen() {
                 }
 
             }
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(90.dp)
+                .background(MaterialTheme.colors.primary))
+            {
+                OutlinedTextField(
+                    value = viewModel.searchQuery.value,
+                    onValueChange = viewModel::onSearch,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .offset(0.dp, (30).dp)
+                        .padding(10.dp, 0.dp)
+                        .shadow(5.dp),
+                    placeholder = { Text(text = "Search for words...", color = Color.DarkGray)},
+                    trailingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "")},
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.White,
+                        textColor = Color.Black,
+                        trailingIconColor = MaterialTheme.colors.primaryVariant,
+                        focusedIndicatorColor = Color.Transparent
 
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Search
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            localFocusManager.clearFocus()
+                            txt = "" + textState.text
+                        }
+                    )
+                )
 
+            }
         }
 
     }
@@ -173,7 +181,9 @@ fun AppBar(title : String, backgroundColor: Color, onMenuClick : () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+            IconButton(onClick = { onMenuClick()}) {
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+            }
             Text(text = title)
             Spacer(modifier = Modifier.size(20.dp))
         }
