@@ -161,7 +161,7 @@ fun DrawerContent() {
 
 
 @Composable
-fun AppBar(title : String, backgroundColor: Color) {
+fun AppBar(title : String, backgroundColor: Color, onMenuClick : () -> Unit) {
     TopAppBar(
         elevation = 0.dp,
         backgroundColor = backgroundColor
