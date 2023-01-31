@@ -71,7 +71,11 @@ fun MainScreen() {
         scaffoldState = scaffoldState,
         topBar = {
             AppBar("Lictionary", backgroundColor = MaterialTheme.colors.primaryVariant)
+        },
+        drawerContent = {
+            DrawerContent()
         }
+
     ){
         Column{
             Box(modifier = Modifier
@@ -113,7 +117,6 @@ fun MainScreen() {
                 .fillMaxSize()
                 .background(if (isSystemInDarkTheme()) Color.Black else Color.LightGray.copy(alpha = 0.1f)))
             {
-
                 LazyColumn(modifier = Modifier
                     .align(Alignment.Center)
                     .padding(20.dp, 40.dp))
@@ -123,11 +126,12 @@ fun MainScreen() {
                         if(i > 0) {
                             Text(text = "Previously Searched",
                                 color = Color.Black.copy(alpha = ContentAlpha.disabled),
-                                modifier = Modifier.padding(0.dp, 10.dp).align(Alignment.Center),
+                                modifier = Modifier
+                                    .padding(0.dp, 10.dp)
+                                    .align(Alignment.Center),
                                 style = MaterialTheme.typography.subtitle2,
                             )
-
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(0.dp))
                         }
                         WordInfoItem(wordInfo = wordInfo)
                         if(i < state.wordInfoItems.size - 1) {
@@ -148,6 +152,12 @@ fun MainScreen() {
     }
 }
 
+@Composable
+fun DrawerContent() {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(text = "Drawer Test")
+    }
+}
 
 
 @Composable
