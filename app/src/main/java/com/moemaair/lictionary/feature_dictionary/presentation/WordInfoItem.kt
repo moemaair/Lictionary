@@ -26,7 +26,6 @@ fun WordInfoItem(
         )
         Text(text = wordInfo.phonetic, fontWeight = FontWeight.Light)
         Spacer(modifier = Modifier.height(16.dp))
-        //Text(text = wordInfo.word)
 
         wordInfo.meanings.forEach { meaning ->
             Text(text = meaning.partOfSpeech, fontWeight = FontWeight.Bold)
