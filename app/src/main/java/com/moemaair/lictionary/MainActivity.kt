@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -88,72 +89,89 @@ fun MainScreen() {
 
     ){
         Column{
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(if (isSystemInDarkTheme()) Color.Black else Color.LightGray.copy(alpha = 0.1f)))
-            {
-                LazyColumn(modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(20.dp, 40.dp))
+            Box(modifier = Modifier.fillMaxSize()){
+                Box(modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxSize()
+
+                )
                 {
-                    items(state.wordInfoItems.size) { i ->
-                        val wordInfo = state.wordInfoItems[i]
-                        if(i > 0) {
-                            Text(text = "Previously Searched",
-                                color = Color.Black.copy(alpha = ContentAlpha.disabled),
-                                modifier = Modifier
-                                    .padding(0.dp, 10.dp)
-                                    .align(Alignment.Center),
-                                style = MaterialTheme.typography.subtitle2,
-                            )
-                            Spacer(modifier = Modifier.height(0.dp))
+                    LazyColumn(modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(20.dp, 100.dp, 20.dp, 0.dp))
+                    {
+                        item{
+                            Text(text = "Empty")
                         }
-                        WordInfoItem(wordInfo = wordInfo)
-                        if(i < state.wordInfoItems.size - 1) {
-                            Divider()
+                        items(state.wordInfoItems.size) { i ->
+                            val wordInfo = state.wordInfoItems[i]
+                            if(i > 0) {
+                                Text(
+                                    text = "Previously Searched",
+                                    color = if (isSystemInDarkTheme()) Color.White.copy(alpha = ContentAlpha.disabled) else Color.Black.copy(alpha = ContentAlpha.disabled),
+                                    modifier = Modifier
+                                        .padding(0.dp, 10.dp)
+                                        .align(Alignment.Center),
+                                    style = MaterialTheme.typography.subtitle2,
+                                )
+                                Spacer(modifier = Modifier.height(0.dp))
+                            }
+                            WordInfoItem(wordInfo = wordInfo)
+                            if(i < state.wordInfoItems.size - 1) {
+                                Divider()
+                            }
                         }
+
+                    }
+                    if(state.isLoading && viewModel.state == null) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                     }
 
                 }
-                if(state.isLoading && viewModel.state == null) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-
-            }
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(90.dp)
-                .background(MaterialTheme.colors.primary))
-            {
-                OutlinedTextField(
-                    value = viewModel.searchQuery.value,
-                    onValueChange = viewModel::onSearch,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .offset(0.dp, (30).dp)
-                        .padding(10.dp, 0.dp)
-                        .shadow(5.dp),
-                    placeholder = { Text(text = "Search for words...", color = Color.DarkGray)},
-                    trailingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "")},
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White,
-                        textColor = Color.Black,
-                        trailingIconColor = MaterialTheme.colors.primaryVariant,
-                        focusedIndicatorColor = Color.Transparent
-
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Search
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            localFocusManager.clearFocus()
-                            txt = "" + textState.text
-                        }
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+                    .height(90.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colors.primaryVariant,
+                                MaterialTheme.colors.primary
+                            )
+                        )
                     )
                 )
+                {
+                    OutlinedTextField(
+                        value = viewModel.searchQuery.value,
+                        onValueChange = viewModel::onSearch,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .offset(0.dp, (30).dp)
+                            .padding(10.dp, 0.dp)
+                            .shadow(5.dp),
+                        placeholder = { Text(text = "Search for words...", color = Color.LightGray)},
+                        trailingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "")},
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White,
+                            textColor = Color.Black,
+                            trailingIconColor = MaterialTheme.colors.primaryVariant,
+                            focusedIndicatorColor = Color.Transparent
 
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Search
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {
+                                localFocusManager.clearFocus()
+                                txt = "" + textState.text
+                            }
+                        )
+                    )
+
+                }
             }
         }
 
@@ -171,7 +189,7 @@ fun DrawerContent() {
 @Composable
 fun AppBar(title : String, backgroundColor: Color, onMenuClick : () -> Unit) {
     TopAppBar(
-        elevation = 0.dp,
+        elevation = 8.dp,
         backgroundColor = backgroundColor
     ) {
         Row(
