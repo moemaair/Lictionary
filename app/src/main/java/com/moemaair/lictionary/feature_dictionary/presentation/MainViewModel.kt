@@ -24,11 +24,11 @@ class MainViewModel @Inject constructor(
     private val getWordInfo: GetWordInfo
 ) : ViewModel(){
 
-    val _searchQuery = mutableStateOf("")
-    val searchQuery: State<String> = _searchQuery
+    var _searchQuery = mutableStateOf("")
+    var searchQuery: State<String> = _searchQuery
 
-    private val _state = mutableStateOf(WordInfoState())
-    val state: State<WordInfoState> = _state
+    private var _state = mutableStateOf(WordInfoState())
+    var state: State<WordInfoState> = _state
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()

@@ -7,7 +7,8 @@ import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEnti
 
 @Database(
     entities = [WordInfoEntity::class],
-    version = 1
+    version = 1,
+    exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class WordInfoDatabase: RoomDatabase() {

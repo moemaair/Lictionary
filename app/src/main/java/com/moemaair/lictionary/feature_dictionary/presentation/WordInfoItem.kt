@@ -6,6 +6,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,13 +18,13 @@ fun WordInfoItem(
     wordInfo: WordInfo
 ) {
     Column(modifier = Modifier) {
+
         Text(
             text = wordInfo.word,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.h2,
             modifier = Modifier.padding(top = 20.dp)
         )
-        Text(text = wordInfo.phonetic, fontWeight = FontWeight.Light)
+        Text(text = wordInfo.phonetic.toString(), fontWeight = FontWeight.Normal)
         Spacer(modifier = Modifier.height(16.dp))
 
         wordInfo.meanings.forEach { meaning ->
@@ -31,7 +33,7 @@ fun WordInfoItem(
                 Text(text = "${i + 1}. ${definition.definition}")
                 Spacer(modifier = Modifier.height(8.dp))
                 definition.example?.let { example ->
-                    Text(text = "Example: $example", style = MaterialTheme.typography.subtitle1)
+                    Text(text = "Example: $example", fontWeight = FontWeight.Light, fontStyle = FontStyle.Italic)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
