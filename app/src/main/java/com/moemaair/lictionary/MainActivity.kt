@@ -163,9 +163,12 @@ fun MainScreen() {
                             .fillMaxWidth()
                             .align(Alignment.BottomCenter)
                             .offset(0.dp, (30).dp)
-                            .padding(10.dp, 5.dp)
+                            .padding(10.dp, 6.dp)
                             .shadow(5.dp),
                         placeholder = { Text(text = "Search for words...", color = Color.LightGray)},
+                        leadingIcon = { IconButton(onClick = { /*TODO*/ }) {
+                            Icon(imageVector = Icons.Default.Search, contentDescription = "")
+                        }},
                         trailingIcon = {
                                        if(isVisible){
                                           IconButton(onClick = {
@@ -179,8 +182,9 @@ fun MainScreen() {
                             backgroundColor = Color.White,
                             textColor = Color.Black,
                             trailingIconColor = MaterialTheme.colors.primaryVariant,
-                            focusedIndicatorColor = Color.Transparent,
-                            cursorColor = Color.Transparent
+                            leadingIconColor = MaterialTheme.colors.primaryVariant,
+                            focusedIndicatorColor = Color.LightGray,
+                            cursorColor = Color.Black
                         ),
 
                         keyboardOptions = KeyboardOptions(
