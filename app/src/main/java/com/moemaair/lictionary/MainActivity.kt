@@ -27,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,6 +59,8 @@ fun MainScreen() {
     var viewModel: MainViewModel = hiltViewModel()
     var state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
+
+    val audioVector = ImageVector.vectorResource(id = R.drawable.audio_icon)
 
     var textState by remember { mutableStateOf(TextFieldValue()) }
     var txt by remember { mutableStateOf("") }
@@ -130,7 +134,10 @@ fun MainScreen() {
                                     )
                                     Spacer(modifier = Modifier.height(0.dp))
                                 }
-                                WordInfoItem(wordInfo = wordInfo)
+                                WordInfoItem(
+                                    wordInfo = wordInfo,
+                                    audioVector
+                                )
                                 if(i < state.wordInfoItems.size - 1) {
                                     Divider()
                                 }
