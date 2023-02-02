@@ -42,9 +42,15 @@ fun WordInfoItem(
     var audioUrl: String? by remember {
         mutableStateOf("")
     }
-    val audio = wordInfo.phonetics.forEach{
-        it -> audioUrl = it.audio
+    val audio = wordInfo.phonetics.forEach{ it ->
+        if (!(it.audio == "")){
+            audioUrl = it.audio
+        }
     }
+    var phonetic: String? by remember {
+        mutableStateOf("")
+    }
+    val textPhonetic = wordInfo.phonetics.forEach{it->  phonetic = it.text}
 
     Column(modifier = Modifier) {
 
@@ -67,6 +73,7 @@ fun WordInfoItem(
                 mediaPlayer.start()
             }
             ) {
+
                if(wordInfo.phonetics.size > 0){
                    Icon(imageVector = audioIcon, contentDescription ="" )
                }
@@ -75,7 +82,7 @@ fun WordInfoItem(
         }
 
 
-        Text(text = wordInfo.phonetic.toString(), fontWeight = FontWeight.Normal)
+        Text(text = phonetic.toString(), fontWeight = FontWeight.Normal)
         Spacer(modifier = Modifier.height(16.dp))
 
         wordInfo.meanings.forEach { meaning ->
