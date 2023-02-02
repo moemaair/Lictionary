@@ -74,7 +74,7 @@ fun WordInfoItem(
             }
             ) {
 
-               if(wordInfo.phonetics.size > 0){
+               if((audioUrl?.isNotEmpty() == true)){
                    Icon(imageVector = audioIcon, contentDescription ="" )
                }
 
