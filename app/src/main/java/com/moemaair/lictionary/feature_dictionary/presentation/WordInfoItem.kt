@@ -1,7 +1,9 @@
 package com.moemaair.lictionary.feature_dictionary.presentation
 
+import android.annotation.SuppressLint
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.browse.MediaBrowser.MediaItem
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -9,10 +11,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +25,11 @@ import androidx.compose.ui.unit.sp
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import kotlinx.coroutines.runBlocking
 import android.net.Uri
+import android.widget.ToggleButton
+import androidx.compose.runtime.*
+import com.moemaair.lictionary.R
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun WordInfoItem(
     wordInfo: WordInfo,
@@ -35,13 +37,14 @@ fun WordInfoItem(
 
 ) {
     var context = LocalContext.current.applicationContext
-    val mediaPlayer = remember {
-        mutableStateOf(MediaPlayer())
-    }
-    val url = wordInfo.phonetics.forEach{
-           it.audio
-    }
+    var mediaPlayer = MediaPlayer()
 
+    var audioUrl: String? by remember {
+        mutableStateOf("")
+    }
+    val audio = wordInfo.phonetics.forEach{
+        it -> audioUrl = it.audio
+    }
 
     Column(modifier = Modifier) {
 
@@ -58,16 +61,16 @@ fun WordInfoItem(
             //audio icon
 
             IconButton(onClick = {
-
-                mediaPlayer.value.apply {
-                    setDataSource(url.toString())
-                    mediaPlayer
-                    mediaPlayer
-                }
-
+                mediaPlayer.reset();
+                mediaPlayer.setDataSource(audioUrl.toString())
+                mediaPlayer.prepare()
+                mediaPlayer.start()
             }
             ) {
-               Icon(imageVector = audioIcon, contentDescription ="" )
+               if(wordInfo.phonetics.size > 0){
+                   Icon(imageVector = audioIcon, contentDescription ="" )
+               }
+
             }
         }
 
