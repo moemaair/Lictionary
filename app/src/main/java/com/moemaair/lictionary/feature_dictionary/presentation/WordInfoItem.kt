@@ -1,5 +1,6 @@
 package com.moemaair.lictionary.feature_dictionary.presentation
 
+import android.media.AudioManager
 import android.media.MediaPlayer
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -7,7 +8,11 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import kotlinx.coroutines.runBlocking
+import android.net.Uri
 
 @Composable
 fun WordInfoItem(
@@ -29,18 +35,13 @@ fun WordInfoItem(
 
 ) {
     var context = LocalContext.current.applicationContext
-    var url = ""
-
-    runBlocking {
-        for(i in wordInfo.phonetics){
-            if(i.text == "audio"){
-                url = i.toString()
-
-            }
-        }
+    val mediaPlayer = remember {
+        mutableStateOf(MediaPlayer())
+    }
+    val url = wordInfo.phonetics.forEach{
+           it.audio
     }
 
-    var mp: MediaPlayer = MediaPlayer.create(context, url.length)
 
     Column(modifier = Modifier) {
 
@@ -56,8 +57,17 @@ fun WordInfoItem(
             Spacer(modifier = Modifier.height(18.dp))
             //audio icon
 
-            IconButton(onClick = {mp.start()}, modifier = Modifier.fillMaxWidth()) {
-               Icon(imageVector = audioIcon, contentDescription = "")
+            IconButton(onClick = {
+
+                mediaPlayer.value.apply {
+                    setDataSource(url.toString())
+                    mediaPlayer
+                    mediaPlayer
+                }
+
+            }
+            ) {
+               Icon(imageVector = audioIcon, contentDescription ="" )
             }
         }
 

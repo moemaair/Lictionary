@@ -1,12 +1,16 @@
 package com.moemaair.lictionary.feature_dictionary.data.local.entity
 
-import Phonetics
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.moemaair.lictionary.feature_dictionary.data.remote.PhoneticDto
+import androidx.room.TypeConverters
+import com.moemaair.lictionary.feature_dictionary.data.local.PhoneticsTypeConverter
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import com.moemaair.lictionary.feature_dictionary.domain.model.Meaning
+import com.moemaair.lictionary.feature_dictionary.domain.model.Phonetics
 
+
+@TypeConverters(PhoneticsTypeConverter::class)
 @Entity
 data class WordInfoEntity(
     val word: String,

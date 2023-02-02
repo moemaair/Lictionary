@@ -1,7 +1,6 @@
 package com.moemaair.lictionary.feature_dictionary.data.remote.dto
 
 import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEntity
-import com.moemaair.lictionary.feature_dictionary.data.remote.PhoneticDto
 
 
 data class WordInfoDto(
@@ -16,7 +15,6 @@ data class WordInfoDto(
             phonetic = phonetic,
             phonetics = phonetics.map { it.toPhontics() },
             word = word,
-
         )
     }
 

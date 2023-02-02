@@ -1,12 +1,12 @@
-package com.moemaair.lictionary.feature_dictionary.data.remote
+package com.moemaair.lictionary.feature_dictionary.data.remote.dto
 
-import Phonetics
-import com.moemaair.lictionary.feature_dictionary.domain.model.Meaning
+import com.moemaair.lictionary.feature_dictionary.domain.model.Phonetics
+
 
 data class PhoneticDto(
-    val audio: String,
-    val sourceUrl: String,
-    val text: String
+    val audio: String?,
+    val sourceUrl: String?,
+    val text: String?
 ){
     fun toPhontics(): Phonetics {
         return Phonetics(
