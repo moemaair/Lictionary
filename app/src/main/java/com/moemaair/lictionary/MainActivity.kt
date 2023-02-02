@@ -125,7 +125,7 @@ fun MainScreen() {
                                 val wordInfo = state.wordInfoItems[i]
                                 if(i > 0) {
                                     Text(
-                                        text = "Previously Searched",
+                                        text = "Other Definations...",
                                         color = if (isSystemInDarkTheme()) Color.White.copy(alpha = ContentAlpha.disabled) else Color.Black.copy(alpha = ContentAlpha.disabled),
                                         modifier = Modifier
                                             .padding(0.dp, 10.dp)
