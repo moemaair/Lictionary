@@ -13,14 +13,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.DrawerDefaults.shape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
@@ -212,36 +210,109 @@ fun MainScreen() {
 
 @Composable
 fun DrawerContent() {
-    Column(modifier = Modifier
+    LazyColumn(modifier = Modifier
         .fillMaxSize()
         .padding(start = 10.dp)) {
         //icon image
-        Row() {
-            Image(painter = painterResource(id = R.drawable.man), contentDescription = "", modifier = Modifier
-                .height(100.dp)
-                .scale(0.8f))
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(text = "Account Owner")
+        item {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                Image(painter = painterResource(id = R.drawable.man), contentDescription = "", modifier = Modifier
+                    .height(100.dp)
+                    .scale(0.8f))
+                Spacer(modifier = Modifier.height(30.dp))
+                Text(text = "Account Owner", style = MaterialTheme.typography.subtitle1)
+            }
+            Divider()
+            Spacer(modifier = Modifier.height(10.dp))
         }
 
         //support
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()) {
-            Text(text = "Support", style = MaterialTheme.typography.h3)
-            //row 1 (send feedback)
-            Row() {
-                Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
+        item {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(top = 20.dp),
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                Text(text = "Support", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) Color.White else Color.Black)
+                //row 1 (send feedback)
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
+                    Text(text = "Send Feedback")
+                }
+                Divider()
+                //row 2 rate app
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "email icon")
+                    Text(text = "Rate this app")
+                }
+                Divider()
+                //row 3 share app
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Icon(imageVector = Icons.Default.Share, contentDescription = "email icon")
+                    Text(text = "Share this app")
+                }
+                Divider()
             }
-            //row 2 rate app
-            //row 3 share app
         }
         //setting
+
+        item {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp)) {
+                Text(text = "Setting", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) Color.White else Color.Black)
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Icon(imageVector = Icons.Default.DarkMode, contentDescription = "dark mode")
+                        Text(text = "Dark mode")
+                    }
+                    // Declaring a boolean value for storing checked state
+                    val mCheckedState = remember{ mutableStateOf(false)} // not toggled darkmode icon
+
+                    // Creating a Switch, when value changes,
+                    // it updates mCheckedState value
+                    Switch(checked = mCheckedState.value, onCheckedChange = {mCheckedState.value = it})
+
+                    // Adding a Space of 100dp height
+                    //Spacer(modifier = Modifier.height(100.dp))
+
+
+                }
+            }
+            Divider()
+        }
+
         //other
+       item {
+           Column(modifier = Modifier
+               .fillMaxWidth()
+               .padding(top = 20.dp)) {
+               Text(text = "Other", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) Color.White else Color.Black)
+               Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                   Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
+                   Text(text = "App version 1.0.0" )
+               }
+               Divider()
+               Row(modifier = Modifier.padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                   Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "dark mode", modifier = Modifier
+                       .size(32.dp)
+                       .rotate(90f))
+                   Text(text = "Log out")
+               }
+               Divider()
 
+           }
+       }
     }
-}
 
+}
 
 @Composable
 fun AppBar(

@@ -5,6 +5,7 @@ package com.moemaair.lictionary.ui.theme
 import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -28,16 +29,28 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
-    subtitle2 = TextStyle(
+    subtitle1 = TextStyle(
         fontFamily = montserrat_font,
         fontWeight = FontWeight.Normal,
         fontSize = 13.sp
+    ),
+    subtitle2 = TextStyle(
+        fontFamily = montserrat_font,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 19.sp
     ),
     h3 = TextStyle(  // title in appbar
         fontFamily = montserrat_font,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
-    ),
+    )
+    ,
+    h4 = TextStyle(  // title in appbar
+        fontFamily = montserrat_font,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+    )
+    ,
     h2 = TextStyle(  // word from api
         fontFamily = playfair_display_font,
         fontWeight = FontWeight.Bold,
