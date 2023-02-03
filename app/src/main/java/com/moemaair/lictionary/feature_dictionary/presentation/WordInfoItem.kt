@@ -26,6 +26,8 @@ import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import kotlinx.coroutines.runBlocking
 import android.net.Uri
 import android.widget.ToggleButton
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.runtime.*
 import com.moemaair.lictionary.R
 
@@ -54,16 +56,16 @@ fun WordInfoItem(
 
     Column(modifier = Modifier) {
 
-        Row(modifier = Modifier.fillMaxWidth(),
+        Row(modifier = Modifier.fillMaxSize().padding(top = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start) {
             //word
             Text(
                 text = wordInfo.word,
                 style = MaterialTheme.typography.h2,
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier
             )
-            Spacer(modifier = Modifier.height(18.dp))
+
             //audio icon
 
             IconButton(onClick = {
@@ -72,6 +74,7 @@ fun WordInfoItem(
                 mediaPlayer.prepare()
                 mediaPlayer.start()
             }
+
             ) {
 
                if((audioUrl?.isNotEmpty() == true)){
@@ -85,6 +88,9 @@ fun WordInfoItem(
         Text(text = phonetic.toString(), fontWeight = FontWeight.Normal)
         Spacer(modifier = Modifier.height(16.dp))
 
+       if(wordInfo.word.length <= 0){
+           Image(painter = painterResource(id = R.drawable.man), contentDescription = "")
+       }
         wordInfo.meanings.forEach { meaning ->
             Text(text = meaning.partOfSpeech, fontWeight = FontWeight.Bold)
             meaning.definitions.forEachIndexed { i, definition ->

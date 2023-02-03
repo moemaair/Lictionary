@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -13,11 +14,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DrawerDefaults.shape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -102,7 +106,7 @@ fun MainScreen() {
         },
         drawerContent = {
             DrawerContent()
-        }
+        },
 
     ){
         Column{
@@ -145,9 +149,7 @@ fun MainScreen() {
 
                         }
                     }
-
-
-
+                    
                 }
                 Box(modifier = Modifier
                     .fillMaxWidth()
@@ -210,8 +212,33 @@ fun MainScreen() {
 
 @Composable
 fun DrawerContent() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Drawer Test")
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(start = 10.dp)) {
+        //icon image
+        Row() {
+            Image(painter = painterResource(id = R.drawable.man), contentDescription = "", modifier = Modifier
+                .height(100.dp)
+                .scale(0.8f))
+            Spacer(modifier = Modifier.height(30.dp))
+            Text(text = "Account Owner")
+        }
+
+        //support
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()) {
+            Text(text = "Support", style = MaterialTheme.typography.h3)
+            //row 1 (send feedback)
+            Row() {
+                Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
+            }
+            //row 2 rate app
+            //row 3 share app
+        }
+        //setting
+        //other
+
     }
 }
 
