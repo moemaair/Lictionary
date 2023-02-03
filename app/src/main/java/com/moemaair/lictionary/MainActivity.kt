@@ -124,19 +124,18 @@ fun MainScreen() {
                     .fillMaxSize()
                 )
                 {
-
+                    if(state.isLoading ) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    }
                     if(!isVisible){
                      Text(text = "Try searching for a word",
                          color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
                          modifier = Modifier
                              .fillMaxWidth()
                              .align(Alignment.TopCenter).padding(top = 150.dp),
-
                          textAlign = TextAlign.Center, fontSize = 14.sp)
                     }
-                    if(state.isLoading ) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    } else{
+                    else{
                         LazyColumn(modifier = Modifier
                             .align(Alignment.TopCenter)
                             .padding(20.dp, 100.dp, 20.dp, 0.dp))
