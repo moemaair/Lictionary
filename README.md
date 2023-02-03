@@ -22,11 +22,11 @@
       <img src = "https://img.shields.io/badge/Jetpack%20Compose-1.1.1-brightgreen" />
     </a>
     <a href = "https://github.com/moemaair/Lictionary/blob/main/LICENSE"> 
-     <img src = "https://img.shields.io/github/license/moemaair/lictionary" />
-  </a>
-  <a href = "https://twitter.com/codingin254">
+        <img src = "https://img.shields.io/github/license/moemaair/lictionary" />
+    </a>
+   <a href = "https://twitter.com/codingin254">
      <img src = "https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fcodingin254" />
-  </a>
+   </a>
 </div>
 
 ## Lictionary
@@ -35,15 +35,15 @@ Lictionary is a mobile dictionary application for Android devices. It allows use
 ## Screens
 <h3 align="center">Home</h3>
 
-| Light mode                                                                                                 | Dark mode                                                                                                 |
-|------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_light_home.png =300x300) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_dark_home.png =300x300) |
+| Light mode                                                                                         | Dark mode                                                                                         |
+|----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_light_home.png ) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_dark_home.png ) |
 
 <h3 align="center">Navigation drawer</h3>
 
-| Light mode                                                                                                   | Dark mode                                                                                                   |
-|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_light_drawer.png =300x300) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_dark_drawer.png =300x300) |
+| Light mode                                                                                           | Dark mode                                                                                           |
+|------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_light_drawer.png ) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_dark_drawer.png ) |
 
 ## Built With 🛠
 
@@ -60,13 +60,13 @@ Lictionary is a mobile dictionary application for Android devices. It allows use
 ## Architecture used
 
 This app uses [***Android Clean Architecture (MVVM)***](https://developer.android.com/topic/architecture) architecture.
-
+.
 ├── Core
 ├── Data
 ├── Domain
 └── Presentation
 
-![](clean_arch_pic.png =100x100)
+![](clean_arch_pic.png)
 
 ## Contact
 
