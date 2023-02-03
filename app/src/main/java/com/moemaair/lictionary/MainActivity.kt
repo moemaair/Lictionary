@@ -1,6 +1,7 @@
 package com.moemaair.lictionary
 
 
+import android.content.res.Resources.Theme
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -36,19 +37,25 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = ViewModelProvider(this)[MainViewModel::class.java] // getting the instance of MainViewModel
         setContent {
-            LictionaryTheme {
+            LictionaryTheme(viewModel._darkmode.value) {
                 MainScreen()
             }
         }
@@ -210,6 +217,7 @@ fun MainScreen() {
 
 @Composable
 fun DrawerContent() {
+    var viewModel = viewModel<MainViewModel>()
     LazyColumn(modifier = Modifier
         .fillMaxSize()
         .padding(start = 10.dp)) {
@@ -279,18 +287,16 @@ fun DrawerContent() {
                     // Creating a Switch, when value changes,
                     // it updates mCheckedState value
                     Switch(checked = mCheckedState.value,
-                        onCheckedChange = {mCheckedState.value = it},
+                        onCheckedChange = {mCheckedState.value = it
+                            viewModel.setDarkmode(mCheckedState.value)
+
+                                          },
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = MaterialTheme.colors.primaryVariant,
                             checkedThumbColor = MaterialTheme.colors.primary
                         )
 
                     )
-
-
-
-
-
                 }
             }
             Divider()

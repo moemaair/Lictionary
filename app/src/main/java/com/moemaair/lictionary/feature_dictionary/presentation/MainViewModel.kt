@@ -27,6 +27,12 @@ class MainViewModel @Inject constructor(
     var _searchQuery = mutableStateOf("")
     var searchQuery: State<String> = _searchQuery
 
+    var _darkmode = mutableStateOf(true)
+
+    fun setDarkmode(darkmode: Boolean){
+        _darkmode.value = darkmode
+    }
+
     private var _state = mutableStateOf(WordInfoState())
     var state: State<WordInfoState> = _state
 
