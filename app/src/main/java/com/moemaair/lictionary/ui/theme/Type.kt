@@ -27,8 +27,9 @@ val Typography = Typography(
     body1 = TextStyle(
         fontFamily = montserrat_font,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
-    ),
+        fontSize = 15.sp
+    )
+    ,
     subtitle1 = TextStyle(
         fontFamily = montserrat_font,
         fontWeight = FontWeight.Normal,
@@ -37,7 +38,7 @@ val Typography = Typography(
     subtitle2 = TextStyle(
         fontFamily = montserrat_font,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 19.sp
+        fontSize = 17.sp
     ),
     h3 = TextStyle(  // title in appbar
         fontFamily = montserrat_font,
@@ -48,7 +49,7 @@ val Typography = Typography(
     h4 = TextStyle(  // title in appbar
         fontFamily = montserrat_font,
         fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
+        fontSize = 20.sp,
     )
     ,
     h2 = TextStyle(  // word from api

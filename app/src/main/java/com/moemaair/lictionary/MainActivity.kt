@@ -34,14 +34,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
+import com.moemaair.lictionary.ui.theme.playfair_display_font
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -121,10 +124,19 @@ fun MainScreen() {
                     .fillMaxSize()
                 )
                 {
+
+                    if(!isVisible){
+                     Text(text = "Try searching for a word",
+                         color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
+                         modifier = Modifier
+                             .fillMaxWidth()
+                             .align(Alignment.TopCenter).padding(top = 150.dp),
+
+                         textAlign = TextAlign.Center, fontSize = 14.sp)
+                    }
                     if(state.isLoading ) {
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                    else{
+                    } else{
                         LazyColumn(modifier = Modifier
                             .align(Alignment.TopCenter)
                             .padding(20.dp, 100.dp, 20.dp, 0.dp))
@@ -242,7 +254,7 @@ fun DrawerContent() {
                 .padding(top = 20.dp),
                 verticalArrangement = Arrangement.SpaceAround
             ) {
-                Text(text = "Support", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) Color.White else Color.Black)
+                Text(text = "Support", style = MaterialTheme.typography.h4)
                 //row 1 (send feedback)
                 Row(modifier = Modifier
                     .fillMaxWidth()
@@ -275,7 +287,7 @@ fun DrawerContent() {
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp)) {
-                Text(text = "Setting", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) Color.White else Color.Black)
+                Text(text = "Setting", style = MaterialTheme.typography.h4)
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         Icon(imageVector = Icons.Default.DarkMode, contentDescription = "dark mode")
@@ -307,7 +319,7 @@ fun DrawerContent() {
            Column(modifier = Modifier
                .fillMaxWidth()
                .padding(top = 20.dp)) {
-               Text(text = "Other", style = MaterialTheme.typography.h4, color = if(isSystemInDarkTheme()) Color.White else Color.Black)
+               Text(text = "Other", style = MaterialTheme.typography.h4)
                Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                    Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
                    Text(text = "App version 1.0.0" )
