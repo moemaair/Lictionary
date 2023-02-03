@@ -274,14 +274,21 @@ fun DrawerContent() {
                         Text(text = "Dark mode")
                     }
                     // Declaring a boolean value for storing checked state
-                    val mCheckedState = remember{ mutableStateOf(false)} // not toggled darkmode icon
+                    var mCheckedState = remember{ mutableStateOf(false)} // not toggled darkmode icon
 
                     // Creating a Switch, when value changes,
                     // it updates mCheckedState value
-                    Switch(checked = mCheckedState.value, onCheckedChange = {mCheckedState.value = it})
+                    Switch(checked = mCheckedState.value,
+                        onCheckedChange = {mCheckedState.value = it},
+                        colors = SwitchDefaults.colors(
+                            checkedTrackColor = MaterialTheme.colors.primaryVariant,
+                            checkedThumbColor = MaterialTheme.colors.primary
+                        )
 
-                    // Adding a Space of 100dp height
-                    //Spacer(modifier = Modifier.height(100.dp))
+                    )
+
+
+
 
 
                 }
