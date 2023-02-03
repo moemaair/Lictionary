@@ -95,7 +95,4 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.5.0"
 
-    //exoPlayer libray for media
-//    implementation "androidx.media2:media2-exoplayer:1.2.1"
-//    implementation "androidx.media2:media2-ui:1.2.1"
 }
