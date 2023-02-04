@@ -324,12 +324,11 @@ fun DrawerContent() {
                    Text(text = "App version 1.0.0" )
                }
                Divider()
-               Row(modifier = Modifier.padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                   Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "dark mode", modifier = Modifier
-                       .size(32.dp)
-                       .rotate(90f))
+               Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                   Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
                    Text(text = "Log out")
                }
+
                Divider()
 
            }
