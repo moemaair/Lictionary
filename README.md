@@ -68,31 +68,47 @@ Lictionary is a mobile dictionary application for Android devices. It allows use
 
 ## Architecture used
 
-This app uses [***Android Clean Architecture (MVVM)***](https://developer.android.com/topic/architecture) architecture.
-## Example
+This app uses [Android Clean Architecture (MVVM)](https://developer.android.com/topic/architecture) architecture.
+
+## Project Structure
 
 ```bash
 Lictionary-project-structure
 ├── MainActivity
 ├── AppApplication
 ├── core
-│   ├── util
+│   └─── util
 │        └── resources
-├── feature
-│   └── data 
-│   │    ├── local
-│   │    ├── remote 
-│   │    └── util
-│   └── dl 
-│   │   └── AppModule 
-│   └── domain 
-│   │    ├── local
-│   │    ├── remote 
-│   │    └── util
-│───└── presentation 
-         ├── local
-         ├── remote 
-         └── util
+└── feature
+   └── data 
+   │    ├── local
+   │    │    └─── entity
+   │    │    │     ├── dao
+   │    │    │     └── LictionaryDatabase
+   │    │    └─── converters
+   │    │         
+   │    │   
+   │    ├── remote 
+   │    │    ├── dto
+   │    │    └─── LictionaryApi     
+   │    │        
+   │    └── repository
+   │    │     └─── wordInfoRepoImpl
+   │    │        
+   │    └── util
+   │    │     ├── JsonParse
+   │    │     └─── GsonParser 
+   └── dl 
+   │   └── AppModule 
+   └── domain 
+   │    ├── model
+   │    ├── repository 
+   │    │     └─── wordInfoRepo
+   │    └── usecase
+   └── presentation 
+         ├── wordInfoItem
+         ├── MainActivityViewModel 
+         └── WordInfoState
 
 ```
 
