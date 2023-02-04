@@ -39,11 +39,20 @@ Lictionary is a mobile dictionary application for Android devices. It allows use
 |----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_light_home.png ) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_dark_home.png ) |
 
+
+<h3 align="center">Gifs</h3>
+
+| Light mode                                                                              | Dark mode                                                                              |
+|-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/light_home.gif ) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/dark_home.gif ) |
+
+
 <h3 align="center">Navigation drawer</h3>
 
 | Light mode                                                                                           | Dark mode                                                                                           |
 |------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
 | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_light_drawer.png ) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_dark_drawer.png ) |
+
 
 ## Built With 🛠
 
@@ -60,11 +69,33 @@ Lictionary is a mobile dictionary application for Android devices. It allows use
 ## Architecture used
 
 This app uses [***Android Clean Architecture (MVVM)***](https://developer.android.com/topic/architecture) architecture.
-.
-├── Core
-├── Data
-├── Domain
-└── Presentation
+## Example
+
+```bash
+Lictionary-project-structure
+├── MainActivity
+├── AppApplication
+├── core
+│   ├── util
+│        └── resources
+├── feature
+│   └── data 
+│   │    ├── local
+│   │    ├── remote 
+│   │    └── util
+│   └── dl 
+│   │   └── AppModule 
+│   └── domain 
+│   │    ├── local
+│   │    ├── remote 
+│   │    └── util
+│───└── presentation 
+         ├── local
+         ├── remote 
+         └── util
+
+```
+
 
 ![](clean_arch_pic.png)
 
