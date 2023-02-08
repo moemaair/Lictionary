@@ -4,6 +4,7 @@ package com.moemaair.lictionary
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources.Theme
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -271,7 +272,11 @@ fun DrawerContent() {
                 //row 2 rate app
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    .padding(0.dp, 20.dp).clickable {
+                        val openPlayStore = Intent(Intent.ACTION_VIEW)
+                        openPlayStore.data = Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                        ctx.startActivity(openPlayStore)
+                    }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "email icon")
                     Text(text = "Rate this app")
                 }
