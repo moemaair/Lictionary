@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -263,7 +264,15 @@ fun DrawerContent() {
                 Text(text = "Support", style = MaterialTheme.typography.h4)
                 //row 1 (send feedback)
                 Row(modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth().clickable {
+                        val sendIntent = Intent( Intent.ACTION_SEND)
+                        sendIntent.type = "text/plain"
+                        sendIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("ibrahimohamed81@outlook.com"))
+                        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
+
+                        val chooser = Intent.createChooser(sendIntent, "Send Email")
+                        ctx.startActivity( chooser )
+                    }
                     .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
                     Text(text = "Send Feedback")
