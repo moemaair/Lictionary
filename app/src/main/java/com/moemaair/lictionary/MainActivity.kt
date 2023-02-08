@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val viewModel = ViewModelProvider(this)[MainViewModel::class.java] // getting the instance of MainViewModel
         setContent {
-            LictionaryTheme(viewModel._darkmode.value) {
+            LictionaryTheme(!viewModel._darkmode.value) {
                 MainScreen()
             }
         }
@@ -132,7 +132,8 @@ fun MainScreen() {
                          color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
                          modifier = Modifier
                              .fillMaxWidth()
-                             .align(Alignment.TopCenter).padding(top = 150.dp),
+                             .align(Alignment.TopCenter)
+                             .padding(top = 150.dp),
                          textAlign = TextAlign.Center, fontSize = 14.sp)
                     }
                     else{
@@ -229,6 +230,7 @@ fun MainScreen() {
 @Composable
 fun DrawerContent() {
     var viewModel = viewModel<MainViewModel>()
+    var isdark = isSystemInDarkTheme()
     LazyColumn(modifier = Modifier
         .fillMaxSize()
         .padding(start = 10.dp)) {
@@ -300,8 +302,9 @@ fun DrawerContent() {
                     Switch(checked = mCheckedState.value,
                         onCheckedChange = {mCheckedState.value = it
                             viewModel.setDarkmode(mCheckedState.value)
+                            viewModel._darkmode.value = !viewModel._darkmode.value
 
-                                          },
+                            },
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = MaterialTheme.colors.primaryVariant,
                             checkedThumbColor = MaterialTheme.colors.primary

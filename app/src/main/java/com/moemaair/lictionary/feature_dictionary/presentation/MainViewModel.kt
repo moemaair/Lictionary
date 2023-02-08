@@ -1,5 +1,6 @@
 package com.moemaair.lictionary.feature_dictionary.presentation
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
