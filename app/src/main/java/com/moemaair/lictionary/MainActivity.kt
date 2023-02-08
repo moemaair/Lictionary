@@ -1,6 +1,8 @@
 package com.moemaair.lictionary
 
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Resources.Theme
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
@@ -53,10 +57,10 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel = ViewModelProvider(this)[MainViewModel::class.java] // getting the instance of MainViewModel
+
         setContent {
             LictionaryTheme(!viewModel._darkmode.value) {
                 MainScreen()
@@ -230,7 +234,7 @@ fun MainScreen() {
 @Composable
 fun DrawerContent() {
     var viewModel = viewModel<MainViewModel>()
-    var isdark = isSystemInDarkTheme()
+    var ctx = LocalContext.current
     LazyColumn(modifier = Modifier
         .fillMaxSize()
         .padding(start = 10.dp)) {
@@ -275,7 +279,10 @@ fun DrawerContent() {
                 //row 3 share app
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    .padding(0.dp, 20.dp).clickable {
+                     ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                    },
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.Share, contentDescription = "email icon")
                     Text(text = "Share this app")
                 }
