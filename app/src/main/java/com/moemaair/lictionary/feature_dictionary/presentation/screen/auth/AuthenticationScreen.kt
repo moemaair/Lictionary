@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
+import com.stevdzasan.onetap.OneTapSignInWithGoogle
 
 @Composable
 fun AuthenticationScreen(
@@ -25,6 +26,13 @@ fun AuthenticationScreen(
                 )
             }
         }
+    )
+
+    OneTapSignInWithGoogle(
+        state = oneTapSignInState,
+        clientId = ,
+        onTokenIdReceived = ,
+        onDialogDismissed =
     )
     
 }
