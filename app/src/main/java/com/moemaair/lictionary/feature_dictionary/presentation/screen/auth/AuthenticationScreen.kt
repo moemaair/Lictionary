@@ -3,6 +3,7 @@ package com.moemaair.lictionary.feature_dictionary.presentation.screen.auth
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import com.moemaair.lictionary.core.util.Constants.CLIENT_ID
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
@@ -30,8 +31,10 @@ fun AuthenticationScreen(
 
     OneTapSignInWithGoogle(
         state = oneTapSignInState,
-        clientId = ,
-        onTokenIdReceived = ,
+        clientId = CLIENT_ID ,
+        onTokenIdReceived = {
+
+        },
         onDialogDismissed =
     )
     
