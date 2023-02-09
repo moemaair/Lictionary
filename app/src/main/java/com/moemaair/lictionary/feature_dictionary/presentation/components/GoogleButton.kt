@@ -1,5 +1,6 @@
 package com.moemaair.lictionary.feature_dictionary.presentation.components
 
+import AuthenticationViewModel
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.R
 
 @Composable
@@ -34,6 +36,7 @@ fun GoogleButton(
     onClick: () -> Unit
 ) {
         var buttonText by remember { mutableStateOf(primaryText) }
+        var viewModel: AuthenticationViewModel = viewModel()
 
         LaunchedEffect(key1 = loadingState) {
             buttonText = if (loadingState) secondaryText else primaryText

@@ -1,5 +1,6 @@
 package com.moemaair.lictionary.feature_dictionary.presentation.screen.auth
 
+import android.util.Log
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -32,10 +33,12 @@ fun AuthenticationScreen(
     OneTapSignInWithGoogle(
         state = oneTapSignInState,
         clientId = CLIENT_ID ,
-        onTokenIdReceived = {
-
+        onTokenIdReceived = { tokenId ->
+            Log.d("tokenId -> ", tokenId)
         },
-        onDialogDismissed =
+        onDialogDismissed = { message ->
+            Log.d("failed token  -> " ,message)
+        }
     )
     
 }

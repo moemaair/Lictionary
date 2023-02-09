@@ -8,6 +8,4 @@ class AuthenticationViewModel : ViewModel(){
     fun setLoadingState(loading: Boolean){
         loadingState.value = loading
     }
-
-
 }
