@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Shapes
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,7 +26,7 @@ fun GoogleButton(
     primaryText: String = "Sign in with Google",
     secondaryText: String = "Please wait...",
     //icon: Int = R.drawable,
-    shape: Shape = Shapes().extraSmall,
+    shape: Shape = Shapes().medium,
     borderColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     borderStrokeWidth: Dp = 1.dp,

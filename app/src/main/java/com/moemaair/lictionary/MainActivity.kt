@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.DrawerDefaults.shape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
+import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreenContent
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
 import com.moemaair.lictionary.ui.theme.playfair_display_font
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,7 +65,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LictionaryTheme(!viewModel._darkmode.value) {
-                MainScreen()
+                //MainScreen()
+                AuthenticationScreenContent(false, {})
             }
         }
 

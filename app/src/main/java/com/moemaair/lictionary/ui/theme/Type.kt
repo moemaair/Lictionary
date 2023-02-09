@@ -57,7 +57,16 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         letterSpacing = 1.2.sp
+    ),
+    h5 = TextStyle(  // word from api
+        fontFamily = montserrat_font,
+        fontWeight = FontWeight.Bold,
+        fontSize = 15.sp,
+        color = Color.LightGray
     )
+
+
+
 
 
     /* Other default text styles to override
