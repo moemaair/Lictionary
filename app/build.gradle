@@ -95,4 +95,23 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.5.0"
 
+    // Runtime Compose
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04"
+
+    // Splash API
+    implementation "androidx.core:core-splashscreen:1.0.0"
+
+    // Mongo DB Realm
+    implementation ('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt') {
+        version {
+            strictly("1.6.0-native-mt")
+        }
+    }
+
+    // Message Bar Compose
+    implementation 'com.github.stevdza-san:MessageBarCompose:1.0.5'
+
+    // One-Tap Compose
+    implementation 'com.github.stevdza-san:OneTapCompose:1.0.0'
+
 }

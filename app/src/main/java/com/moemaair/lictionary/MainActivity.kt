@@ -118,119 +118,120 @@ fun MainScreen() {
                 }
             }
         },
+        content = {
+            Column{
+                Box(modifier = Modifier.fillMaxSize()){
+                    Box(modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxSize()
+                    )
+                    {
+                        if(state.isLoading ) {
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        }
+                        if(!isVisible){
+                            Text(text = "Try searching for a word",
+                                color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.TopCenter)
+                                    .padding(top = 150.dp),
+                                textAlign = TextAlign.Center, fontSize = 14.sp)
+                        }
+                        else{
+                            LazyColumn(modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(20.dp, 100.dp, 20.dp, 0.dp))
+                            {
+
+                                items(state.wordInfoItems.size) { i ->
+                                    val wordInfo = state.wordInfoItems[i]
+                                    if(i > 0) {
+                                        Text(
+                                            text = "Other Definations...",
+                                            color = if (isSystemInDarkTheme()) Color.White.copy(alpha = ContentAlpha.disabled) else Color.Black.copy(alpha = ContentAlpha.disabled),
+                                            modifier = Modifier
+                                                .padding(0.dp, 10.dp)
+                                                .align(Alignment.Center),
+                                            style = MaterialTheme.typography.subtitle2,
+                                        )
+                                        Spacer(modifier = Modifier.height(0.dp))
+                                    }
+                                    WordInfoItem(
+                                        wordInfo = wordInfo,
+                                        audioVector
+                                    )
+                                    if(i < state.wordInfoItems.size - 1) {
+                                        Divider()
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                        .height(90.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    MaterialTheme.colors.primaryVariant,
+                                    MaterialTheme.colors.primary
+                                )
+                            )
+                        )
+                    )
+                    {
+                        OutlinedTextField(
+                            value = viewModel.searchQuery.value.trim(),
+                            onValueChange = viewModel::onSearch,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                                .offset(0.dp, (30).dp)
+                                .padding(10.dp, 6.dp)
+                                .shadow(5.dp),
+                            placeholder = { Text(text = "Search for words...", color = Color.LightGray)},
+                            leadingIcon = { IconButton(onClick = { /*TODO*/ }) {
+                                Icon(imageVector = Icons.Default.Search, contentDescription = "")
+                            }},
+                            trailingIcon = {
+                                if(isVisible){
+                                    IconButton(onClick = {
+                                        viewModel._searchQuery.value = ""
+                                    }) {
+                                        Icon(imageVector = Icons.Default.Close, contentDescription = "")
+                                    }
+                                }
+                            },
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = Color.White,
+                                textColor = Color.Black,
+                                trailingIconColor = MaterialTheme.colors.primaryVariant,
+                                leadingIconColor = MaterialTheme.colors.primaryVariant,
+                                focusedIndicatorColor = Color.LightGray,
+                                cursorColor = Color.Black
+                            ),
+
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Search
+                            ),
+                            singleLine = true,
+                            maxLines = 1
+                        )
+
+                    }
+                }
+            }
+        },
         drawerContent = {
             DrawerContent()
         },
 
-    ){
-        Column{
-            Box(modifier = Modifier.fillMaxSize()){
-                Box(modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxSize()
-                )
-                {
-                    if(state.isLoading ) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                    if(!isVisible){
-                     Text(text = "Try searching for a word",
-                         color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
-                         modifier = Modifier
-                             .fillMaxWidth()
-                             .align(Alignment.TopCenter)
-                             .padding(top = 150.dp),
-                         textAlign = TextAlign.Center, fontSize = 14.sp)
-                    }
-                    else{
-                        LazyColumn(modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(20.dp, 100.dp, 20.dp, 0.dp))
-                        {
 
-                            items(state.wordInfoItems.size) { i ->
-                                val wordInfo = state.wordInfoItems[i]
-                                if(i > 0) {
-                                    Text(
-                                        text = "Other Definations...",
-                                        color = if (isSystemInDarkTheme()) Color.White.copy(alpha = ContentAlpha.disabled) else Color.Black.copy(alpha = ContentAlpha.disabled),
-                                        modifier = Modifier
-                                            .padding(0.dp, 10.dp)
-                                            .align(Alignment.Center),
-                                        style = MaterialTheme.typography.subtitle2,
-                                    )
-                                    Spacer(modifier = Modifier.height(0.dp))
-                                }
-                                WordInfoItem(
-                                    wordInfo = wordInfo,
-                                    audioVector
-                                )
-                                if(i < state.wordInfoItems.size - 1) {
-                                    Divider()
-                                }
-                            }
-
-                        }
-                    }
-                    
-                }
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter)
-                    .height(90.dp)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                MaterialTheme.colors.primaryVariant,
-                                MaterialTheme.colors.primary
-                            )
-                        )
-                    )
-                )
-                {
-                    OutlinedTextField(
-                        value = viewModel.searchQuery.value.trim(),
-                        onValueChange = viewModel::onSearch,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .offset(0.dp, (30).dp)
-                            .padding(10.dp, 6.dp)
-                            .shadow(5.dp),
-                        placeholder = { Text(text = "Search for words...", color = Color.LightGray)},
-                        leadingIcon = { IconButton(onClick = { /*TODO*/ }) {
-                            Icon(imageVector = Icons.Default.Search, contentDescription = "")
-                        }},
-                        trailingIcon = {
-                                       if(isVisible){
-                                          IconButton(onClick = {
-                                              viewModel._searchQuery.value = ""
-                                          }) {
-                                              Icon(imageVector = Icons.Default.Close, contentDescription = "")
-                                          }
-                                       }
-                        },
-                        colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = Color.White,
-                            textColor = Color.Black,
-                            trailingIconColor = MaterialTheme.colors.primaryVariant,
-                            leadingIconColor = MaterialTheme.colors.primaryVariant,
-                            focusedIndicatorColor = Color.LightGray,
-                            cursorColor = Color.Black
-                        ),
-
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Search
-                        ),
-                        singleLine = true,
-                        maxLines = 1
-                    )
-
-                }
-            }
-        }
-
-    }
+    )
 }
 
 @Composable
@@ -271,7 +272,7 @@ fun DrawerContent() {
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
 
                         val chooser = Intent.createChooser(sendIntent, "Send Email")
-                        ctx.startActivity( chooser )
+                        startActivity(ctx, chooser, null)
                     }
                     .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
@@ -332,6 +333,15 @@ fun DrawerContent() {
                         )
 
                     )
+                }
+
+                Divider()
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Icon(imageVector = Icons.Default.History, contentDescription = "History")
+                    Text(text = "History")
                 }
             }
             Divider()
