@@ -45,10 +45,13 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreenContent
+import com.moemaair.lictionary.navigation.Screen
+import com.moemaair.lictionary.navigation.ScreenNavGraph
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
 import com.moemaair.lictionary.ui.theme.playfair_display_font
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,7 +69,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             LictionaryTheme(!viewModel._darkmode.value) {
                 //MainScreen()
-                AuthenticationScreenContent(false, {})
+                val navController = rememberNavController()
+                ScreenNavGraph(startDestination = Screen.Authentication.route,
+                    navController = navController )
             }
         }
 
@@ -266,10 +271,14 @@ fun DrawerContent() {
                 Text(text = "Support", style = MaterialTheme.typography.h4)
                 //row 1 (send feedback)
                 Row(modifier = Modifier
-                    .fillMaxWidth().clickable {
-                        val sendIntent = Intent( Intent.ACTION_SEND)
+                    .fillMaxWidth()
+                    .clickable {
+                        val sendIntent = Intent(Intent.ACTION_SEND)
                         sendIntent.type = "text/plain"
-                        sendIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("ibrahimohamed81@outlook.com"))
+                        sendIntent.putExtra(
+                            Intent.EXTRA_EMAIL,
+                            arrayOf("ibrahimohamed81@outlook.com")
+                        )
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
 
                         val chooser = Intent.createChooser(sendIntent, "Send Email")
@@ -283,9 +292,11 @@ fun DrawerContent() {
                 //row 2 rate app
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 20.dp).clickable {
+                    .padding(0.dp, 20.dp)
+                    .clickable {
                         val openPlayStore = Intent(Intent.ACTION_VIEW)
-                        openPlayStore.data = Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                        openPlayStore.data =
+                            Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
                         ctx.startActivity(openPlayStore)
                     }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "email icon")
@@ -295,8 +306,9 @@ fun DrawerContent() {
                 //row 3 share app
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 20.dp).clickable {
-                     ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                    .padding(0.dp, 20.dp)
+                    .clickable {
+                        ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
                     },
                     horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.Share, contentDescription = "email icon")
