@@ -70,8 +70,10 @@ class MainActivity : ComponentActivity() {
             LictionaryTheme(!viewModel._darkmode.value) {
                 //MainScreen()
                 val navController = rememberNavController()
-                ScreenNavGraph(startDestination = Screen.Authentication.route,
-                    navController = navController )
+                ScreenNavGraph(
+                    startDestination = Screen.Authentication.route,
+                    navController = navController
+                )
             }
         }
 
