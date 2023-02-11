@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 //MainScreen()
                 val navController = rememberNavController()
                 ScreenNavGraph(
-                    startDestination = Screen.Authentication.route,
+                    startDestination = Screen.History.route,
                     navController = navController
                 )
             }

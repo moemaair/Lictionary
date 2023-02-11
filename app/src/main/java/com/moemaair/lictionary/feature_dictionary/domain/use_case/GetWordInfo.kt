@@ -15,4 +15,8 @@ class GetWordInfo (
         }
         return repo.getWordInfo(word)
     }
+
+    fun getAll(): Flow<Resource<List<WordInfo>>>{
+        return repo.getAllWordInfos()
+    }
 }

@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.moemaair.lictionary.MainScreen
+import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.History
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreen
 import com.stevdzasan.messagebar.rememberMessageBarState
@@ -23,6 +24,7 @@ fun ScreenNavGraph(startDestination: String, navController: NavHostController) {
         navController = navController
     ){
         authenticationScreen()
+        history()
     }
 }
 

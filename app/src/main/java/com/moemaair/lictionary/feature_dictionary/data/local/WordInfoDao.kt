@@ -19,4 +19,7 @@ interface WordInfoDao {
     @Query("SELECT * FROM wordinfoentity WHERE word LIKE :word ")
     suspend fun getWordInfos(word: String): List<WordInfoEntity>
 
+    @Query("SELECT * FROM wordinfoentity")
+    suspend fun getAllWordInfos(): List<WordInfoEntity>
+
 }

@@ -1,28 +1,20 @@
 package com.moemaair.lictionary.feature_dictionary.presentation
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moemaair.lictionary.core.util.Resource
 import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetWordInfo
-import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getWordInfo: GetWordInfo
+    private val getWordInfo: GetWordInfo,
 ) : ViewModel(){
 
     var _searchQuery = mutableStateOf("")
@@ -75,6 +67,7 @@ class MainViewModel @Inject constructor(
                 }.launchIn(this)
         }
     }
+
 
     sealed class UIEvent {
         data class ShowSnackbar(val message: String): UIEvent()

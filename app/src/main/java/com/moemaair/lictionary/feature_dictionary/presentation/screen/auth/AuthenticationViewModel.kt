@@ -5,6 +5,9 @@ class AuthenticationViewModel : ViewModel(){
     var loadingState = mutableStateOf(false)
         private set
 
+    var authenticated = mutableStateOf(false)
+        private set
+
     fun setLoadingState(loading: Boolean){
         loadingState.value = loading
     }

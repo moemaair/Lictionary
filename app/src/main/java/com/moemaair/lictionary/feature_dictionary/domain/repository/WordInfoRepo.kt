@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface WordInfoRepo {
     fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>>
+    fun getAllWordInfos(): Flow<Resource<List<WordInfo>>>
 }
