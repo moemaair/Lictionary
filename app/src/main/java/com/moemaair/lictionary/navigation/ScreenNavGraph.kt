@@ -10,10 +10,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.moemaair.lictionary.MainScreen
+import com.moemaair.lictionary.R
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.History
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreen
+import com.moemaair.lictionary.feature_dictionary.presentation.screen.home.Home
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 
@@ -28,7 +29,6 @@ fun ScreenNavGraph(startDestination: String, navController: NavHostController) {
     }
 }
 
-//home graph
 
 fun NavGraphBuilder.authenticationScreen(){
     composable(route = Screen.Authentication.route) {
@@ -43,7 +43,19 @@ fun NavGraphBuilder.authenticationScreen(){
                     Log.d("tag", it)
             },
             onTokenReceived = { token ->
-                Log.d("token", token)
+                authenticationViewModel.signInWithMongoAtlas(
+                    tokenId = token,
+                    onSuccess = { it->
+                        if(it){
+                            messageBarState.addSuccess("Succefully Authenticated")
+                        }
+                        authenticationViewModel.setLoadingState(false)
+                    },
+                    onError = { it ->
+                        messageBarState.addError(it)
+                        authenticationViewModel.setLoadingState(true)
+                    }
+                )
             },
             loadingState = loadingState,
             onButtonClick = {
@@ -56,7 +68,7 @@ fun NavGraphBuilder.authenticationScreen(){
 
 fun NavGraphBuilder.home(){
     composable(route = Screen.Home.route){
-        MainScreen()
+       Home(icon = R.drawable.audio_icon)
     }
 }
 
