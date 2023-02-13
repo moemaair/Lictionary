@@ -19,18 +19,27 @@ import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 
 @Composable
-fun ScreenNavGraph(startDestination: String, navController: NavHostController) {
+fun ScreenNavGraph(
+    startDestination: String,
+                   navController: NavHostController) {
     NavHost(
         startDestination = startDestination,
         navController = navController
     ){
-        authenticationScreen()
-        history()
+        authenticationScreen(
+            navigateToHome = {
+                navController.popBackStack()
+                navController.navigate(Screen.Home.route)
+            }
+        )
+
     }
 }
 
 
-fun NavGraphBuilder.authenticationScreen(){
+fun NavGraphBuilder.authenticationScreen(
+    navigateToHome: () -> Unit
+){
     composable(route = Screen.Authentication.route) {
         val authenticationViewModel: AuthenticationViewModel = viewModel()
         val oneTapSignInState = rememberOneTapSignInState()
