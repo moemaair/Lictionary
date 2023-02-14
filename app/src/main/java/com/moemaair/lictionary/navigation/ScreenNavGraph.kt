@@ -36,7 +36,9 @@ fun ScreenNavGraph(
                navController.navigate(Screen.History.route)
             }
         )
-        history()
+        history(
+            navController = navController
+        )
 
     }
 }
@@ -92,8 +94,12 @@ fun NavGraphBuilder.home(navigateToHistory: () -> Unit){
     }
 }
 
-fun NavGraphBuilder.history(){
+fun NavGraphBuilder.history(
+    navController: NavHostController
+){
     composable(route = Screen.History.route){
-        History()
+        History(
+            navController = navController
+        )
     }
 }

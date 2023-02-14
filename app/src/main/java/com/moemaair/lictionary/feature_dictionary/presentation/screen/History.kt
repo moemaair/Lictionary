@@ -8,11 +8,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 
 @Composable
 fun History(
+    navController: NavController
 ) {
-    HistoryContent()
+    HistoryContent(
+        navController = navController
+    )
 }
