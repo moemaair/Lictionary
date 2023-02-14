@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import com.moemaair.lictionary.core.util.Constants.CLIENT_ID
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarState
@@ -12,12 +13,14 @@ import com.stevdzasan.onetap.OneTapSignInWithGoogle
 
 @Composable
 fun AuthenticationScreen(
+    authenticated: Boolean,
     oneTapSignInState: OneTapSignInState, // library state for one tap google sign in
     messageBarState: MessageBarState, // library state with predefined data- { Snackbar }
     onDialogDismissed: (String) -> Unit,
     onTokenReceived: (String) -> Unit,
     loadingState: Boolean,
-    onButtonClick: () -> Unit
+    onButtonClick: () -> Unit,
+    navigateToHome: () -> Unit
 ) {
     Scaffold(
         content = {
@@ -34,11 +37,19 @@ fun AuthenticationScreen(
         state = oneTapSignInState,
         clientId = CLIENT_ID ,
         onTokenIdReceived = { tokenId ->
-            Log.d("tokenId -> ", tokenId)
+            onTokenReceived(tokenId)
+            Log.d("TAG", "AuthenticationScreen: $tokenId")
         },
         onDialogDismissed = { message ->
-            Log.d("failed token  -> " ,message)
+            onDialogDismissed(message)
         }
     )
+
+    LaunchedEffect(key1 = authenticated){
+        if(authenticated){
+            // navigate to homescreen only when authenticate is true
+            navigateToHome()
+        }
+    }
     
 }

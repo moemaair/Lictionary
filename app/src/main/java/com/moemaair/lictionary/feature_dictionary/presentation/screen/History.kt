@@ -14,5 +14,5 @@ import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 @Composable
 fun History(
 ) {
-    HistoryContent(wordInfo = WordInfo(emptyList(), "", "", emptyList() ))
+    HistoryContent()
 }

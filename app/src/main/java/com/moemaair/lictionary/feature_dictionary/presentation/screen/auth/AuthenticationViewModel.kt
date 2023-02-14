@@ -1,10 +1,10 @@
-import android.net.Credentials
+package com.moemaair.lictionary.feature_dictionary.presentation.screen.auth
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import io.realm.kotlin.mongodb.App
-import io.realm.kotlin.mongodb.Credentials.Companion.jwt
+import io.realm.kotlin.mongodb.Credentials
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ class AuthenticationViewModel : ViewModel() {
             try {
                 val result = withContext(Dispatchers.IO) {
                     App.create(APP_ID).login(
-                        io.realm.kotlin.mongodb.Credentials.jwt(tokenId)
+                       Credentials.jwt(tokenId)
                     ).loggedIn
 
                 }

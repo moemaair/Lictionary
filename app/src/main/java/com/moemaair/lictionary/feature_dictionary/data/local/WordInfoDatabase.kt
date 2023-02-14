@@ -7,7 +7,7 @@ import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEnti
 
 @Database(
     entities = [WordInfoEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
