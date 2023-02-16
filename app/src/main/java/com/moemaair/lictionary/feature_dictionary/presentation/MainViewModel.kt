@@ -83,21 +83,23 @@ class MainViewModel @Inject constructor(
         }
     }
 
-      fun fetchAllWords() {
+    fun fetchAllWords() {
         viewModelScope.launch(Dispatchers.IO) {
             repo.getAllWordInfos()
                 .flowOn(Dispatchers.IO)
                 .map { it }
                 .distinctUntilChanged()
                 .collect {
-                    Log.d("TAG", ": ${it[0].word}")
+                    //Log.d("TAG", ": ${it[0].word}")
                     _distinctWords.emit(it)
                 }
 
         }
       }
 
-
+    fun deleteAll(){
+        repo.deleteAll()
+    }
     sealed class UIEvent {
         data class ShowSnackbar(val message: String): UIEvent()
     }

@@ -49,5 +49,11 @@ class WordInfoRepoImpl(
         emit(dao.getAllWordInfos().map { it.toWordInfo() })
     }
 
+    override fun deleteAll(){
+        dao.deleteAllWordInfos()
+    }
+
+
+
 
 }

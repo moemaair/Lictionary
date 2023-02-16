@@ -21,6 +21,7 @@ data class WordInfoEntity(
 ) {
     fun toWordInfo(): WordInfo {
         return WordInfo(
+            id = id,
             meanings = meanings,
             word = word,
             phonetic = phonetic,
