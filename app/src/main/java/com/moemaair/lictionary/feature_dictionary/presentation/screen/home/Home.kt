@@ -35,11 +35,14 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.History
+import com.moemaair.lictionary.navigation.Screen
 import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -49,7 +52,9 @@ import kotlinx.coroutines.launch
 fun Home(
     navigateToHistory: () -> Unit,
     icon: Int,
-    historyClicked : Boolean = false
+    historyClicked : Boolean = false,
+    onClickLogOut: () -> Unit,
+    navController: NavHostController
 ) {
     var viewModel: MainViewModel = hiltViewModel()
     var state = viewModel.state.value
@@ -207,7 +212,9 @@ fun Home(
         drawerContent = {
             DrawerContent(
                com.moemaair.lictionary.R.drawable.man,
-                navigateToHistory = navigateToHistory
+                navigateToHistory = navigateToHistory,
+                onClickLogOut = onClickLogOut,
+                navController= navController
             )
         },
     )
@@ -221,7 +228,9 @@ fun Home(
 @Composable
 fun DrawerContent(
     icon: Int,
-    navigateToHistory: () -> Unit
+    navigateToHistory: () -> Unit,
+    onClickLogOut: () -> Unit,
+    navController: NavHostController
 ) {
     var viewModel = viewModel<MainViewModel>()
     var ctx = LocalContext.current
@@ -357,16 +366,12 @@ fun DrawerContent(
                     Text(text = "App version 1.0.0" )
                 }
                 Divider()
-                Row(modifier = Modifier.fillMaxWidth().clickable(enabled = true, onClick = {
-                    scope.launch(Dispatchers.IO) {
-                        App.Companion.create(APP_ID).currentUser?.logOut()
-                        App.Companion.create(APP_ID).currentUser?.state.apply {
-
-                        }
-
-                    }
+                Row(modifier = Modifier.fillMaxWidth()
+                    .clickable(enabled = true, onClick = {
+                        onClickLogOut()
+                        navController.navigate(Screen.Authentication.route)
                 }
-                    ).padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                ).padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
                     Text(text = "Log out")
                 }

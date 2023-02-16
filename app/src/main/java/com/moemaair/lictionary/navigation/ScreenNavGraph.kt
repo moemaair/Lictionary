@@ -3,18 +3,23 @@ package com.moemaair.lictionary.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.moemaair.lictionary.R
+import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.History
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreen
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.home.Home
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
+import io.realm.kotlin.mongodb.App
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScreenNavGraph(
@@ -34,7 +39,8 @@ fun ScreenNavGraph(
             navigateToHistory = {
                navController.popBackStack()
                navController.navigate(Screen.History.route)
-            }
+            },
+            navController = navController
         )
         history(
             navController = navController
@@ -85,15 +91,24 @@ fun NavGraphBuilder.authenticationScreen(
     }
 }
 
-fun NavGraphBuilder.home(navigateToHistory: () -> Unit){
+fun NavGraphBuilder.home(
+    navigateToHistory: () -> Unit,
+    navController: NavHostController
+){
     composable(route = Screen.Home.route){
+        val scope = rememberCoroutineScope()
        Home(
            navigateToHistory =navigateToHistory ,
-           icon = R.drawable.audio_icon
+           icon = R.drawable.audio_icon,
+           onClickLogOut = {
+               scope.launch (Dispatchers.IO) {
+                   App.create(APP_ID).currentUser?.logOut()
+               }
+           },
+           navController = navController
        )
     }
 }
-
 fun NavGraphBuilder.history(
     navController: NavHostController
 ){

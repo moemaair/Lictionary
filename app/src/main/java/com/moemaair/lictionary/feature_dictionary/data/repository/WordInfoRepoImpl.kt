@@ -2,11 +2,14 @@ package com.moemaair.lictionary.feature_dictionary.data.repository
 
 import com.moemaair.lictionary.core.util.Resource
 import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDao
+import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDatabase
+import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEntity
 import com.moemaair.lictionary.feature_dictionary.data.remote.LictionaryApi
-import com.moemaair.lictionary.feature_dictionary.domain.repository.WordInfoRepo
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
+import com.moemaair.lictionary.feature_dictionary.domain.repository.WordInfoRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -42,8 +45,9 @@ class WordInfoRepoImpl(
         emit(Resource.Success(newWordInfos))
     }
 
-    override fun getAllWordInfos(): Flow<Resource<List<WordInfo>>>  = flow{
-        emit(Resource.Loading())
-        val words = dao.getAllWordInfos()
+    override fun getAllWordInfos(): Flow<List<WordInfo>> = flow{
+        emit(dao.getAllWordInfos().map { it.toWordInfo() })
     }
+
+
 }

@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEntity
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WordInfoDao {
@@ -20,6 +21,6 @@ interface WordInfoDao {
     suspend fun getWordInfos(word: String): List<WordInfoEntity>
 
     @Query("SELECT * FROM wordinfoentity")
-    suspend fun getAllWordInfos(): List<WordInfoEntity>
+     fun getAllWordInfos(): List<WordInfoEntity>
 
 }

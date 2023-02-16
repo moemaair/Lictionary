@@ -9,6 +9,7 @@ import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDatabase
 import com.moemaair.lictionary.feature_dictionary.data.remote.LictionaryApi
 import com.moemaair.lictionary.feature_dictionary.data.repository.WordInfoRepoImpl
 import com.moemaair.lictionary.feature_dictionary.domain.repository.WordInfoRepo
+import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetAllWordsInRoom
 import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetWordInfo
 import dagger.Module
 import dagger.Provides
@@ -29,13 +30,21 @@ object WordInfoModule {
         return GetWordInfo(repository)
     }
 
-
     @Provides
     @Singleton
     fun provideWordInfoRepository(
         db: WordInfoDatabase,
-        api: LictionaryApi
+        api: LictionaryApi,
     ): WordInfoRepo {
+        return WordInfoRepoImpl(api, db.dao)
+    }
+
+    @Provides
+    @Singleton
+    fun profideWordRepoImpl(
+        db: WordInfoDatabase,
+        api: LictionaryApi,
+    ): WordInfoRepoImpl {
         return WordInfoRepoImpl(api, db.dao)
     }
 
