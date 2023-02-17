@@ -11,7 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants.APP_ID
-import com.moemaair.lictionary.feature_dictionary.presentation.screen.History
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreen
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.home.Home
@@ -35,16 +34,8 @@ fun ScreenNavGraph(
                 navController.navigate(Screen.Home.route)
             }
         )
-        home(
-            navigateToHistory = {
-               navController.popBackStack()
-               navController.navigate(Screen.History.route)
-            },
-            navController = navController
-        )
-        history(
-            navController = navController
-        )
+        home(navController = navController)
+
 
     }
 }
@@ -92,13 +83,11 @@ fun NavGraphBuilder.authenticationScreen(
 }
 
 fun NavGraphBuilder.home(
-    navigateToHistory: () -> Unit,
     navController: NavHostController
 ){
     composable(route = Screen.Home.route){
         val scope = rememberCoroutineScope()
        Home(
-           navigateToHistory =navigateToHistory ,
            icon = R.drawable.audio_icon,
            onClickLogOut = {
                scope.launch (Dispatchers.IO) {
@@ -107,14 +96,5 @@ fun NavGraphBuilder.home(
            },
            navController = navController
        )
-    }
-}
-fun NavGraphBuilder.history(
-    navController: NavHostController
-){
-    composable(route = Screen.History.route){
-        History(
-            navController = navController
-        )
     }
 }

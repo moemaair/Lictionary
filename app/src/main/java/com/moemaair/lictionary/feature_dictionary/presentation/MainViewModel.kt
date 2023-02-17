@@ -11,8 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.moemaair.lictionary.core.util.Resource
 import com.moemaair.lictionary.feature_dictionary.data.repository.WordInfoRepoImpl
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
-import com.moemaair.lictionary.feature_dictionary.domain.repository.WordInfoRepo
-import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetAllWordsInRoom
 import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetWordInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,19 +23,17 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getWordInfo: GetWordInfo,
     private val repo: WordInfoRepoImpl
-) : ViewModel(){
+) : ViewModel() {
 
     private val _distinctWords = MutableStateFlow<List<WordInfo>>(emptyList())
     val distinctWords: StateFlow<List<WordInfo>> = _distinctWords
-
-    var history: State<String> = mutableStateOf("")
 
     var _searchQuery = mutableStateOf("")
     var searchQuery: State<String> = _searchQuery
 
     var _darkmode = mutableStateOf(true)
 
-    fun setDarkmode(darkmode: Boolean){
+    fun setDarkmode(darkmode: Boolean) {
         _darkmode.value = darkmode
     }
 
@@ -56,7 +52,7 @@ class MainViewModel @Inject constructor(
             //delay(500L)
             getWordInfo(query)
                 .onEach { result ->
-                    when(result) {
+                    when (result) {
                         is Resource.Success -> {
                             _state.value = state.value.copy(
                                 wordInfoItems = result.data ?: emptyList(),
@@ -68,9 +64,11 @@ class MainViewModel @Inject constructor(
                                 wordInfoItems = result.data ?: emptyList(),
                                 isLoading = false
                             )
-                            _eventFlow.emit(UIEvent.ShowSnackbar(
-                                result.message ?: "Unknown error"
-                            ))
+                            _eventFlow.emit(
+                                UIEvent.ShowSnackbar(
+                                    result.message ?: "Unknown error"
+                                )
+                            )
                         }
                         is Resource.Loading -> {
                             _state.value = state.value.copy(
@@ -87,15 +85,16 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repo.getAllWordInfos()
                 .flowOn(Dispatchers.IO)
-                .map { it }
-                .distinctUntilChanged()
+                .map {
+                    it
+                }
                 .collect {
-                    //Log.d("TAG", ": ${it[0].word}")
-                    _distinctWords.emit(it)
+                    _distinctWords.emit(listOf(it[0]))
                 }
 
         }
-      }
+    }
+
 
     fun deleteAll(){
         repo.deleteAll()

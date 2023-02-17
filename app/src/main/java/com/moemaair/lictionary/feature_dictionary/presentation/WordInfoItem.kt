@@ -52,7 +52,7 @@ fun WordInfoItem(
     var phonetic: String? by remember {
         mutableStateOf("")
     }
-    val textPhonetic = wordInfo.phonetics.forEach{it->  phonetic = it.text}
+    val textPhonetic = wordInfo.phonetics.forEach{it ->  phonetic = it.text}
 
     Column(modifier = Modifier) {
 
@@ -61,7 +61,7 @@ fun WordInfoItem(
             horizontalArrangement = Arrangement.Start) {
             //word
             Text(
-                text = wordInfo.word,
+                text = wordInfo.word.toString(),
                 style = MaterialTheme.typography.h2,
                 modifier = Modifier
             )

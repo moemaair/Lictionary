@@ -12,5 +12,5 @@ import kotlinx.coroutines.flow.Flow
 interface WordInfoRepo {
     fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>>
     fun getAllWordInfos(): Flow<List<WordInfo>>
-    fun deleteAll():Unit
+    fun deleteAll()
 }

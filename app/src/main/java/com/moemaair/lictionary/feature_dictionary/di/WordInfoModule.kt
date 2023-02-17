@@ -9,7 +9,7 @@ import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDatabase
 import com.moemaair.lictionary.feature_dictionary.data.remote.LictionaryApi
 import com.moemaair.lictionary.feature_dictionary.data.repository.WordInfoRepoImpl
 import com.moemaair.lictionary.feature_dictionary.domain.repository.WordInfoRepo
-import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetAllWordsInRoom
+
 import com.moemaair.lictionary.feature_dictionary.domain.use_case.GetWordInfo
 import dagger.Module
 import dagger.Provides

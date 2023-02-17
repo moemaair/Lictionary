@@ -3,6 +3,7 @@ package com.moemaair.lictionary.feature_dictionary.presentation.screen.home
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,7 +42,6 @@ import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
-import com.moemaair.lictionary.feature_dictionary.presentation.screen.History
 import com.moemaair.lictionary.navigation.Screen
 import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Home(
-    navigateToHistory: () -> Unit,
     icon: Int,
     historyClicked : Boolean = false,
     onClickLogOut: () -> Unit,
@@ -125,20 +124,8 @@ fun Home(
                                 .align(Alignment.TopCenter)
                                 .padding(20.dp, 100.dp, 20.dp, 0.dp))
                             {
-
                                 items(state.wordInfoItems.size) { i ->
                                     val wordInfo = state.wordInfoItems[i]
-                                    if(i > 0) {
-                                        Text(
-                                            text = "Other Definations...",
-                                            color = if (isSystemInDarkTheme()) Color.White.copy(alpha = ContentAlpha.disabled) else Color.Black.copy(alpha = ContentAlpha.disabled),
-                                            modifier = Modifier
-                                                .padding(0.dp, 10.dp)
-                                                .align(Alignment.Center),
-                                            style = MaterialTheme.typography.subtitle2,
-                                        )
-                                        Spacer(modifier = Modifier.height(0.dp))
-                                    }
                                     WordInfoItem(
                                         wordInfo = wordInfo,
                                         audioVector
@@ -212,23 +199,16 @@ fun Home(
         drawerContent = {
             DrawerContent(
                com.moemaair.lictionary.R.drawable.man,
-                navigateToHistory = navigateToHistory,
                 onClickLogOut = onClickLogOut,
-                navController= navController
+                navController = navController
             )
         },
     )
-    LaunchedEffect(key1 = historyClicked){
-        if(historyClicked){
-            navigateToHistory()
-        }
-    }
 }
 
 @Composable
 fun DrawerContent(
     icon: Int,
-    navigateToHistory: () -> Unit,
     onClickLogOut: () -> Unit,
     navController: NavHostController
 ) {
@@ -338,18 +318,6 @@ fun DrawerContent(
 
                     )
                 }
-
-                Divider()
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 20.dp)
-                    .clickable {
-                        navigateToHistory()
-                    },
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(imageVector = Icons.Default.History, contentDescription = "History")
-                    Text(text = "History")
-                }
             }
             Divider()
         }
@@ -366,12 +334,14 @@ fun DrawerContent(
                     Text(text = "App version 1.0.0" )
                 }
                 Divider()
-                Row(modifier = Modifier.fillMaxWidth()
+                Row(modifier = Modifier
+                    .fillMaxWidth()
                     .clickable(enabled = true, onClick = {
                         onClickLogOut()
                         navController.navigate(Screen.Authentication.route)
-                }
-                ).padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    }
+                    )
+                    .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
                     Text(text = "Log out")
                 }

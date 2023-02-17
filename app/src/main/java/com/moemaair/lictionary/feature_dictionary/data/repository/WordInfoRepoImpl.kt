@@ -1,8 +1,8 @@
 package com.moemaair.lictionary.feature_dictionary.data.repository
 
+import android.util.Log
 import com.moemaair.lictionary.core.util.Resource
 import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDao
-import com.moemaair.lictionary.feature_dictionary.data.local.WordInfoDatabase
 import com.moemaair.lictionary.feature_dictionary.data.local.entity.WordInfoEntity
 import com.moemaair.lictionary.feature_dictionary.data.remote.LictionaryApi
 import com.moemaair.lictionary.feature_dictionary.domain.model.WordInfo
@@ -21,12 +21,12 @@ class WordInfoRepoImpl(
     override fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>> = flow {
         emit(Resource.Loading())
 
-        val wordInfos = dao.getWordInfos(word).map { it.toWordInfo() }
+        val wordInfos = dao.getWordInfos(word).map { it.toWordInfo()}
         emit(Resource.Loading(data = wordInfos))
 
         try {
             val remoteWordInfos = api.getWordInfo(word)
-            dao.deleteWordInfos(remoteWordInfos.map { it.word })
+            //dao.deleteWordInfos(remoteWordInfos.map { it.word })
             dao.insertWordInfos(remoteWordInfos.map { it.toWordInfoEntity() })
 
         } catch(e: HttpException) {
