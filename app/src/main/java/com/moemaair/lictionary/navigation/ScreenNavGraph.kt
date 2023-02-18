@@ -34,8 +34,9 @@ fun ScreenNavGraph(
                 navController.navigate(Screen.Home.route)
             }
         )
-        home(navController = navController)
-
+        home(
+            navController = navController
+        )
 
     }
 }

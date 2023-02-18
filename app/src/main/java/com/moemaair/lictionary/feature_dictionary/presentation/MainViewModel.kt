@@ -2,6 +2,7 @@ package com.moemaair.lictionary.feature_dictionary.presentation
 
 
 import android.util.Log
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -31,10 +32,10 @@ class MainViewModel @Inject constructor(
     var _searchQuery = mutableStateOf("")
     var searchQuery: State<String> = _searchQuery
 
-    var _darkmode = mutableStateOf(true)
+    var checkIfDarkmode = mutableStateOf(false)
 
     fun setDarkmode(darkmode: Boolean) {
-        _darkmode.value = darkmode
+        checkIfDarkmode.value = darkmode
     }
 
     private var _state = mutableStateOf(WordInfoState())
@@ -80,21 +81,6 @@ class MainViewModel @Inject constructor(
                 }.launchIn(this)
         }
     }
-
-    fun fetchAllWords() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.getAllWordInfos()
-                .flowOn(Dispatchers.IO)
-                .map {
-                    it
-                }
-                .collect {
-                    _distinctWords.emit(listOf(it[0]))
-                }
-
-        }
-    }
-
 
     fun deleteAll(){
         repo.deleteAll()

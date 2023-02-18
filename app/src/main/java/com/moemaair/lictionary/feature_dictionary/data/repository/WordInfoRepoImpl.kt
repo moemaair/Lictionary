@@ -45,10 +45,6 @@ class WordInfoRepoImpl(
         emit(Resource.Success(newWordInfos))
     }
 
-    override fun getAllWordInfos(): Flow<List<WordInfo>> = flow{
-        emit(dao.getAllWordInfos().map { it.toWordInfo() })
-    }
-
     override fun deleteAll(){
         dao.deleteAllWordInfos()
     }

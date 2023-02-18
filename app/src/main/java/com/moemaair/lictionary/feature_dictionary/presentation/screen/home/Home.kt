@@ -110,15 +110,15 @@ fun Home(
                         if(state.isLoading ) {
                             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                         }
-                        if(!isVisible){
-                            Text(text = "Try searching for a word",
-                                color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .align(Alignment.TopCenter)
-                                    .padding(top = 150.dp),
-                                textAlign = TextAlign.Center, fontSize = 14.sp)
-                        }
+//                        if(!isVisible){
+//                            Text(text = "Try searching for a word",
+//                                color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .align(Alignment.TopCenter)
+//                                    .padding(top = 150.dp),
+//                                textAlign = TextAlign.Center, fontSize = 14.sp)
+//                        }
                         else{
                             LazyColumn(modifier = Modifier
                                 .align(Alignment.TopCenter)
@@ -126,6 +126,17 @@ fun Home(
                             {
                                 items(state.wordInfoItems.size) { i ->
                                     val wordInfo = state.wordInfoItems[i]
+                                    if(i < 1) {
+                                        Text(
+                                            text = "Other Definations...",
+                                           // color = if (isSystemInDarkTheme()) Color.White.copy(alpha = ContentAlpha.disabled) else Color.Black.copy(alpha = ContentAlpha.disabled),
+                                            modifier = Modifier
+                                                .padding(0.dp, 10.dp)
+                                                .align(Alignment.Center),
+                                            style = MaterialTheme.typography.subtitle2,
+                                        )
+                                        Spacer(modifier = Modifier.height(0.dp))
+                                    }
                                     WordInfoItem(
                                         wordInfo = wordInfo,
                                         audioVector
@@ -200,7 +211,7 @@ fun Home(
             DrawerContent(
                com.moemaair.lictionary.R.drawable.man,
                 onClickLogOut = onClickLogOut,
-                navController = navController
+                navController= navController
             )
         },
     )
@@ -308,7 +319,6 @@ fun DrawerContent(
                     Switch(checked = mCheckedState.value,
                         onCheckedChange = {mCheckedState.value = it
                             viewModel.setDarkmode(mCheckedState.value)
-                            viewModel._darkmode.value = !viewModel._darkmode.value
 
                         },
                         colors = SwitchDefaults.colors(
@@ -317,6 +327,17 @@ fun DrawerContent(
                         )
 
                     )
+                }
+
+                Divider()
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 20.dp)
+                    .clickable {
+                    },
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Icon(imageVector = Icons.Default.History, contentDescription = "History")
+                    Text(text = "History")
                 }
             }
             Divider()
