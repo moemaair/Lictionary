@@ -302,7 +302,7 @@ fun DrawerContent(
                 Text(text = "Other", style = MaterialTheme.typography.h4)
                 Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
-                    Text(text = "App version 1.0.0" )
+                    Text(text = "App version 1.1.2" )
                 }
                 Divider()
                 Row(modifier = Modifier
