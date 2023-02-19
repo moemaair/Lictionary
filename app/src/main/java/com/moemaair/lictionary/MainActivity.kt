@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
         val viewModel = ViewModelProvider(this)[MainViewModel::class.java] // getting the instance of MainViewModel
 
         setContent {
-            LictionaryTheme(viewModel.checkIfDarkmode.value) {
+            LictionaryTheme {
                 val navController = rememberNavController()
                 ScreenNavGraph(
                     startDestination = getStartDestination(),

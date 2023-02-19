@@ -110,15 +110,15 @@ fun Home(
                         if(state.isLoading ) {
                             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                         }
-//                        if(!isVisible){
-//                            Text(text = "Try searching for a word",
-//                                color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .align(Alignment.TopCenter)
-//                                    .padding(top = 150.dp),
-//                                textAlign = TextAlign.Center, fontSize = 14.sp)
-//                        }
+                        if(!isVisible){
+                            Text(text = "Try searching for a word",
+                                color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.TopCenter)
+                                    .padding(top = 150.dp),
+                                textAlign = TextAlign.Center, fontSize = 14.sp)
+                        }
                         else{
                             LazyColumn(modifier = Modifier
                                 .align(Alignment.TopCenter)
@@ -126,17 +126,6 @@ fun Home(
                             {
                                 items(state.wordInfoItems.size) { i ->
                                     val wordInfo = state.wordInfoItems[i]
-                                    if(i < 1) {
-                                        Text(
-                                            text = "Other Definations...",
-                                           // color = if (isSystemInDarkTheme()) Color.White.copy(alpha = ContentAlpha.disabled) else Color.Black.copy(alpha = ContentAlpha.disabled),
-                                            modifier = Modifier
-                                                .padding(0.dp, 10.dp)
-                                                .align(Alignment.Center),
-                                            style = MaterialTheme.typography.subtitle2,
-                                        )
-                                        Spacer(modifier = Modifier.height(0.dp))
-                                    }
                                     WordInfoItem(
                                         wordInfo = wordInfo,
                                         audioVector
@@ -221,13 +210,18 @@ fun Home(
 fun DrawerContent(
     icon: Int,
     onClickLogOut: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    backgroundColor: List<Color> = listOf(
+        MaterialTheme.colors.primaryVariant,
+        MaterialTheme.colors.primary
+    )
 ) {
     var viewModel = viewModel<MainViewModel>()
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     LazyColumn(modifier = Modifier
         .fillMaxSize()
+        .background(brush = Brush.verticalGradient(backgroundColor))
         .padding(start = 10.dp)) {
         //icon image
         item {
@@ -299,50 +293,6 @@ fun DrawerContent(
                 Divider()
             }
         }
-        //setting
-
-        item {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp)) {
-                Text(text = "Setting", style = MaterialTheme.typography.h4)
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.DarkMode, contentDescription = "dark mode")
-                        Text(text = "Dark mode")
-                    }
-                    // Declaring a boolean value for storing checked state
-                    var mCheckedState = remember{ mutableStateOf(false) } // not toggled darkmode icon
-
-                    // Creating a Switch, when value changes,
-                    // it updates mCheckedState value
-                    Switch(checked = mCheckedState.value,
-                        onCheckedChange = {mCheckedState.value = it
-                            viewModel.setDarkmode(mCheckedState.value)
-
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedTrackColor = MaterialTheme.colors.primaryVariant,
-                            checkedThumbColor = MaterialTheme.colors.primary
-                        )
-
-                    )
-                }
-
-                Divider()
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 20.dp)
-                    .clickable {
-                    },
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(imageVector = Icons.Default.History, contentDescription = "History")
-                    Text(text = "History")
-                }
-            }
-            Divider()
-        }
-
         //other
         item {
 
