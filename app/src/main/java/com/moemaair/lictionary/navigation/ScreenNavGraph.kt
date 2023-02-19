@@ -30,7 +30,7 @@ fun ScreenNavGraph(
     ){
         authenticationScreen(
             navigateToHome = {
-                navController.previousBackStackEntry
+                navController.popBackStack()
                 navController.navigate(Screen.Home.route)
             }
         )
