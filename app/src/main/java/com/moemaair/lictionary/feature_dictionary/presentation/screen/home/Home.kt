@@ -51,7 +51,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun Home(
     icon: Int,
-    historyClicked : Boolean = false,
     onClickLogOut: () -> Unit,
     navController: NavHostController
 ) {
@@ -107,6 +106,7 @@ fun Home(
                         .fillMaxSize()
                     )
                     {
+
                         if(state.isLoading ) {
                             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                         }
