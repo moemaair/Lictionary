@@ -36,7 +36,7 @@ fun AuthenticationScreenContent(
                     modifier = Modifier
                 )
                 // sign in with google button
-                   Column(modifier = Modifier.fillMaxWidth().weight(10f),
+                   Column(modifier = Modifier.fillMaxWidth(),
                        verticalArrangement = Arrangement.SpaceBetween,
                        horizontalAlignment = Alignment.CenterHorizontally) {
                        GoogleButton(
@@ -47,11 +47,7 @@ fun AuthenticationScreenContent(
                 Column(modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "unlock the power of words", style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.primaryVariant,
-                        fontStyle = FontStyle.Italic
-                    )
-                    Text(text = "Lictionary", style = MaterialTheme.typography.h5)
+                    Text(text = "powered by Lictionary", style = MaterialTheme.typography.h5)
                 }
             }
 

@@ -35,6 +35,11 @@ Lictionary is a mobile dictionary application for Android devices. It allows use
 ## Screens
 <h3 align="center">Home</h3>
 
+| Authentication                                                                                 |
+|------------------------------------------------------------------------------------------------|
+| ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/authentication_gif.gif) |
+
+
 | Light mode                                                                                         | Dark mode                                                                                         |
 |----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_light_home.png ) | ![](https://github.com/moemaair/Lictionary/blob/main/lictionary_assets/lictionary_dark_home.png ) |

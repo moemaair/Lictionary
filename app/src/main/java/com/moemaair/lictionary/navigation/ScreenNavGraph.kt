@@ -1,6 +1,7 @@
 package com.moemaair.lictionary.navigation
 
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,9 +63,7 @@ fun NavGraphBuilder.authenticationScreen(
                 viewModel.signInWithMongoAtlas(
                     tokenId = tokenId,
                     onSuccess = { it->
-                        if(it){
-                            messageBarState.addSuccess("Succefully Authenticated")
-                        }
+                        messageBarState.addSuccess("Succefully Authenticated")
                         viewModel.setLoadingState(false)
                     },
                     onError = { it ->

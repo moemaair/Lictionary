@@ -2,6 +2,7 @@ package com.moemaair.lictionary.feature_dictionary.presentation.screen.home
 
 import android.content.Intent
 import android.graphics.drawable.Icon
+import android.graphics.fonts.FontStyle
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -45,6 +46,7 @@ import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
 import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -106,7 +108,6 @@ fun Home(
                         .fillMaxSize()
                     )
                     {
-
                         if(state.isLoading ) {
                             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                         }
@@ -219,109 +220,119 @@ fun DrawerContent(
     var viewModel = viewModel<MainViewModel>()
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
+    Column(modifier = Modifier
         .background(brush = Brush.verticalGradient(backgroundColor))
-        .padding(start = 10.dp)) {
-        //icon image
-        item {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
-                Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
-                    .height(100.dp)
-                    .scale(0.8f))
-                Spacer(modifier = Modifier.height(30.dp))
-                Text(text = "Account Owner", style = MaterialTheme.typography.subtitle1)
+        .padding(start = 10.dp),
+    verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            //icon image
+            item {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                    Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
+                        .height(100.dp)
+                        .scale(0.8f))
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Text(text = "Account Owner", style = MaterialTheme.typography.subtitle1)
+                }
+                Divider()
+                Spacer(modifier = Modifier.height(10.dp))
             }
-            Divider()
-            Spacer(modifier = Modifier.height(10.dp))
-        }
-
-        //support
-        item {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(top = 20.dp),
-                verticalArrangement = Arrangement.SpaceAround
-            ) {
-                Text(text = "Support", style = MaterialTheme.typography.h4)
-                //row 1 (send feedback)
-                Row(modifier = Modifier
+            //support
+            item {
+                Column(modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        val sendIntent = Intent(Intent.ACTION_SEND)
-                        sendIntent.type = "text/plain"
-                        sendIntent.putExtra(
-                            Intent.EXTRA_EMAIL,
-                            arrayOf("ibrahimohamed81@outlook.com")
+                    .wrapContentHeight()
+                    .padding(top = 20.dp),
+                    verticalArrangement = Arrangement.SpaceAround
+                ) {
+                    Text(text = "Support", style = MaterialTheme.typography.h4)
+                    //row 1 (send feedback)
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            val sendIntent = Intent(Intent.ACTION_SEND)
+                            sendIntent.type = "text/plain"
+                            sendIntent.putExtra(
+                                Intent.EXTRA_EMAIL,
+                                arrayOf("ibrahimohamed81@outlook.com")
+                            )
+                            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
+
+                            val chooser = Intent.createChooser(sendIntent, "Send Email")
+                            ContextCompat.startActivity(ctx, chooser, null)
+                        }
+                        .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
+                        Text(text = "Send Feedback")
+                    }
+                    Divider()
+                    //row 2 rate app
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 20.dp)
+                        .clickable {
+                            val openPlayStore = Intent(Intent.ACTION_VIEW)
+                            openPlayStore.data =
+                                Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                            ctx.startActivity(openPlayStore)
+                        }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "email icon")
+                        Text(text = "Rate this app")
+                    }
+                    Divider()
+                    //row 3 share app
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 20.dp)
+                        .clickable {
+                            ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                        },
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Icon(imageVector = Icons.Default.Share, contentDescription = "email icon")
+                        Text(text = "Share this app")
+                    }
+                    Divider()
+                }
+            }
+            //other
+            item {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp)) {
+                    Text(text = "Other", style = MaterialTheme.typography.h4)
+                    Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
+                        Text(text = "App version 1.1.2" )
+                    }
+                    Divider()
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(enabled = true, onClick = {
+                            onClickLogOut()
+                            navController.navigate(Screen.Authentication.route)
+                        }
                         )
-                        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
-
-                        val chooser = Intent.createChooser(sendIntent, "Send Email")
-                        ContextCompat.startActivity(ctx, chooser, null)
+                        .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
+                        Text(text = "Log out")
                     }
-                    .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
-                    Text(text = "Send Feedback")
+                    Divider()
+
+
                 }
-                Divider()
-                //row 2 rate app
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 20.dp)
-                    .clickable {
-                        val openPlayStore = Intent(Intent.ACTION_VIEW)
-                        openPlayStore.data =
-                            Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
-                        ctx.startActivity(openPlayStore)
-                    }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "email icon")
-                    Text(text = "Rate this app")
-                }
-                Divider()
-                //row 3 share app
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 20.dp)
-                    .clickable {
-                        ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
-                    },
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(imageVector = Icons.Default.Share, contentDescription = "email icon")
-                    Text(text = "Share this app")
-                }
-                Divider()
             }
         }
-        //other
-        item {
 
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp)) {
-                Text(text = "Other", style = MaterialTheme.typography.h4)
-                Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
-                    Text(text = "App version 1.1.2" )
-                }
-                Divider()
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(enabled = true, onClick = {
-                        onClickLogOut()
-                        navController.navigate(Screen.Authentication.route)
-                    }
-                    )
-                    .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
-                    Text(text = "Log out")
-                }
-                Divider()
-
-            }
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 5.dp), contentAlignment = Alignment.BottomCenter){
+            Text(text = "Unlock the power of words", style = MaterialTheme.typography.body2,
+                color = Color.White,
+                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+            )
         }
     }
-
 }
 
 @Composable

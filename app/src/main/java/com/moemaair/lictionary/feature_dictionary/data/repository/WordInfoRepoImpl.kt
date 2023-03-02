@@ -26,12 +26,11 @@ class WordInfoRepoImpl(
 
         try {
             val remoteWordInfos = api.getWordInfo(word)
-            //dao.deleteWordInfos(remoteWordInfos.map { it.word })
             dao.insertWordInfos(remoteWordInfos.map { it.toWordInfoEntity() })
 
         } catch(e: HttpException) {
             emit(Resource.Error(
-                message = "Oops, something went wrong!",
+                message = "Sorry pal, we couldn't find definitions for the word you were looking for.",
                 data = wordInfos
             ))
         } catch(e: IOException) {
