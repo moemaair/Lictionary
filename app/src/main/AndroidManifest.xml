@@ -28,6 +28,11 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <meta-data
+            android:name="CLIENT_ID"
+            android:value="${CLIENT_ID}"/>
     </application>
+
 
 </manifest>
