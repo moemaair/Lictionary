@@ -1,7 +1,6 @@
 package com.moemaair.lictionary.navigation
 
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -12,9 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants.APP_ID
-import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreen
-import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationViewModel
-import com.moemaair.lictionary.feature_dictionary.presentation.screen.home.Home
+import com.moemaair.lictionary.feature_lictionary.presentation.screen.auth.AuthenticationScreen
+import com.moemaair.lictionary.feature_lictionary.presentation.screen.auth.AuthenticationViewModel
+import com.moemaair.lictionary.feature_lictionary.presentation.screen.home.Home
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import io.realm.kotlin.mongodb.App
