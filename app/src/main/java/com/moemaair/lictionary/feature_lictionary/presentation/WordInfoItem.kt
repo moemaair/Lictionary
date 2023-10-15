@@ -3,10 +3,7 @@ package com.moemaair.lictionary.feature_lictionary.presentation
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,9 +14,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.moemaair.lictionary.feature_lictionary.domain.model.WordInfo
 import androidx.compose.foundation.Image
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import com.moemaair.lictionary.R
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 @SuppressLint("RestrictedApi")
 @Composable
 fun WordInfoItem(
@@ -51,7 +53,7 @@ fun WordInfoItem(
             //word
             Text(
                 text = wordInfo.word.toString(),
-                style = MaterialTheme.typography.h2,
+                style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier
             )
 

@@ -1,5 +1,6 @@
 package com.moemaair.lictionary.feature_lictionary.presentation.screen.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -12,6 +13,25 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +54,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
@@ -41,6 +62,8 @@ import com.moemaair.lictionary.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Home(
     icon: Int,
@@ -49,7 +72,8 @@ fun Home(
 ) {
     var viewModel: MainViewModel = hiltViewModel()
     var state = viewModel.state.value
-    val scaffoldState = rememberScaffoldState()
+    //val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val audioVector = ImageVector.vectorResource(id = icon)
 
@@ -67,12 +91,13 @@ fun Home(
             viewModel.searchQuery.value.isNotBlank()
         }
     }
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is MainViewModel.UIEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
+                    snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
@@ -81,17 +106,17 @@ fun Home(
     }
 
     Scaffold(
-        scaffoldState = scaffoldState,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AppBar("Lictionary",
-                backgroundColor = MaterialTheme.colors.primaryVariant
+                backgroundColor = MaterialTheme.colorScheme.inversePrimary
             ) {
-                coroutineScope.launch {
-                    scaffoldState.drawerState.open()
-                }
+
             }
         },
+
         content = {
+
             Column{
                 Box(modifier = Modifier.fillMaxSize()){
                     Box(modifier = Modifier
@@ -104,7 +129,7 @@ fun Home(
                         }
                         if(!isVisible){
                             Text(text = "Try searching for a word",
-                                color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
+                                color = if(isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else Color.LightGray,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .align(Alignment.TopCenter)
@@ -138,8 +163,8 @@ fun Home(
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
-                                    MaterialTheme.colors.primaryVariant,
-                                    MaterialTheme.colors.primary
+                                    MaterialTheme.colorScheme.inversePrimary,
+                                    MaterialTheme.colorScheme.primary
                                 )
                             )
                         )
@@ -167,36 +192,190 @@ fun Home(
                                         Icon(imageVector = Icons.Default.Close, contentDescription = "")
                                     }
                                 }
-                            },
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = Color.White,
-                                textColor = Color.Black,
-                                trailingIconColor = MaterialTheme.colors.primaryVariant,
-                                leadingIconColor = MaterialTheme.colors.primaryVariant,
-                                focusedIndicatorColor = Color.LightGray,
-                                cursorColor = Color.Black
-                            ),
-
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Search
-                            ),
-                            singleLine = true,
-                            maxLines = 1
+                            }
                         )
+
+//                            colors = TextFieldDefaults.textFieldColors(
+//                                backgroundColor = Color.White,
+//                                textColor = Color.Black,
+//                                trailingIconColor = MaterialTheme.colors.primaryVariant,
+//                                leadingIconColor = MaterialTheme.colors.primaryVariant,
+//                                focusedIndicatorColor = Color.LightGray,
+//                                cursorColor = Color.Black
+//                            ),
+//
+//                            keyboardOptions = KeyboardOptions(
+//                                imeAction = ImeAction.Search
+//                            ),
+//                            singleLine = true,
+//                            maxLines = 1
+//                        )
 
                     }
                 }
             }
-        },
-        drawerContent = {
-            DrawerContent(
-               com.moemaair.lictionary.R.drawable.man,
-                onClickLogOut = onClickLogOut,
-                navController= navController
+            ModalNavigationDrawerSample(
+                onClickLogOut = {
+
+                },
+                navController = navController
             )
+
         },
+
     )
 }
+
+@Composable
+fun ModalNavigationDrawerSample(
+    onClickLogOut: () -> Unit,
+    navController: NavHostController
+) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    // icons to mimic drawer destinations
+    val items = listOf(Icons.Default.Favorite, Icons.Default.Face, Icons.Default.Email)
+    val selectedItem = remember { mutableStateOf(items[0]) }
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Spacer(Modifier.height(12.dp))
+                items.forEach { item ->
+                    NavigationDrawerItem(
+                        icon = { Icon(item, contentDescription = null) },
+                        label = { Text(item.name) },
+                        selected = item == selectedItem.value,
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            selectedItem.value = item
+                        },
+                        //modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
+                }
+            }
+        },
+        content = {
+            var viewModel = viewModel<MainViewModel>()
+            var ctx = LocalContext.current
+            val scope = rememberCoroutineScope()
+            Column(modifier = Modifier
+                //.background(brush = Brush.verticalGradient(backgroundColor))
+                .padding(start = 10.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    //icon image
+                    item {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                            Image(painter = painterResource(id = R.drawable.man), contentDescription = "", modifier = Modifier
+                                .height(100.dp)
+                                .scale(0.8f))
+                            Spacer(modifier = Modifier.height(30.dp))
+                            Text(text = "Account Owner", style = MaterialTheme.typography.labelSmall)
+                        }
+                        Divider()
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+                    //support
+                    item {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(top = 20.dp),
+                            verticalArrangement = Arrangement.SpaceAround
+                        ) {
+                            Text(text = "Support", style = MaterialTheme.typography.headlineLarge)
+                            //row 1 (send feedback)
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    val sendIntent = Intent(Intent.ACTION_SEND)
+                                    sendIntent.type = "text/plain"
+                                    sendIntent.putExtra(
+                                        Intent.EXTRA_EMAIL,
+                                        arrayOf("ibrahimohamed81@outlook.com")
+                                    )
+                                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
+
+                                    val chooser = Intent.createChooser(sendIntent, "Send Email")
+                                    ContextCompat.startActivity(ctx, chooser, null)
+                                }
+                                .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
+                                Text(text = "Send Feedback")
+                            }
+                            Divider()
+                            //row 2 rate app
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 20.dp)
+                                .clickable {
+                                    val openPlayStore = Intent(Intent.ACTION_VIEW)
+                                    openPlayStore.data =
+                                        Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                                    ctx.startActivity(openPlayStore)
+                                }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "email icon")
+                                Text(text = "Rate this app")
+                            }
+                            Divider()
+                            //row 3 share app
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 20.dp)
+                                .clickable {
+                                    ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                                },
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Default.Share, contentDescription = "email icon")
+                                Text(text = "Share this app")
+                            }
+                            Divider()
+                        }
+                    }
+                    //other
+                    item {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp)) {
+                            Text(text = "Other", style = MaterialTheme.typography.headlineMedium)
+                            Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
+                                Text(text = "App version 1.1.2" )
+                            }
+                            Divider()
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(enabled = true, onClick = {
+                                    onClickLogOut()
+                                    navController.navigate(Screen.Authentication.route)
+                                }
+                                )
+                                .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
+                                Text(text = "Log out")
+                            }
+                            Divider()
+
+
+                        }
+                    }
+                }
+
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 5.dp), contentAlignment = Alignment.BottomCenter){
+                    Text(text = "Unlock the power of words", style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                    )
+                }
+            }
+        }
+    )
+}
+
 
 @Composable
 fun DrawerContent(
@@ -204,8 +383,8 @@ fun DrawerContent(
     onClickLogOut: () -> Unit,
     navController: NavHostController,
     backgroundColor: List<Color> = listOf(
-        MaterialTheme.colors.primaryVariant,
-        MaterialTheme.colors.primary
+        MaterialTheme.colorScheme.inversePrimary,
+        MaterialTheme.colorScheme.primary
     )
 ) {
     var viewModel = viewModel<MainViewModel>()
@@ -224,7 +403,7 @@ fun DrawerContent(
                         .height(100.dp)
                         .scale(0.8f))
                     Spacer(modifier = Modifier.height(30.dp))
-                    Text(text = "Account Owner", style = MaterialTheme.typography.subtitle1)
+                    Text(text = "Account Owner", style = MaterialTheme.typography.labelSmall)
                 }
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
@@ -237,7 +416,7 @@ fun DrawerContent(
                     .padding(top = 20.dp),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = "Support", style = MaterialTheme.typography.h4)
+                    Text(text = "Support", style = MaterialTheme.typography.headlineLarge)
                     //row 1 (send feedback)
                     Row(modifier = Modifier
                         .fillMaxWidth()
@@ -291,7 +470,7 @@ fun DrawerContent(
                 Column(modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 20.dp)) {
-                    Text(text = "Other", style = MaterialTheme.typography.h4)
+                    Text(text = "Other", style = MaterialTheme.typography.headlineMedium)
                     Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
                         Text(text = "App version 1.1.2" )
@@ -318,7 +497,7 @@ fun DrawerContent(
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 5.dp), contentAlignment = Alignment.BottomCenter){
-            Text(text = "Unlock the power of words", style = MaterialTheme.typography.body2,
+            Text(text = "Unlock the power of words", style = MaterialTheme.typography.bodyMedium,
                 color = Color.White,
                 fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
             )
@@ -326,33 +505,32 @@ fun DrawerContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     title : String,
     backgroundColor: Color,
     onMenuClick : () -> Unit) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     TopAppBar(
-        elevation = 7.dp,
-        backgroundColor = backgroundColor
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = { onMenuClick()}) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+        //elevation = 7.dp,
+        //backgroundColor = backgroundColor
+        title = { Text(title) },
+        navigationIcon = {
+            IconButton(onClick = { onMenuClick() }) {
+                Icon(Icons.Filled.Menu, contentDescription = null)
             }
-            Text(text = title,
-                style = MaterialTheme.typography.h3,
-                color = if(!isSystemInDarkTheme()) Color.White else Color.Black
-            )
-            Spacer(modifier = Modifier.size(24.dp))
-        }
-
-    }
+        },
+        actions = {
+            IconButton(onClick = { /* doSomething() */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = "Localized description"
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }
 

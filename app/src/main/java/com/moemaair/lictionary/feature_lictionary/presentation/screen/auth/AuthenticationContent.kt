@@ -3,8 +3,8 @@ package com.moemaair.lictionary.feature_lictionary.presentation.screen.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +44,7 @@ fun AuthenticationScreenContent(
                 Column(modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "powered by Lictionary", style = MaterialTheme.typography.h5)
+                    Text(text = "powered by Lictionary", style = MaterialTheme.typography.headlineMedium)
                 }
             }
 

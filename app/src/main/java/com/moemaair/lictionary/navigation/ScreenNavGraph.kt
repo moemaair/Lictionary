@@ -1,6 +1,7 @@
 package com.moemaair.lictionary.navigation
 
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,9 +25,11 @@ import kotlinx.coroutines.launch
 fun ScreenNavGraph(
     startDestination: String,
     navController: NavHostController) {
+
     NavHost(
         startDestination = startDestination,
         navController = navController
+
     ){
         authenticationScreen(
             navigateToHome = {
