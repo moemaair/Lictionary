@@ -39,14 +39,14 @@ fun GoogleButton(
         }
 
         Surface(
-            modifier = modifier
-                .clickable(enabled = !loadingState) { onClick() },
+            modifier = Modifier.clickable(enabled = !loadingState) { onClick() },
             shape = shape,
             border = BorderStroke(width = borderStrokeWidth, color = borderColor),
             color = backgroundColor
         ) {
             Row(
                 modifier = Modifier
+
                     .fillMaxWidth()
                     .padding(12.dp)
                     .animateContentSize(

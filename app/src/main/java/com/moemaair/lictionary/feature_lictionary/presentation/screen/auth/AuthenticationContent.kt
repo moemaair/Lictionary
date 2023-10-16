@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +42,9 @@ fun AuthenticationScreenContent(
                            onClick = onButtonClick
                        )
                    }
-                Column(modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = "powered by Lictionary", style = MaterialTheme.typography.headlineMedium)
@@ -50,6 +53,8 @@ fun AuthenticationScreenContent(
 
         }
     }
+    
+
 
 }
 

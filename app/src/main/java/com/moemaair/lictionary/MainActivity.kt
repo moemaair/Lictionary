@@ -19,7 +19,7 @@ import io.realm.kotlin.mongodb.App
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = ViewModelProvider(this)[MainViewModel::class.java] // getting the instance of MainViewModel
+        //val viewModel = ViewModelProvider(this)[MainViewModel::class.java] // getting the instance of MainViewModel
 
         setContent {
             LictionaryTheme {
@@ -37,8 +37,8 @@ class MainActivity : ComponentActivity() {
 private fun getStartDestination(): String{
     val user = App.create(APP_ID).currentUser
     return if(user != null && user.loggedIn)
-        Screen.Home.route else
-            Screen.Authentication.route
+        Screen.Authentication.route else
+        Screen.Home.route
 
 
 }

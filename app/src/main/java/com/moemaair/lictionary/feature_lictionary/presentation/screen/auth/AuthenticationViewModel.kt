@@ -3,7 +3,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.jwt.JWT
+import com.moemaair.lictionary.core.util.Constants
 import com.moemaair.lictionary.core.util.Constants.APP_ID
+import com.moemaair.lictionary.feature_lictionary.data.local.Claim
+import com.moemaair.lictionary.feature_lictionary.data.local.UserDetail
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +35,7 @@ class AuthenticationViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    App.create(APP_ID).login(
+                    App.create(Constants.APP_ID).login(
                        Credentials.jwt(tokenId)
                     ).loggedIn
 
@@ -46,6 +49,7 @@ class AuthenticationViewModel : ViewModel() {
                         onError(Exception("User is not logged in."))
                     }
                 }
+
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     onError(e)
@@ -55,4 +59,5 @@ class AuthenticationViewModel : ViewModel() {
 
 
     }
+
 }

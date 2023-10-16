@@ -5,8 +5,12 @@ import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.moemaair.lictionary.MainVm
+import com.moemaair.lictionary.core.util.Constants
 import com.moemaair.lictionary.core.util.Constants.CLIENT_ID
 import com.stevdzasan.messagebar.ContentWithMessageBar
+import com.stevdzasan.messagebar.MessageBarPosition
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
 import com.stevdzasan.onetap.OneTapSignInWithGoogle
@@ -26,9 +30,11 @@ fun AuthenticationScreen(
     navigateToHome: () -> Unit
 ) {
     //var user: GoogleUser? by remember { mutableStateOf(null) }
+    var authVm: AuthenticationViewModel = viewModel()
+    var mainVm: MainVm = viewModel()
     Scaffold(
         content = {
-            ContentWithMessageBar(messageBarState = messageBarState) {
+            ContentWithMessageBar(messageBarState = messageBarState, position = MessageBarPosition.BOTTOM) {
                 AuthenticationScreenContent(
                     loadingState = loadingState,
                     onButtonClick = onButtonClick
@@ -39,12 +45,10 @@ fun AuthenticationScreen(
 
     OneTapSignInWithGoogle(
         state = oneTapSignInState,
-        clientId = CLIENT_ID ,
+        clientId = Constants.CLIENT_ID ,
         onTokenIdReceived = { tokenId ->
-            //user = getUserFromTokenId(tokenId = tokenId)
             onTokenReceived(tokenId)
-
-            //Log.d("LOG", viewmodel.getUserFromTokenId(it).toString())
+            //Log.d("LOG", mainVm.getUserFromTokenId(tokenId).toString())
         },
         onDialogDismissed = { message ->
             onDialogDismissed(message)
