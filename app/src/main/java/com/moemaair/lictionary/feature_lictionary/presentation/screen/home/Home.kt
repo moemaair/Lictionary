@@ -5,10 +5,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -26,8 +29,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,11 +42,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.DefaultShadowColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,6 +62,9 @@ import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
+import com.moemaair.lictionary.ui.theme.AngryColor
+import com.moemaair.lictionary.ui.theme.md_theme_light_primary
+import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -107,56 +117,27 @@ fun Home(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AppBar("Lictionary",
-                backgroundColor = Color.Transparent,
+                backgroundColor = MaterialTheme.colorScheme.inversePrimary,
                 onMenuClick = {
                     isDrawerOpen = !isDrawerOpen
                 }
             )
         },
         content = {
-            Column{
-                Box(modifier = Modifier.fillMaxSize()){
-                    Box(modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxSize()
-                    )
-                    {
-                        if(state.isLoading ) {
-                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                        }
-                        if(!isVisible){
-                            Text(text = "Try searching for a word",
-                                color = if(isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else Color.LightGray,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .align(Alignment.TopCenter)
-                                    .padding(top = 150.dp),
-                                textAlign = TextAlign.Center, fontSize = 14.sp)
-                        }
-                        else{
-                            LazyColumn(modifier = Modifier
-                                .align(Alignment.TopCenter)
-                                .padding(20.dp, 100.dp, 20.dp, 0.dp))
-                            {
-                                items(state.wordInfoItems.size) { i ->
-                                    val wordInfo = state.wordInfoItems[i]
-                                    WordInfoItem(
-                                        wordInfo = wordInfo,
-                                        audioVector
-                                    )
-                                    if(i < state.wordInfoItems.size - 1) {
-                                        Divider()
-                                    }
-                                }
 
-                            }
-                        }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
 
-                    }
-                    Box(modifier = Modifier
+                , verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                /*...........................col 25%....................................................*/
+                Column(
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .align(Alignment.TopCenter)
-                        .height(90.dp)
+                        .height(0.dp)
+                        .weight(0.25f)
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
@@ -165,53 +146,110 @@ fun Home(
                                 )
                             )
                         )
-                    )
-                    {
+                )
+                {
+                    Box( modifier =  Modifier
+                        .fillMaxSize(),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
                         OutlinedTextField(
                             value = viewModel.searchQuery.value.trim(),
                             onValueChange = viewModel::onSearch,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                                .offset(0.dp, (30).dp)
-                                .padding(10.dp, 6.dp)
-                                .shadow(5.dp),
-                            placeholder = { Text(text = "Search for words...", color = Color.LightGray) },
-                            leadingIcon = { IconButton(onClick = { /*TODO*/ }) {
-                                Icon(imageVector = Icons.Default.Search, contentDescription = "")
-                            }
+                                .padding(10.dp, 4.dp)
+                                .shadow(2.dp, clip = true)
+                                .border(1.dp, Color.White),
+                            placeholder = {
+                                Text(
+                                    text = "Search for words...",
+                                    color = Color.LightGray
+                                )
+                            },
+                            leadingIcon = {
+                                IconButton(onClick = { /*TODO*/ }) {
+                                    Icon(imageVector = Icons.Default.Search, contentDescription = "")
+                                }
                             },
                             trailingIcon = {
-                                if(isVisible){
+                                if (isVisible) {
                                     IconButton(onClick = {
                                         viewModel._searchQuery.value = ""
                                     }) {
                                         Icon(imageVector = Icons.Default.Close, contentDescription = "")
                                     }
                                 }
-                            }
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Search
+                            ),
+                            singleLine = true,
+                            maxLines = 1
                         )
+                    }
 
-//                            colors = TextFieldDefaults.textFieldColors(
-//                                backgroundColor = Color.White,
-//                                textColor = Color.Black,
-//                                trailingIconColor = MaterialTheme.colors.primaryVariant,
-//                                leadingIconColor = MaterialTheme.colors.primaryVariant,
-//                                focusedIndicatorColor = Color.LightGray,
-//                                cursorColor = Color.Black
-//                            ),
-//
-//                            keyboardOptions = KeyboardOptions(
-//                                imeAction = ImeAction.Search
-//                            ),
-//                            singleLine = true,
-//                            maxLines = 1
-//                        )
+                }
+
+
+                /*...........................col 75%....................................................*/
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.75f)
+
+                ) {
+
+                    Box(modifier = Modifier.fillMaxSize().padding(15.dp)) {
+                        if (state.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .height(15.dp)
+                                    .align(Alignment.Center)
+                                ,
+                                trackColor = md_theme_light_tertiaryContainer)
+                        }
+                        if (!isVisible) {
+                            Text(
+                                text = "Try searching for a word",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center),
+
+                                textAlign = TextAlign.Center, fontSize = 14.sp
+                            )
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier
+                                // .align(Alignment.TopCenter)
+                                //.padding(20.dp, 100.dp, 20.dp, 0.dp))
+                            )
+                            {
+                                items(state.wordInfoItems.size) { i ->
+                                    val wordInfo = state.wordInfoItems[i]
+                                    WordInfoItem(
+                                        wordInfo = wordInfo,
+                                        audioVector
+                                    )
+                                    if (i < state.wordInfoItems.size - 1) {
+                                        Divider()
+                                    }
+                                }
+
+                            }
+                        }
+
+
 
                     }
+
+
+
                 }
+
             }
-            if(isDrawerOpen){
+
+            if (isDrawerOpen) {
                 ModalNavigationDrawer(
                     onClickLogOut = {
                     },
@@ -221,7 +259,13 @@ fun Home(
             }
             drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
 
-        },
+
+
+
+
+        }
+
+
 
     )
 }
@@ -265,10 +309,14 @@ fun DrawerContent(
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     Column(modifier = Modifier
+        .fillMaxWidth(0.75f)
+        .fillMaxHeight()
         .background(Color.White),
     verticalArrangement = Arrangement.SpaceBetween
     ) {
-        LazyColumn(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
+        LazyColumn(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)) {
             item {
                 Spacer(modifier = Modifier.height(50.dp))
             }
@@ -404,12 +452,15 @@ fun AppBar(
         actions = {
             IconButton(onClick = { /* doSomething() */ }) {
                 Icon(
-                    imageVector = Icons.Filled.Favorite,
+                    imageVector = Icons.Default.MoreVert,
                     contentDescription = "Localized description"
                 )
             }
         },
-        scrollBehavior = scrollBehavior
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        scrollBehavior = null
     )
 }
 
