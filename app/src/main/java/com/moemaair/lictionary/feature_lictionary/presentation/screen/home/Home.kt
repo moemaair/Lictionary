@@ -107,7 +107,7 @@ fun Home(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AppBar("Lictionary",
-                backgroundColor = MaterialTheme.colorScheme.inversePrimary,
+                backgroundColor = Color.Transparent,
                 onMenuClick = {
                     isDrawerOpen = !isDrawerOpen
                 }
@@ -241,7 +241,6 @@ fun ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             DrawerContent(
-                modifier = Modifier.padding(50.dp,10.dp),
                 R.drawable.man,
                 onClickLogOut = onClickLogOut,
                 navController = navController
@@ -258,24 +257,21 @@ fun ModalNavigationDrawer(
 /*...........................DrawerContent....................................................*/
 @Composable
 fun DrawerContent(
-    modifier: Modifier,
     icon: Int,
     onClickLogOut: () -> Unit,
     navController: NavHostController,
-    backgroundColor: List<Color> = listOf(
-        MaterialTheme.colorScheme.inversePrimary,
-        MaterialTheme.colorScheme.primary
-    )
 ) {
     var viewModel = viewModel<MainViewModel>()
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     Column(modifier = Modifier
-        .background(brush = Brush.verticalGradient(backgroundColor))
-        .padding(start = 10.dp),
+        .background(Color.White),
     verticalArrangement = Arrangement.SpaceBetween
     ) {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        LazyColumn(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
+            item {
+                Spacer(modifier = Modifier.height(50.dp))
+            }
             //icon image
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
@@ -283,7 +279,10 @@ fun DrawerContent(
                         .height(100.dp)
                         .scale(0.8f))
                     Spacer(modifier = Modifier.height(30.dp))
-                    Text(text = "Account Owner", style = MaterialTheme.typography.labelSmall)
+                    Column {
+                        Text(text = "mohamed Ibrahim", style = MaterialTheme.typography.titleSmall)
+                        Text(text = "ibrahimohamed81@outlook.com", style = MaterialTheme.typography.labelSmall)
+                    }
                 }
                 Divider()
                 Spacer(modifier = Modifier.height(10.dp))
@@ -293,10 +292,10 @@ fun DrawerContent(
                 Column(modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = 20.dp),
+                    .padding(top = 15.dp),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = "Support", style = MaterialTheme.typography.headlineLarge)
+                    Text(text = "Support", style = MaterialTheme.typography.headlineSmall)
                     //row 1 (send feedback)
                     Row(modifier = Modifier
                         .fillMaxWidth()
@@ -313,7 +312,7 @@ fun DrawerContent(
                             ContextCompat.startActivity(ctx, chooser, null)
                         }
                         .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.Email, contentDescription = "email icon")
+                        Icon(imageVector = Icons.Filled.Email, contentDescription = "email icon")
                         Text(text = "Send Feedback")
                     }
                     Divider()
@@ -327,7 +326,7 @@ fun DrawerContent(
                                 Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
                             ctx.startActivity(openPlayStore)
                         }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "email icon")
+                        Icon(imageVector = Icons.Filled.ThumbUp, contentDescription = "email icon")
                         Text(text = "Rate this app")
                     }
                     Divider()
@@ -339,7 +338,7 @@ fun DrawerContent(
                             ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
                         },
                         horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.Share, contentDescription = "email icon")
+                        Icon(imageVector = Icons.Filled.Share, contentDescription = "email icon")
                         Text(text = "Share this app")
                     }
                     Divider()
@@ -349,11 +348,11 @@ fun DrawerContent(
             item {
                 Column(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp)) {
-                    Text(text = "Other", style = MaterialTheme.typography.headlineMedium)
+                    .padding(top = 15.dp)) {
+                    Text(text = "Other", style = MaterialTheme.typography.headlineSmall)
                     Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
-                        Text(text = "App version 1.1.2" )
+                        Icon(imageVector = Icons.Filled.Info, contentDescription = "dark mode")
+                        Text(text = "App version 1.2.2" )
                     }
                     Divider()
                     Row(modifier = Modifier
@@ -364,12 +363,10 @@ fun DrawerContent(
                         }
                         )
                         .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
+                        Icon(imageVector = Icons.Filled.PowerSettingsNew, contentDescription = "log out")
                         Text(text = "Log out")
                     }
                     Divider()
-
-
                 }
             }
         }
@@ -393,7 +390,7 @@ fun AppBar(
     title : String,
     backgroundColor: Color,
     onMenuClick : () -> Unit) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(canScroll = { true })
 
     TopAppBar(
         //elevation = 7.dp,
