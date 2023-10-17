@@ -47,7 +47,7 @@ fun AuthenticationScreenContent(
                     .padding(bottom = 10.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "powered by Lictionary", style = MaterialTheme.typography.headlineMedium)
+                    Text(text = "powered by Lictionary", style = MaterialTheme.typography.labelMedium)
                 }
             }
 

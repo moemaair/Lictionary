@@ -11,10 +11,12 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -37,12 +39,14 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.DefaultShadowColor
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -63,6 +67,7 @@ import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.ui.theme.AngryColor
+import com.moemaair.lictionary.ui.theme.md_theme_light_onTertiary
 import com.moemaair.lictionary.ui.theme.md_theme_light_primary
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
 import kotlinx.coroutines.flow.collectLatest
@@ -137,7 +142,7 @@ fun Home(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(0.dp)
-                        .weight(0.25f)
+                        .weight(0.6f)
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
@@ -149,7 +154,8 @@ fun Home(
                 )
                 {
                     Box( modifier =  Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(10.dp, 4.dp),
                         contentAlignment = Alignment.BottomCenter
                     ) {
                         OutlinedTextField(
@@ -157,13 +163,14 @@ fun Home(
                             onValueChange = viewModel::onSearch,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(10.dp, 4.dp)
-                                .shadow(2.dp, clip = true)
-                                .border(1.dp, Color.White),
+                                .clip(shape = RoundedCornerShape(100.dp))
+
+                                .background(Color.White)
+                                .padding(10.dp, 2.dp),
                             placeholder = {
                                 Text(
                                     text = "Search for words...",
-                                    color = Color.LightGray
+                                    color = Color.LightGray, style = MaterialTheme.typography.labelMedium
                                 )
                             },
                             leadingIcon = {
@@ -180,12 +187,17 @@ fun Home(
                                     }
                                 }
                             },
+
                             keyboardOptions = KeyboardOptions(
                                 imeAction = ImeAction.Search
                             ),
                             singleLine = true,
-                            maxLines = 1
+                            maxLines = 1,
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedBorderColor = Color.Transparent)
                         )
+
                     }
 
                 }
@@ -196,11 +208,13 @@ fun Home(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.75f)
+                        .weight(0.4f)
 
                 ) {
 
-                    Box(modifier = Modifier.fillMaxSize().padding(15.dp)) {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(15.dp)) {
                         if (state.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier
@@ -310,8 +324,8 @@ fun DrawerContent(
     val scope = rememberCoroutineScope()
     Column(modifier = Modifier
         .fillMaxWidth(0.75f)
-        .fillMaxHeight()
-        .background(Color.White),
+        .background(MaterialTheme.colorScheme.background)
+        .fillMaxHeight(),
     verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyColumn(modifier = Modifier
@@ -322,9 +336,9 @@ fun DrawerContent(
             }
             //icon image
             item {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier.fillMaxWidth().padding(top = 15.dp), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
                     Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
-                        .height(100.dp)
+                        .height(70.dp)
                         .scale(0.8f))
                     Spacer(modifier = Modifier.height(30.dp))
                     Column {
@@ -333,7 +347,7 @@ fun DrawerContent(
                     }
                 }
                 Divider()
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(7.dp))
             }
             //support
             item {
@@ -343,7 +357,7 @@ fun DrawerContent(
                     .padding(top = 15.dp),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = "Support", style = MaterialTheme.typography.headlineSmall)
+                    Text(text = "SUPPORT", style = MaterialTheme.typography.titleMedium)
                     //row 1 (send feedback)
                     Row(modifier = Modifier
                         .fillMaxWidth()
@@ -361,7 +375,7 @@ fun DrawerContent(
                         }
                         .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         Icon(imageVector = Icons.Filled.Email, contentDescription = "email icon")
-                        Text(text = "Send Feedback")
+                        Text(text = "Send Feedback", style = MaterialTheme.typography.titleSmall)
                     }
                     Divider()
                     //row 2 rate app
@@ -387,7 +401,7 @@ fun DrawerContent(
                         },
                         horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         Icon(imageVector = Icons.Filled.Share, contentDescription = "email icon")
-                        Text(text = "Share this app")
+                        Text(text = "Share this app", style = MaterialTheme.typography.titleMedium)
                     }
                     Divider()
                 }
@@ -397,10 +411,10 @@ fun DrawerContent(
                 Column(modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 15.dp)) {
-                    Text(text = "Other", style = MaterialTheme.typography.headlineSmall)
+                    Text(text = "OTHER", style = MaterialTheme.typography.titleMedium)
                     Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         Icon(imageVector = Icons.Filled.Info, contentDescription = "dark mode")
-                        Text(text = "App version 1.2.2" )
+                        Text(text = "App version 1.2.2", style = MaterialTheme.typography.titleMedium )
                     }
                     Divider()
                     Row(modifier = Modifier
@@ -411,8 +425,8 @@ fun DrawerContent(
                         }
                         )
                         .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Filled.PowerSettingsNew, contentDescription = "log out")
-                        Text(text = "Log out")
+                        Icon(imageVector = Icons.Filled.Info, tint = AngryColor, contentDescription = "log out")
+                        Text(text = "Log out", color = AngryColor , style = MaterialTheme.typography.titleMedium)
                     }
                     Divider()
                 }
@@ -440,20 +454,25 @@ fun AppBar(
     onMenuClick : () -> Unit) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(canScroll = { true })
 
-    TopAppBar(
+    CenterAlignedTopAppBar(
         //elevation = 7.dp,
         //backgroundColor = backgroundColor
-        title = { Text(title) },
+        title = { 
+                Text(text = title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.background)
+        },
+        modifier = Modifier.fillMaxWidth()
+        ,
         navigationIcon = {
             IconButton(onClick = { onMenuClick() }) {
-                Icon(Icons.Filled.Menu, contentDescription = null)
+                Icon(Icons.Filled.Menu, tint = MaterialTheme.colorScheme.background, contentDescription = null)
             }
         },
         actions = {
             IconButton(onClick = { /* doSomething() */ }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
-                    contentDescription = "Localized description"
+                    contentDescription = "Localized description",
+                    tint = MaterialTheme.colorScheme.background
                 )
             }
         },

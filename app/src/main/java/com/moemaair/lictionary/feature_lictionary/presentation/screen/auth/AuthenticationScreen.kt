@@ -20,16 +20,15 @@ import com.stevdzasan.onetap.OneTapSignInWithGoogle
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AuthenticationScreen(
-    authenticated: Boolean,
+    authenticated : Boolean,
     oneTapSignInState: OneTapSignInState, // library state for one tap google sign in
     messageBarState: MessageBarState, // library state with predefined data- { Snackbar }
     onDialogDismissed: (String) -> Unit,
     onTokenReceived: (String) -> Unit,
     loadingState: Boolean,
     onButtonClick: () -> Unit,
-    navigateToHome: () -> Unit
+    navigateToHome: ()-> Unit
 ) {
-    //var user: GoogleUser? by remember { mutableStateOf(null) }
     var authVm: AuthenticationViewModel = viewModel()
     var mainVm: MainVm = viewModel()
     Scaffold(
@@ -45,21 +44,20 @@ fun AuthenticationScreen(
 
     OneTapSignInWithGoogle(
         state = oneTapSignInState,
-        clientId = Constants.CLIENT_ID ,
-        onTokenIdReceived = { tokenId ->
-            onTokenReceived(tokenId)
-            //Log.d("LOG", mainVm.getUserFromTokenId(tokenId).toString())
+        clientId = CLIENT_ID ,
+        onTokenIdReceived = {it
+            onTokenReceived(it)
+            Log.d("LOG", mainVm.getUserFromTokenId(it).toString())
+            Log.d("LOG", it)
         },
-        onDialogDismissed = { message ->
+        onDialogDismissed = {message->
             onDialogDismissed(message)
         }
     )
-
     LaunchedEffect(key1 = authenticated){
         if(authenticated){
             // navigate to homescreen only when authenticate is true
             navigateToHome()
         }
     }
-    
 }

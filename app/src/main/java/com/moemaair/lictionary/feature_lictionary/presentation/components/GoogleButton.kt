@@ -46,7 +46,6 @@ fun GoogleButton(
         ) {
             Row(
                 modifier = Modifier
-
                     .fillMaxWidth()
                     .padding(12.dp)
                     .animateContentSize(

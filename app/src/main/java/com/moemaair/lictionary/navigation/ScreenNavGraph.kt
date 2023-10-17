@@ -66,6 +66,7 @@ fun NavGraphBuilder.authenticationScreen(
             authenticated = authenticated,
             oneTapSignInState = oneTapSignInState,
             messageBarState = messageBarState,
+            loadingState = oneTapSignInState.opened,
             onDialogDismissed = { message->
                 messageBarState.addError(Exception(message))
 
@@ -86,7 +87,6 @@ fun NavGraphBuilder.authenticationScreen(
                     }
                 )
             },
-            loadingState = loadingState,
             onButtonClick = {
                 oneTapSignInState.open()
                 viewModel.setLoadingState(true)
