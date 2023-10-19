@@ -5,21 +5,25 @@ import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.MainVm
 import com.moemaair.lictionary.core.util.Constants
 import com.moemaair.lictionary.core.util.Constants.CLIENT_ID
+import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
+import com.moemaair.lictionary.feature_lictionary.domain.repository.DataStoreOperations
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarPosition
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
 import com.stevdzasan.onetap.OneTapSignInWithGoogle
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AuthenticationScreen(
+fun AuthenticationScreen(     // where we have tokenid
     authenticated : Boolean,
     oneTapSignInState: OneTapSignInState, // library state for one tap google sign in
     messageBarState: MessageBarState, // library state with predefined data- { Snackbar }
@@ -29,8 +33,13 @@ fun AuthenticationScreen(
     onButtonClick: () -> Unit,
     navigateToHome: ()-> Unit
 ) {
+    var context = LocalContext.current
+    var scope = rememberCoroutineScope()
+
     var authVm: AuthenticationViewModel = viewModel()
-    var mainVm: MainVm = viewModel()
+    var mainVm: MainVm = MainVm()
+    val token by DataStoreOperationsImpl(context).readTokenId().collectAsState(initial = "loading")
+
     Scaffold(
         content = {
             ContentWithMessageBar(messageBarState = messageBarState, position = MessageBarPosition.BOTTOM) {
@@ -47,8 +56,11 @@ fun AuthenticationScreen(
         clientId = CLIENT_ID ,
         onTokenIdReceived = {it
             onTokenReceived(it)
-            Log.d("LOG", mainVm.getUserFromTokenId(it).toString())
-            Log.d("LOG", it)
+           scope.launch {
+               DataStoreOperationsImpl(context).getTokenId(tokeid = it)
+               Log.d("DS", token)
+           }
+            //Log.d("LOG", mainVm.getUserFromTokenId(it).picture.toString())
         },
         onDialogDismissed = {message->
             onDialogDismissed(message)

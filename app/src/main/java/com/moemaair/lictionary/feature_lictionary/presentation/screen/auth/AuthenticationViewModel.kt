@@ -1,9 +1,12 @@
 package com.moemaair.lictionary.feature_lictionary.presentation.screen.auth
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moemaair.lictionary.core.util.Constants.APP_ID
+import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.Credentials
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +30,8 @@ class AuthenticationViewModel : ViewModel() {
     fun signInWithMongoAtlas(
         tokenId: String,
         onSuccess: (Boolean) -> Unit,
-        onError: (Exception) -> Unit
+        onError: (Exception) -> Unit,
+        context: Context
     ) {
         viewModelScope.launch {
 
@@ -36,8 +40,10 @@ class AuthenticationViewModel : ViewModel() {
                     App.create(APP_ID).login(
                       Credentials.jwt(tokenId)
                     ).loggedIn
-
                 }
+
+                //Log.i("LOG2", "tokenid: ${DataStoreOperationsImpl(context).getTokenId(tokenId)}")
+
                 withContext(Dispatchers.Main) {
                     if (result) {
                         onSuccess(result)

@@ -3,5 +3,5 @@ data class UserDetail (
     val email: String?,
     val fullName: String?,
     val picture: String?,
-    val sub: String?
+
 )

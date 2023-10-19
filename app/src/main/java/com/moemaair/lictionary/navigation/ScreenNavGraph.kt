@@ -4,6 +4,7 @@ package com.moemaair.lictionary.navigation
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
@@ -14,9 +15,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.auth0.android.jwt.JWT
+import com.moemaair.lictionary.MainVm
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.core.util.Constants.WRITE_SCREEN_ARGUMENT_KEY
+import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
 import com.moemaair.lictionary.feature_lictionary.presentation.screen.auth.AuthenticationScreen
 import com.moemaair.lictionary.feature_lictionary.presentation.screen.auth.AuthenticationViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.screen.home.Home
@@ -54,26 +58,34 @@ fun ScreenNavGraph(
 fun NavGraphBuilder.authenticationScreen(
     navigateToHome: () -> Unit
 ){
+
     composable(route = Screen.Authentication.route) {
+        var context = LocalContext.current
+        val tokenid by DataStoreOperationsImpl(context).readTokenId().collectAsState(initial = "loading")
         val viewModel: AuthenticationViewModel = viewModel()
+        val mainVm: MainVm = MainVm()
         val authenticated by viewModel.authenticated
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
         val loadingState by viewModel.loadingState
 
-        var context = LocalContext.current
+
+        //Log.i("DS", mainVm.getUserFromTokenId(tokenid, jwt.header.toString(), jwt.signature.toString()).toString())
         AuthenticationScreen(
             authenticated = authenticated,
             oneTapSignInState = oneTapSignInState,
             messageBarState = messageBarState,
             loadingState = oneTapSignInState.opened,
             onDialogDismissed = { message->
+
                 messageBarState.addError(Exception(message))
 
             },
             onTokenReceived ={ tokenId->
+
                 viewModel.signInWithMongoAtlas(
                     tokenId = tokenId,
+
                     onSuccess = { it->
                         if(it){
                             messageBarState.addSuccess("Succefully Authenticated")
@@ -81,10 +93,11 @@ fun NavGraphBuilder.authenticationScreen(
                         viewModel.setLoadingState(false)
                     },
                     onError = { it ->
-                        Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+
                         messageBarState.addError(it)
                         viewModel.setLoadingState(true)
-                    }
+                    },
+                    context = context
                 )
             },
             onButtonClick = {
@@ -99,7 +112,9 @@ fun NavGraphBuilder.authenticationScreen(
 fun NavGraphBuilder.home(
     navController: NavHostController
 ){
+
     composable(route = Screen.Home.route){
+        val viewModel: AuthenticationViewModel = viewModel()
         val scope = rememberCoroutineScope()
        Home(
            icon = R.drawable.audio_icon,
@@ -108,7 +123,8 @@ fun NavGraphBuilder.home(
                    App.create(APP_ID).currentUser?.logOut()
                }
            },
-           navController = navController
+           navController = navController,
+
        )
     }
 }

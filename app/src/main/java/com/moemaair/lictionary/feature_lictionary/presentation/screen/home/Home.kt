@@ -3,6 +3,8 @@ package com.moemaair.lictionary.feature_lictionary.presentation.screen.home
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -59,10 +61,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.moemaair.lictionary.MainVm
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.shareApp
+import com.moemaair.lictionary.feature_lictionary.data.local.Claim
+import com.moemaair.lictionary.feature_lictionary.data.local.UserDetail
+import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
+import com.moemaair.lictionary.feature_lictionary.presentation.LegoLottie
 import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
@@ -70,7 +78,11 @@ import com.moemaair.lictionary.ui.theme.AngryColor
 import com.moemaair.lictionary.ui.theme.md_theme_light_onTertiary
 import com.moemaair.lictionary.ui.theme.md_theme_light_primary
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
+import com.stevdzasan.onetap.getUserFromTokenId
+import io.realm.kotlin.mongodb.Credentials
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 /*...........................Home....................................................*/
@@ -98,6 +110,7 @@ fun Home(
     val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current.applicationContext
 
+
     val isVisible by remember {
         derivedStateOf {
             viewModel.searchQuery.value.isNotBlank()
@@ -107,6 +120,8 @@ fun Home(
     var isDrawerOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
+
+
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is MainViewModel.UIEvent.ShowSnackbar -> {
@@ -125,7 +140,9 @@ fun Home(
                 backgroundColor = MaterialTheme.colorScheme.inversePrimary,
                 onMenuClick = {
                     isDrawerOpen = !isDrawerOpen
-                }
+                },
+                onClickLogOut = { onClickLogOut()},
+                navController = navController
             )
         },
         content = {
@@ -142,7 +159,7 @@ fun Home(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(0.dp)
-                        .weight(0.6f)
+                        .weight(0.25f)
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
@@ -153,7 +170,7 @@ fun Home(
                         )
                 )
                 {
-                    Box( modifier =  Modifier
+                    Box( modifier = Modifier
                         .fillMaxSize()
                         .padding(10.dp, 4.dp),
                         contentAlignment = Alignment.BottomCenter
@@ -208,7 +225,7 @@ fun Home(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.4f)
+                        .weight(0.75f)
 
                 ) {
 
@@ -224,8 +241,9 @@ fun Home(
                                 trackColor = md_theme_light_tertiaryContainer)
                         }
                         if (!isVisible) {
+                            LegoLottie()
                             Text(
-                                text = "Try searching for a word",
+                                text = "Try searching for a word ",
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .align(Alignment.Center),
@@ -320,8 +338,18 @@ fun DrawerContent(
     navController: NavHostController,
 ) {
     var viewModel = viewModel<MainViewModel>()
+    var mainVm: MainVm = MainVm()
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
+    val tokenid by DataStoreOperationsImpl(ctx).readTokenId().collectAsState(initial = "loading")
+    var getFullname = ""
+    LaunchedEffect(true){
+        //getFullname = mainVm.getUserFromTokenId(tokenid).fullName.toString()
+        //Toast.makeText(ctx, mainVm.getUserFromTokenId(tokenid).fullName.toString(), Toast.LENGTH_SHORT).show()
+        Log.i("LOG", getUserFromTokenId(tokenid).toString())
+    }
+
+
     Column(modifier = Modifier
         .fillMaxWidth(0.75f)
         .background(MaterialTheme.colorScheme.background)
@@ -336,14 +364,16 @@ fun DrawerContent(
             }
             //icon image
             item {
-                Row(modifier = Modifier.fillMaxWidth().padding(top = 15.dp), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 15.dp), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
                     Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
                         .height(70.dp)
                         .scale(0.8f))
                     Spacer(modifier = Modifier.height(30.dp))
                     Column {
-                        Text(text = "mohamed Ibrahim", style = MaterialTheme.typography.titleSmall)
-                        Text(text = "ibrahimohamed81@outlook.com", style = MaterialTheme.typography.labelSmall)
+                        Text(text = mainVm.getUserFromTokenId(tokenid).fullName.toString(), style = MaterialTheme.typography.titleSmall)
+                        //Text(text = mainvm.getUserFromTokenId(token).email.toString(), style = MaterialTheme.typography.labelSmall)
                     }
                 }
                 Divider()
@@ -420,7 +450,7 @@ fun DrawerContent(
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .clickable(enabled = true, onClick = {
-                            onClickLogOut()
+                            //onClickLogOut()
                             navController.navigate(Screen.Authentication.route)
                         }
                         )
@@ -451,7 +481,10 @@ fun DrawerContent(
 fun AppBar(
     title : String,
     backgroundColor: Color,
-    onMenuClick : () -> Unit) {
+    onMenuClick : () -> Unit,
+    onClickLogOut: () -> Unit,
+    navController: NavHostController
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(canScroll = { true })
 
     CenterAlignedTopAppBar(
@@ -468,7 +501,10 @@ fun AppBar(
             }
         },
         actions = {
-            IconButton(onClick = { /* doSomething() */ }) {
+            IconButton(onClick = {
+                onClickLogOut()
+                navController.navigate(Screen.Authentication.route)
+            }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "Localized description",
@@ -479,7 +515,7 @@ fun AppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
-        scrollBehavior = null
+        scrollBehavior = scrollBehavior
     )
 }
 
