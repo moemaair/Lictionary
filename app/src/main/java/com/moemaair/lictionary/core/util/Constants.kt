@@ -6,6 +6,9 @@ object Constants {
     // From mongodb atlas of Project Lictionary
     const val APP_ID = BuildConfig.APP_ID
     const val CLIENT_ID = BuildConfig.CLIENT_ID
+    const val EMAIL = "email"
+    const val Fullname = "fullname"
+    const val PREFERENCE_NAME = "pref"
 
 
     const val WRITE_SCREEN_ARGUMENT_KEY= "lictionaryId"
