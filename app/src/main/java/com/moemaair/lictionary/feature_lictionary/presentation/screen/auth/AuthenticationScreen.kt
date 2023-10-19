@@ -1,24 +1,21 @@
 package com.moemaair.lictionary.feature_lictionary.presentation.screen.auth
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.moemaair.lictionary.MainVm
-import com.moemaair.lictionary.core.util.Constants
 import com.moemaair.lictionary.core.util.Constants.CLIENT_ID
 import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
-import com.moemaair.lictionary.feature_lictionary.domain.repository.DataStoreOperations
 import com.stevdzasan.messagebar.ContentWithMessageBar
 import com.stevdzasan.messagebar.MessageBarPosition
 import com.stevdzasan.messagebar.MessageBarState
 import com.stevdzasan.onetap.OneTapSignInState
 import com.stevdzasan.onetap.OneTapSignInWithGoogle
+import com.stevdzasan.onetap.getUserFromTokenId
 import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -37,8 +34,8 @@ fun AuthenticationScreen(     // where we have tokenid
     var scope = rememberCoroutineScope()
 
     var authVm: AuthenticationViewModel = viewModel()
-    var mainVm: MainVm = MainVm()
-    val token by DataStoreOperationsImpl(context).readTokenId().collectAsState(initial = "loading")
+    var mainVm: MainVm = viewModel()
+
 
     Scaffold(
         content = {
@@ -57,10 +54,10 @@ fun AuthenticationScreen(     // where we have tokenid
         onTokenIdReceived = {it
             onTokenReceived(it)
            scope.launch {
-               DataStoreOperationsImpl(context).getTokenId(tokeid = it)
-               Log.d("DS", token)
+               DataStoreOperationsImpl(context).getEmailofUser(getUserFromTokenId(it).email.toString())
+               DataStoreOperationsImpl(context).getFullnameofUser(getUserFromTokenId(it).fullName.toString())
+
            }
-            //Log.d("LOG", mainVm.getUserFromTokenId(it).picture.toString())
         },
         onDialogDismissed = {message->
             onDialogDismissed(message)
@@ -70,6 +67,7 @@ fun AuthenticationScreen(     // where we have tokenid
         if(authenticated){
             // navigate to homescreen only when authenticate is true
             navigateToHome()
+
         }
     }
 }

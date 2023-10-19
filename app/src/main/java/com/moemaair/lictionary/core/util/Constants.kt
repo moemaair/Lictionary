@@ -7,7 +7,7 @@ object Constants {
     const val APP_ID = BuildConfig.APP_ID
     const val CLIENT_ID = BuildConfig.CLIENT_ID
     const val EMAIL = "email"
-    const val Fullname = "fullname"
+    const val FULLNAME = "fullname"
     const val PREFERENCE_NAME = "pref"
 
 

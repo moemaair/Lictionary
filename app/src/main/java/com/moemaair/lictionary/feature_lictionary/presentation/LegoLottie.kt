@@ -1,5 +1,6 @@
 package com.moemaair.lictionary.feature_lictionary.presentation
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import com.airbnb.lottie.compose.*
 
 @Composable
 fun LegoLottie(
+
 ) {
     val compositionResult: LottieCompositionResult =
         rememberLottieComposition(LottieCompositionSpec.Asset("lottie/Lottie_Lego.json"))
@@ -27,18 +29,11 @@ fun LegoLottie(
         speed = 1.0f
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LottieAnimation(
-            compositionResult.value,
-            progress,
-            modifier = Modifier.size(200.dp)
-        )
-
-    }
+    LottieAnimation(
+        compositionResult.value,
+        progress,
+        modifier = Modifier.height(100.dp)
+    )
 
 
 }

@@ -7,11 +7,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.moemaair.lictionary.MainVm
-import com.moemaair.lictionary.core.util.Constants
 import com.moemaair.lictionary.core.util.Constants.EMAIL
-import com.moemaair.lictionary.core.util.Constants.Fullname
+import com.moemaair.lictionary.core.util.Constants.FULLNAME
 import com.moemaair.lictionary.core.util.Constants.PREFERENCE_NAME
 import com.moemaair.lictionary.feature_lictionary.domain.repository.DataStoreOperations
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +23,7 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
 
     private object PreferencesKey {
         val email = stringPreferencesKey(name = EMAIL)
-        val fullname = stringPreferencesKey(name = Fullname)
+        val fullname = stringPreferencesKey(name = FULLNAME)
     }
     private val dataStore = context.dataStore
 

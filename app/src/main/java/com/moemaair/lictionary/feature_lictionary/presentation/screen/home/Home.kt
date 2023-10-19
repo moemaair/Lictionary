@@ -1,15 +1,12 @@
 package com.moemaair.lictionary.feature_lictionary.presentation.screen.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,21 +31,16 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.DefaultShadowColor
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -60,31 +52,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.moemaair.lictionary.MainVm
 import com.moemaair.lictionary.R
+import com.moemaair.lictionary.core.util.Constants
 import com.moemaair.lictionary.core.util.shareApp
-import com.moemaair.lictionary.feature_lictionary.data.local.Claim
-import com.moemaair.lictionary.feature_lictionary.data.local.UserDetail
 import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
 import com.moemaair.lictionary.feature_lictionary.presentation.LegoLottie
 import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.ui.theme.AngryColor
-import com.moemaair.lictionary.ui.theme.md_theme_light_onTertiary
-import com.moemaair.lictionary.ui.theme.md_theme_light_primary
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
-import com.stevdzasan.onetap.getUserFromTokenId
-import io.realm.kotlin.mongodb.Credentials
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
-
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCE_NAME) // name of datastore
 /*...........................Home....................................................*/
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
@@ -118,6 +104,10 @@ fun Home(
     }
     var drawerState = rememberDrawerState(DrawerValue.Closed)
     var isDrawerOpen by remember { mutableStateOf(false) }
+
+    val email by DataStoreOperationsImpl(context).readEmailofUser().collectAsState(initial = Constants.EMAIL)
+    val fullname by DataStoreOperationsImpl(context).readFullnameofUser().collectAsState(initial = Constants.FULLNAME)
+
 
     LaunchedEffect(key1 = true) {
 
@@ -170,50 +160,55 @@ fun Home(
                         )
                 )
                 {
+
                     Box( modifier = Modifier
                         .fillMaxSize()
                         .padding(10.dp, 4.dp),
                         contentAlignment = Alignment.BottomCenter
                     ) {
-                        OutlinedTextField(
-                            value = viewModel.searchQuery.value.trim(),
-                            onValueChange = viewModel::onSearch,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(shape = RoundedCornerShape(100.dp))
+                        Column {
+                            Text(text = "Hello, $fullname")
+                            Spacer(modifier = Modifier.height(30.dp))
+                            OutlinedTextField(
+                                value = viewModel.searchQuery.value.trim(),
+                                onValueChange = viewModel::onSearch,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(shape = RoundedCornerShape(100.dp))
 
-                                .background(Color.White)
-                                .padding(10.dp, 2.dp),
-                            placeholder = {
-                                Text(
-                                    text = "Search for words...",
-                                    color = Color.LightGray, style = MaterialTheme.typography.labelMedium
-                                )
-                            },
-                            leadingIcon = {
-                                IconButton(onClick = { /*TODO*/ }) {
-                                    Icon(imageVector = Icons.Default.Search, contentDescription = "")
-                                }
-                            },
-                            trailingIcon = {
-                                if (isVisible) {
-                                    IconButton(onClick = {
-                                        viewModel._searchQuery.value = ""
-                                    }) {
-                                        Icon(imageVector = Icons.Default.Close, contentDescription = "")
+                                    .background(Color.White)
+                                    .padding(10.dp, 2.dp),
+                                placeholder = {
+                                    Text(
+                                        text = "Search for words...",
+                                        color = Color.LightGray, style = MaterialTheme.typography.labelMedium
+                                    )
+                                },
+                                leadingIcon = {
+                                    IconButton(onClick = { /*TODO*/ }) {
+                                        Icon(imageVector = Icons.Default.Search, contentDescription = "")
                                     }
-                                }
-                            },
+                                },
+                                trailingIcon = {
+                                    if (isVisible) {
+                                        IconButton(onClick = {
+                                            viewModel._searchQuery.value = ""
+                                        }) {
+                                            Icon(imageVector = Icons.Default.Close, contentDescription = "")
+                                        }
+                                    }
+                                },
 
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Search
-                            ),
-                            singleLine = true,
-                            maxLines = 1,
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.Transparent,
-                                unfocusedBorderColor = Color.Transparent)
-                        )
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Search
+                                ),
+                                singleLine = true,
+                                maxLines = 1,
+                                colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    focusedBorderColor = Color.Transparent,
+                                    unfocusedBorderColor = Color.Transparent)
+                            )
+                        }
 
                     }
 
@@ -241,20 +236,22 @@ fun Home(
                                 trackColor = md_theme_light_tertiaryContainer)
                         }
                         if (!isVisible) {
-                            LegoLottie()
-                            Text(
-                                text = "Try searching for a word ",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .align(Alignment.Center),
+                            Column (modifier = Modifier
+                                .fillMaxSize()
+                                .align(alignment = Alignment.Center) ){
+                                LegoLottie()
+                                Text(
+                                    text = "Try searching for a word ",
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
 
-                                textAlign = TextAlign.Center, fontSize = 14.sp
-                            )
+                                    textAlign = TextAlign.Center, fontSize = 14.sp
+                                )
+                            }
                         } else {
                             LazyColumn(
                                 modifier = Modifier
-                                // .align(Alignment.TopCenter)
-                                //.padding(20.dp, 100.dp, 20.dp, 0.dp))
+
                             )
                             {
                                 items(state.wordInfoItems.size) { i ->
@@ -338,16 +335,10 @@ fun DrawerContent(
     navController: NavHostController,
 ) {
     var viewModel = viewModel<MainViewModel>()
-    var mainVm: MainVm = MainVm()
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
-    val tokenid by DataStoreOperationsImpl(ctx).readTokenId().collectAsState(initial = "loading")
-    var getFullname = ""
-    LaunchedEffect(true){
-        //getFullname = mainVm.getUserFromTokenId(tokenid).fullName.toString()
-        //Toast.makeText(ctx, mainVm.getUserFromTokenId(tokenid).fullName.toString(), Toast.LENGTH_SHORT).show()
-        Log.i("LOG", getUserFromTokenId(tokenid).toString())
-    }
+    val email by DataStoreOperationsImpl(ctx).readEmailofUser().collectAsState(initial = Constants.EMAIL)
+    val fullname by DataStoreOperationsImpl(ctx).readFullnameofUser().collectAsState(initial = Constants.FULLNAME)
 
 
     Column(modifier = Modifier
@@ -372,8 +363,8 @@ fun DrawerContent(
                         .scale(0.8f))
                     Spacer(modifier = Modifier.height(30.dp))
                     Column {
-                        Text(text = mainVm.getUserFromTokenId(tokenid).fullName.toString(), style = MaterialTheme.typography.titleSmall)
-                        //Text(text = mainvm.getUserFromTokenId(token).email.toString(), style = MaterialTheme.typography.labelSmall)
+                        Text(text = fullname, style = MaterialTheme.typography.titleSmall)
+                        Text(text = email, style = MaterialTheme.typography.labelSmall)
                     }
                 }
                 Divider()

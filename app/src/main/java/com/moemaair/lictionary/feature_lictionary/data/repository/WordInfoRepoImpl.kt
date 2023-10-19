@@ -15,6 +15,8 @@ class WordInfoRepoImpl(
     private val dao:WordInfoDao
 ) : WordInfoRepo {
 
+
+
     override fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>> = flow {
         emit(Resource.Loading())
 

@@ -1,40 +1,52 @@
 package com.moemaair.lictionary
 
-import android.util.Log
-import android.view.View
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import android.content.Context
+import android.os.Build
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.ViewModelProvider
+import com.auth0.android.jwt.DecodeException
 import com.auth0.android.jwt.JWT
+import com.moemaair.lictionary.core.util.Constants
 import com.moemaair.lictionary.feature_lictionary.data.local.Claim
 import com.moemaair.lictionary.feature_lictionary.data.local.UserDetail
-import com.stevdzasan.messagebar.rememberMessageBarState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.moemaair.lictionary.feature_lictionary.data.repository.dataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import java.io.IOException
+import java.util.Base64
 
-class MainVm {
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCE_NAME) // name of datastore
+
+class MainVm(
+   // private val dataStore: DataStore<Preferences>
+): ViewModel() {
 
     fun getUserFromTokenId(
         tokenId: String,
-
     ): UserDetail {
-        val jwt = JWT(tokenId)
+        var jwt = JWT(tokenId)
 
-
-        val res = UserDetail(
+        return UserDetail(
                     email = jwt.claims[Claim.EMAIL]?.asString(),
                     fullName = jwt.claims[Claim.FUll_NAME]?.asString(),
-                    picture = jwt.claims[Claim.PICTURE]?.asString(),
-                    //sub = jwt.claims[Claim.SUB]?.asString(),
-            )
-
-        return res
-
-
-
-
-
+                    picture = jwt.claims[Claim.PICTURE]?.asString()
+        )
     }
 }
+
+//class MainVmFactory(
+//    private val dataStore: DataStore<Preferences>
+//) : ViewModelProvider.NewInstanceFactory() {
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        return MainVmFactory(
+//            dataStore = dataStore
+//        ) as T
+//    }
+//}

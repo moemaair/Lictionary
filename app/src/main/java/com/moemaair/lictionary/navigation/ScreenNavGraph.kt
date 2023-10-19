@@ -20,7 +20,6 @@ import com.moemaair.lictionary.MainVm
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.core.util.Constants.WRITE_SCREEN_ARGUMENT_KEY
-import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
 import com.moemaair.lictionary.feature_lictionary.presentation.screen.auth.AuthenticationScreen
 import com.moemaair.lictionary.feature_lictionary.presentation.screen.auth.AuthenticationViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.screen.home.Home
@@ -61,9 +60,9 @@ fun NavGraphBuilder.authenticationScreen(
 
     composable(route = Screen.Authentication.route) {
         var context = LocalContext.current
-        val tokenid by DataStoreOperationsImpl(context).readTokenId().collectAsState(initial = "loading")
+        //val tokenid by DataStoreOperationsImpl(context).readTokenId().collectAsState(initial = "loading")
         val viewModel: AuthenticationViewModel = viewModel()
-        val mainVm: MainVm = MainVm()
+        //val mainVm: MainVm = MainVm()
         val authenticated by viewModel.authenticated
         val oneTapSignInState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()

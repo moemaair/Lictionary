@@ -10,6 +10,7 @@ data class WordInfoDto(
     val word: String
 ) {
     fun toWordInfoEntity(): WordInfoEntity {
+        
         return WordInfoEntity(
             meanings = meanings.map { it.toMeaning() },
             phonetic = phonetic,

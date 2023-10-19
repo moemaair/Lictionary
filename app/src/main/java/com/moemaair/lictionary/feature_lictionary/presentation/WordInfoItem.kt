@@ -27,7 +27,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 fun WordInfoItem(
     wordInfo: WordInfo,
     audioIcon: ImageVector,
-
 ) {
     var context = LocalContext.current.applicationContext
     var mediaPlayer = MediaPlayer()
@@ -52,19 +51,19 @@ fun WordInfoItem(
             horizontalArrangement = Arrangement.Start) {
             //word
             Text(
-                text = wordInfo.word.toString(),
+                text = wordInfo.word,
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier
             )
 
             //audio icon
-
             IconButton(onClick = {
                 mediaPlayer.reset();
                 mediaPlayer.setDataSource(audioUrl.toString())
                 mediaPlayer.prepare()
                 mediaPlayer.start()
             }
+
 
             ) {
 
@@ -77,7 +76,7 @@ fun WordInfoItem(
 
 
         Text(text = phonetic.toString(), fontWeight = FontWeight.Normal)
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
        if(wordInfo.word.length <= 0){
            Image(painter = painterResource(id = R.drawable.man), contentDescription = "")
@@ -93,7 +92,7 @@ fun WordInfoItem(
                 definition
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
     
