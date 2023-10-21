@@ -72,6 +72,7 @@ import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOpera
 import com.moemaair.lictionary.feature_lictionary.presentation.LegoLottie
 import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
+import com.moemaair.lictionary.feature_lictionary.presentation.components.UserPictureFromGoogle
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.ui.theme.AngryColor
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
@@ -110,13 +111,15 @@ fun Home(
         }
     }
     var drawerState = rememberDrawerState(DrawerValue.Closed)
-    var isDrawerOpen by remember { mutableStateOf(false) }
+
     val firstname_ by DataStoreOperationsImpl(context).readGivenNameofUser().collectAsState(initial = FIRSTNAME)
     val fulname by DataStoreOperationsImpl(context).readFullnameofUser().collectAsState(initial = FULLNAME)
 
     val mainVm: MainVm = androidx.lifecycle.viewmodel.compose.viewModel()
 
     val firstname = firstname_.replaceFirstChar { it.uppercase() }
+
+    var isDrawerOpen by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(key1 = true) {
@@ -167,7 +170,7 @@ fun Home(
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ) {
-                /*...........................col 25%....................................................*/
+                /*...........................col 30%....................................................*/
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -194,10 +197,6 @@ fun Home(
                             Text(text = homeText,
                                 modifier = Modifier.padding(10.dp, 0.dp),
                                 color = MaterialTheme.colorScheme.background,
-//                                textAlign = TextAlign.Start,
-//                                style = MaterialTheme.typography.titleLarge,
-//                                fontWeight = FontWeight.ExtraBold
-
                             )
                             
 
@@ -319,8 +318,10 @@ fun Home(
                     navController = navController,
                     drawerState = drawerState
                 )
+                drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
             }
-            drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
+
+
 
 
 
@@ -368,22 +369,25 @@ fun DrawerContent(
     navController: NavHostController,
 ) {
     var viewModel = viewModel<MainViewModel>()
+    var mainVm = viewModel<MainVm>()
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
-    val email by DataStoreOperationsImpl(ctx).readEmailofUser().collectAsState(initial = Constants.EMAIL)
-    val fullname by DataStoreOperationsImpl(ctx).readFullnameofUser().collectAsState(initial = Constants.FULLNAME)
+
+    val email_  by DataStoreOperationsImpl(ctx).readEmailofUser().collectAsState(initial = Constants.EMAIL)
+    val email = email_.replaceFirstChar { it.uppercase() }
+
+    val fullname_ by DataStoreOperationsImpl(ctx).readFullnameofUser().collectAsState(initial = Constants.FULLNAME)
+    val fullname = fullname_.replaceFirstChar { it.uppercase() }
 
 
     Column(modifier = Modifier
         .fillMaxWidth(0.7f)
         .background(MaterialTheme.colorScheme.background)
         .fillMaxHeight(),
-    verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyColumn(modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+
         ) {
             item {
                 Spacer(modifier = Modifier.height(50.dp))
@@ -392,10 +396,20 @@ fun DrawerContent(
             item {
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 15.dp), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
-                    Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
-                        .height(70.dp)
-                        .scale(0.8f))
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.inversePrimary,
+                                MaterialTheme.colorScheme.primary
+                            )
+                        )
+                    )
+                    .padding(top = 15.dp),
+                    horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+//                    Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
+//                        .height(70.dp)
+//                        .scale(0.8f))
+
                     Spacer(modifier = Modifier.height(30.dp))
                     Column {
                         Text(text = fullname, style = MaterialTheme.typography.titleSmall)
@@ -410,6 +424,7 @@ fun DrawerContent(
                 Column(modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
+                    .padding(horizontal = 8.dp)
                     .padding(top = 15.dp),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
@@ -466,6 +481,7 @@ fun DrawerContent(
             item {
                 Column(modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
                     .padding(top = 15.dp)) {
                     Text(text = "OTHER", style = MaterialTheme.typography.titleMedium)
                     Row(modifier = Modifier.padding(0.dp, 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {

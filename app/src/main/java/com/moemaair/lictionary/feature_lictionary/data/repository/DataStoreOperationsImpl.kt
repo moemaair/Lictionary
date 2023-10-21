@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.moemaair.lictionary.core.util.Constants.EMAIL
 import com.moemaair.lictionary.core.util.Constants.FIRSTNAME
 import com.moemaair.lictionary.core.util.Constants.FULLNAME
+import com.moemaair.lictionary.core.util.Constants.PICTURE
 import com.moemaair.lictionary.core.util.Constants.PREFERENCE_NAME
 import com.moemaair.lictionary.feature_lictionary.domain.repository.DataStoreOperations
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,7 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
         val email = stringPreferencesKey(name = EMAIL)
         val fullname = stringPreferencesKey(name = FULLNAME)
         val givenName = stringPreferencesKey(name = FIRSTNAME)
+        val picture = stringPreferencesKey(name = PICTURE)
     }
     private val dataStore = context.dataStore
 
@@ -91,6 +93,29 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
             .map { preferences ->
                 val firstname = preferences[PreferencesKey.givenName] ?: ""
                 firstname
+
+            }
+    }
+
+    override suspend fun getUserPic(pic: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKey.picture] = pic
+
+        }
+    }
+
+    override fun readUserPic(): Flow<String> {
+        return dataStore.data
+            .catch { exception ->
+                if(exception is IOException){
+                    emit(emptyPreferences())
+                } else{
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                val picture = preferences[PreferencesKey.picture] ?: ""
+                picture
 
             }
     }

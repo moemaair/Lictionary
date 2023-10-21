@@ -12,4 +12,7 @@ interface DataStoreOperations {
     suspend fun getGivenNameofUser(firstname: String)
     fun readGivenNameofUser(): Flow<String>
 
+    suspend fun getUserPic(pic: String)
+    fun readUserPic(): Flow<String>
+
 }

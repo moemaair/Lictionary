@@ -10,6 +10,7 @@ object Constants {
     const val FULLNAME = "fullname"
     const val FIRSTNAME = "firstname"
     const val PREFERENCE_NAME = "pref"
+    const val PICTURE = ""
 
 
     const val WRITE_SCREEN_ARGUMENT_KEY= "lictionaryId"

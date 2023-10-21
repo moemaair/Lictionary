@@ -42,6 +42,7 @@ class MainVm(
                     fullName = jwt.claims[Claim.FUll_NAME]?.asString(),
                     picture = jwt.claims[Claim.PICTURE]?.asString()
         )
+
     }
 
     fun Times(): String {
