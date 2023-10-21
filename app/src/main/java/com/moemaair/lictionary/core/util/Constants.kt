@@ -8,6 +8,7 @@ object Constants {
     const val CLIENT_ID = BuildConfig.CLIENT_ID
     const val EMAIL = "email"
     const val FULLNAME = "fullname"
+    const val FIRSTNAME = "firstname"
     const val PREFERENCE_NAME = "pref"
 
 

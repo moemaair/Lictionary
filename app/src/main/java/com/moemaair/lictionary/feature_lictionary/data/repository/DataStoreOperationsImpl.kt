@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.moemaair.lictionary.core.util.Constants.EMAIL
+import com.moemaair.lictionary.core.util.Constants.FIRSTNAME
 import com.moemaair.lictionary.core.util.Constants.FULLNAME
 import com.moemaair.lictionary.core.util.Constants.PREFERENCE_NAME
 import com.moemaair.lictionary.feature_lictionary.domain.repository.DataStoreOperations
@@ -24,6 +25,7 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
     private object PreferencesKey {
         val email = stringPreferencesKey(name = EMAIL)
         val fullname = stringPreferencesKey(name = FULLNAME)
+        val givenName = stringPreferencesKey(name = FIRSTNAME)
     }
     private val dataStore = context.dataStore
 
@@ -71,5 +73,26 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
     }
 
 
+    override suspend fun getGivenNameofUser(firstname: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKey.givenName] = firstname
+        }
+    }
+
+    override fun readGivenNameofUser(): Flow<String> {
+        return dataStore.data
+            .catch { exception ->
+                if(exception is IOException){
+                    emit(emptyPreferences())
+                } else{
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                val firstname = preferences[PreferencesKey.givenName] ?: ""
+                firstname
+
+            }
+    }
 }
 

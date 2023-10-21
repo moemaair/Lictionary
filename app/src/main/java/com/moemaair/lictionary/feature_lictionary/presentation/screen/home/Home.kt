@@ -46,9 +46,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -58,8 +62,11 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.moemaair.lictionary.MainVm
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants
+import com.moemaair.lictionary.core.util.Constants.FIRSTNAME
+import com.moemaair.lictionary.core.util.Constants.FULLNAME
 import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOperationsImpl
 import com.moemaair.lictionary.feature_lictionary.presentation.LegoLottie
@@ -104,9 +111,12 @@ fun Home(
     }
     var drawerState = rememberDrawerState(DrawerValue.Closed)
     var isDrawerOpen by remember { mutableStateOf(false) }
+    val firstname_ by DataStoreOperationsImpl(context).readGivenNameofUser().collectAsState(initial = FIRSTNAME)
+    val fulname by DataStoreOperationsImpl(context).readFullnameofUser().collectAsState(initial = FULLNAME)
 
-    val email by DataStoreOperationsImpl(context).readEmailofUser().collectAsState(initial = Constants.EMAIL)
-    val fullname by DataStoreOperationsImpl(context).readFullnameofUser().collectAsState(initial = Constants.FULLNAME)
+    val mainVm: MainVm = androidx.lifecycle.viewmodel.compose.viewModel()
+
+    val firstname = firstname_.replaceFirstChar { it.uppercase() }
 
 
     LaunchedEffect(key1 = true) {
@@ -123,6 +133,19 @@ fun Home(
         }
     }
 
+
+    val homeText = buildAnnotatedString {
+
+        withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
+            append("Hi, $firstname")
+        }
+        append("\n")
+       withStyle(
+           style = SpanStyle( fontWeight = FontWeight.Bold, fontSize = 17.sp)
+       ){
+           append(mainVm.Times())
+       }
+    }
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
@@ -140,16 +163,16 @@ fun Home(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-
                 , verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
+
             ) {
                 /*...........................col 25%....................................................*/
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(0.dp)
-                        .weight(0.25f)
+                        .weight(0.3f)
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
@@ -158,6 +181,7 @@ fun Home(
                                 )
                             )
                         )
+
                 )
                 {
 
@@ -167,21 +191,31 @@ fun Home(
                         contentAlignment = Alignment.BottomCenter
                     ) {
                         Column {
-                            Text(text = "Hello, $fullname")
+                            Text(text = homeText,
+                                modifier = Modifier.padding(10.dp, 0.dp),
+                                color = MaterialTheme.colorScheme.background,
+//                                textAlign = TextAlign.Start,
+//                                style = MaterialTheme.typography.titleLarge,
+//                                fontWeight = FontWeight.ExtraBold
+
+                            )
+                            
+
+
                             Spacer(modifier = Modifier.height(30.dp))
                             OutlinedTextField(
                                 value = viewModel.searchQuery.value.trim(),
                                 onValueChange = viewModel::onSearch,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(shape = RoundedCornerShape(100.dp))
+                                    .clip(shape = RoundedCornerShape(12.dp))
 
                                     .background(Color.White)
                                     .padding(10.dp, 2.dp),
                                 placeholder = {
                                     Text(
                                         text = "Search for words...",
-                                        color = Color.LightGray, style = MaterialTheme.typography.labelMedium
+                                        color = Color.LightGray, style = MaterialTheme.typography.labelLarge
                                     )
                                 },
                                 leadingIcon = {
@@ -308,7 +342,6 @@ fun ModalNavigationDrawer(
 ) {
     val drawerState = drawerState
     val scope = rememberCoroutineScope()
-    // icons to mimic drawer destinations
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -321,7 +354,7 @@ fun ModalNavigationDrawer(
 
         },
         content = {
-
+            null
         }
     )
 
@@ -342,14 +375,16 @@ fun DrawerContent(
 
 
     Column(modifier = Modifier
-        .fillMaxWidth(0.75f)
+        .fillMaxWidth(0.7f)
         .background(MaterialTheme.colorScheme.background)
         .fillMaxHeight(),
     verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyColumn(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)) {
+            .fillMaxSize()
+            .padding(horizontal = 8.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             item {
                 Spacer(modifier = Modifier.height(50.dp))
             }
@@ -433,7 +468,7 @@ fun DrawerContent(
                     .fillMaxWidth()
                     .padding(top = 15.dp)) {
                     Text(text = "OTHER", style = MaterialTheme.typography.titleMedium)
-                    Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(modifier = Modifier.padding(0.dp, 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         Icon(imageVector = Icons.Filled.Info, contentDescription = "dark mode")
                         Text(text = "App version 1.2.2", style = MaterialTheme.typography.titleMedium )
                     }
@@ -441,7 +476,7 @@ fun DrawerContent(
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .clickable(enabled = true, onClick = {
-                            //onClickLogOut()
+                            onClickLogOut()
                             navController.navigate(Screen.Authentication.route)
                         }
                         )
@@ -477,6 +512,7 @@ fun AppBar(
     navController: NavHostController
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(canScroll = { true })
+    var vm: MainVm = viewModel()
 
     CenterAlignedTopAppBar(
         //elevation = 7.dp,
@@ -493,8 +529,9 @@ fun AppBar(
         },
         actions = {
             IconButton(onClick = {
-                onClickLogOut()
-                navController.navigate(Screen.Authentication.route)
+                //onClickLogOut()
+                //navController.navigate(Screen.Authentication.route)
+
             }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,

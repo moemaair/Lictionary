@@ -9,4 +9,7 @@ interface DataStoreOperations {
     suspend fun getFullnameofUser(fullname: String)
     fun readFullnameofUser(): Flow<String>
 
+    suspend fun getGivenNameofUser(firstname: String)
+    fun readGivenNameofUser(): Flow<String>
+
 }

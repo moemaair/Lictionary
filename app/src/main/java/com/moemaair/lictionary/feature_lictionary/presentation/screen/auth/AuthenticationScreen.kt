@@ -37,6 +37,7 @@ fun AuthenticationScreen(     // where we have tokenid
     var mainVm: MainVm = viewModel()
 
 
+
     Scaffold(
         content = {
             ContentWithMessageBar(messageBarState = messageBarState, position = MessageBarPosition.BOTTOM) {
@@ -56,7 +57,7 @@ fun AuthenticationScreen(     // where we have tokenid
            scope.launch {
                DataStoreOperationsImpl(context).getEmailofUser(getUserFromTokenId(it).email.toString())
                DataStoreOperationsImpl(context).getFullnameofUser(getUserFromTokenId(it).fullName.toString())
-
+               DataStoreOperationsImpl(context).getGivenNameofUser(getUserFromTokenId(it).givenName.toString())
            }
         },
         onDialogDismissed = {message->

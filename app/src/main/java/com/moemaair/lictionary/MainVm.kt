@@ -2,6 +2,7 @@ package com.moemaair.lictionary
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
@@ -20,6 +21,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Base64
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCE_NAME) // name of datastore
@@ -39,14 +43,40 @@ class MainVm(
                     picture = jwt.claims[Claim.PICTURE]?.asString()
         )
     }
+
+    fun Times(): String {
+        val hour = (LocalDateTime.now().hour)
+        val twelve = "00"
+
+        if(hour == twelve.toInt() && hour <= 12){
+            return "Good Morning!"
+        }
+        else if(hour >= 12 && hour <= 18){
+            return "Good Afternoon!"
+        }
+        else{
+            return "Good Night!"
+        }
+
+
+//        if(hour > 12){
+//            return "Good Evening"
+//        }
+//        else if (hour == twelve.toInt()) {
+//            return "Good Morning"
+//        }
+//        else if (hour == 12..) {
+//            return "Good Evening"
+//        }
+//        else{
+//            return "Good Morning"
+//        }
+
+    }
+
+
+
+
 }
 
-//class MainVmFactory(
-//    private val dataStore: DataStore<Preferences>
-//) : ViewModelProvider.NewInstanceFactory() {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        return MainVmFactory(
-//            dataStore = dataStore
-//        ) as T
-//    }
-//}
+
