@@ -100,7 +100,6 @@ class DataStoreOperationsImpl(context: Context): DataStoreOperations {
     override suspend fun getUserPic(pic: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKey.picture] = pic
-
         }
     }
 

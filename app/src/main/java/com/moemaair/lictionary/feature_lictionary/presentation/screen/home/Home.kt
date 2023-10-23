@@ -3,9 +3,11 @@ package com.moemaair.lictionary.feature_lictionary.presentation.screen.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 
@@ -41,6 +43,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -62,6 +65,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+
+
 import com.moemaair.lictionary.MainVm
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants
@@ -72,13 +77,11 @@ import com.moemaair.lictionary.feature_lictionary.data.repository.DataStoreOpera
 import com.moemaair.lictionary.feature_lictionary.presentation.LegoLottie
 import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
-import com.moemaair.lictionary.feature_lictionary.presentation.components.UserPictureFromGoogle
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.ui.theme.AngryColor
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
 import kotlinx.coroutines.flow.collectLatest
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCE_NAME) // name of datastore
 /*...........................Home....................................................*/
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
@@ -90,7 +93,7 @@ fun Home(
 ) {
     var viewModel: MainViewModel = hiltViewModel()
     var state = viewModel.state.value
-    //val scaffoldState = rememberScaffoldState()
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     val audioVector = ImageVector.vectorResource(id = icon)
@@ -110,20 +113,18 @@ fun Home(
             viewModel.searchQuery.value.isNotBlank()
         }
     }
-    var drawerState = rememberDrawerState(DrawerValue.Closed)
+    var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val firstname_ by DataStoreOperationsImpl(context).readGivenNameofUser().collectAsState(initial = FIRSTNAME)
     val fulname by DataStoreOperationsImpl(context).readFullnameofUser().collectAsState(initial = FULLNAME)
 
-    val mainVm: MainVm = androidx.lifecycle.viewmodel.compose.viewModel()
+    val mainVm: MainVm = viewModel()
 
     val firstname = firstname_.replaceFirstChar { it.uppercase() }
-
     var isDrawerOpen by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(key1 = true) {
-
 
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
@@ -135,10 +136,7 @@ fun Home(
             }
         }
     }
-
-
     val homeText = buildAnnotatedString {
-
         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
             append("Hi, $firstname")
         }
@@ -155,7 +153,7 @@ fun Home(
             AppBar("Lictionary",
                 backgroundColor = MaterialTheme.colorScheme.inversePrimary,
                 onMenuClick = {
-                    isDrawerOpen = !isDrawerOpen
+                    isDrawerOpen = true
                 },
                 onClickLogOut = { onClickLogOut()},
                 navController = navController
@@ -198,8 +196,6 @@ fun Home(
                                 modifier = Modifier.padding(10.dp, 0.dp),
                                 color = MaterialTheme.colorScheme.background,
                             )
-                            
-
 
                             Spacer(modifier = Modifier.height(30.dp))
                             OutlinedTextField(
@@ -208,13 +204,12 @@ fun Home(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(shape = RoundedCornerShape(12.dp))
-
                                     .background(Color.White)
                                     .padding(10.dp, 2.dp),
                                 placeholder = {
                                     Text(
                                         text = "Search for words...",
-                                        color = Color.LightGray, style = MaterialTheme.typography.labelLarge
+                                        color = Color.Black, style = MaterialTheme.typography.labelLarge
                                     )
                                 },
                                 leadingIcon = {
@@ -233,11 +228,14 @@ fun Home(
                                 },
 
                                 keyboardOptions = KeyboardOptions(
+                                    autoCorrect = true,
                                     imeAction = ImeAction.Search
+
                                 ),
                                 singleLine = true,
                                 maxLines = 1,
                                 colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    textColor = Color.Black,
                                     focusedBorderColor = Color.Transparent,
                                     unfocusedBorderColor = Color.Transparent)
                             )
@@ -252,86 +250,81 @@ fun Home(
 
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+
+                        .fillMaxSize()
+                        .height(0.dp)
                         .weight(0.75f)
 
+
                 ) {
+                   Box(
+                       modifier = Modifier.fillMaxSize(),
+                       contentAlignment = Alignment.Center
+                   ) {
+                       if (state.isLoading) {
+                           CircularProgressIndicator(
+                               modifier = Modifier
+                                   .height(15.dp),
+                               trackColor = md_theme_light_tertiaryContainer
+                           )
+                       }
+                       if (!isVisible) {
+                           Column(
+                               modifier = Modifier
+                                   .fillMaxSize()
+                                   .padding(30.dp),
+                               horizontalAlignment = Alignment.CenterHorizontally,
+                               verticalArrangement = Arrangement.Center
+                           ) {
+                               LegoLottie()
+                               Text(
+                                   text = "Try searching for a word ",
+                                   modifier = Modifier
+                                       .fillMaxWidth(),
+                                   fontSize = 14.sp,
+                                   textAlign = TextAlign.Center
+                               )
 
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(15.dp)) {
-                        if (state.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .height(15.dp)
-                                    .align(Alignment.Center)
-                                ,
-                                trackColor = md_theme_light_tertiaryContainer)
-                        }
-                        if (!isVisible) {
-                            Column (modifier = Modifier
-                                .fillMaxSize()
-                                .align(alignment = Alignment.Center) ){
-                                LegoLottie()
-                                Text(
-                                    text = "Try searching for a word ",
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
+                           }
+                       } else {
+                           LazyColumn(
+                               modifier = Modifier.padding(20.dp)
+                           )
+                           {
+                               items(state.wordInfoItems.size) { i ->
+                                   val wordInfo = state.wordInfoItems[i]
+                                   WordInfoItem(
+                                       wordInfo = wordInfo,
+                                       audioVector
+                                   )
+                                   if (i < state.wordInfoItems.size - 1) {
+                                       Divider()
+                                   }
+                               }
 
-                                    textAlign = TextAlign.Center, fontSize = 14.sp
-                                )
-                            }
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier
-
-                            )
-                            {
-                                items(state.wordInfoItems.size) { i ->
-                                    val wordInfo = state.wordInfoItems[i]
-                                    WordInfoItem(
-                                        wordInfo = wordInfo,
-                                        audioVector
-                                    )
-                                    if (i < state.wordInfoItems.size - 1) {
-                                        Divider()
-                                    }
-                                }
-
-                            }
-                        }
-
-
-
-                    }
-
-
-
+                           }
+                       }
+                   }
                 }
 
-            }
 
+            }
             if (isDrawerOpen) {
                 ModalNavigationDrawer(
                     onClickLogOut = {
                     },
                     navController = navController,
-                    drawerState = drawerState
-                )
+
+                    )
                 drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
             }
 
 
-
-
-
-
-
         }
-
-
-
     )
+
+
+
 }
 
 /*...........................ModalNavigationDrawer....................................................*/
@@ -339,39 +332,14 @@ fun Home(
 fun ModalNavigationDrawer(
     onClickLogOut: () -> Unit,
     navController: NavHostController,
-    drawerState: DrawerState
 ) {
-    val drawerState = drawerState
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            DrawerContent(
-                R.drawable.man,
-                onClickLogOut = onClickLogOut,
-                navController = navController
-            )
-
-        },
-        content = {
-            null
-        }
-    )
-
-}
-
-/*...........................DrawerContent....................................................*/
-@Composable
-fun DrawerContent(
-    icon: Int,
-    onClickLogOut: () -> Unit,
-    navController: NavHostController,
-) {
     var viewModel = viewModel<MainViewModel>()
     var mainVm = viewModel<MainVm>()
     var ctx = LocalContext.current
-    val scope = rememberCoroutineScope()
+
 
     val email_  by DataStoreOperationsImpl(ctx).readEmailofUser().collectAsState(initial = Constants.EMAIL)
     val email = email_.replaceFirstChar { it.uppercase() }
@@ -379,141 +347,151 @@ fun DrawerContent(
     val fullname_ by DataStoreOperationsImpl(ctx).readFullnameofUser().collectAsState(initial = Constants.FULLNAME)
     val fullname = fullname_.replaceFirstChar { it.uppercase() }
 
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            Column(modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxHeight(),
+            ) {
+                LazyColumn(modifier = Modifier
+                    .fillMaxSize()
 
-    Column(modifier = Modifier
-        .fillMaxWidth(0.7f)
-        .background(MaterialTheme.colorScheme.background)
-        .fillMaxHeight(),
-    ) {
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(50.dp))
-            }
-            //icon image
-            item {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.inversePrimary,
-                                MaterialTheme.colorScheme.primary
-                            )
-                        )
-                    )
-                    .padding(top = 15.dp),
-                    horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
-//                    Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
-//                        .height(70.dp)
-//                        .scale(0.8f))
-
-                    Spacer(modifier = Modifier.height(30.dp))
-                    Column {
-                        Text(text = fullname, style = MaterialTheme.typography.titleSmall)
-                        Text(text = email, style = MaterialTheme.typography.labelSmall)
-                    }
-                }
-                Divider()
-                Spacer(modifier = Modifier.height(7.dp))
-            }
-            //support
-            item {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(horizontal = 8.dp)
-                    .padding(top = 15.dp),
-                    verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = "SUPPORT", style = MaterialTheme.typography.titleMedium)
-                    //row 1 (send feedback)
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            val sendIntent = Intent(Intent.ACTION_SEND)
-                            sendIntent.type = "text/plain"
-                            sendIntent.putExtra(
-                                Intent.EXTRA_EMAIL,
-                                arrayOf("ibrahimohamed81@outlook.com")
+                    item {
+                        Spacer(modifier = Modifier.height(50.dp))
+                        //Toast.makeText(ctx, "pic: $userpic", Toast.LENGTH_SHORT).show()
+                    }
+                    //icon image
+                    item {
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colorScheme.inversePrimary,
+                                        MaterialTheme.colorScheme.primary
+                                    )
+                                )
                             )
-                            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
+                            .padding(top = 15.dp),
+                            horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                            Image(painter = painterResource(id = R.drawable.man), contentDescription = "", modifier = Modifier
+                                .height(70.dp)
+                                .scale(0.8f))
 
-                            val chooser = Intent.createChooser(sendIntent, "Send Email")
-                            ContextCompat.startActivity(ctx, chooser, null)
+                            Spacer(modifier = Modifier.height(30.dp))
+                            Column {
+                                Text(text = fullname, style = MaterialTheme.typography.titleSmall)
+                                Text(text = email, style = MaterialTheme.typography.labelSmall)
+                            }
                         }
-                        .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Filled.Email, contentDescription = "email icon")
-                        Text(text = "Send Feedback", style = MaterialTheme.typography.titleSmall)
+                        Divider()
+                        Spacer(modifier = Modifier.height(7.dp))
                     }
-                    Divider()
-                    //row 2 rate app
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 20.dp)
-                        .clickable {
-                            val openPlayStore = Intent(Intent.ACTION_VIEW)
-                            openPlayStore.data =
-                                Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
-                            ctx.startActivity(openPlayStore)
-                        }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Filled.ThumbUp, contentDescription = "email icon")
-                        Text(text = "Rate this app")
+                    //support
+                    item {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(horizontal = 8.dp)
+                            .padding(top = 15.dp),
+                            verticalArrangement = Arrangement.SpaceAround
+                        ) {
+                            Text(text = "SUPPORT", style = MaterialTheme.typography.titleMedium)
+                            //row 1 (send feedback)
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    val sendIntent = Intent(Intent.ACTION_SEND)
+                                    sendIntent.type = "text/plain"
+                                    sendIntent.putExtra(
+                                        Intent.EXTRA_EMAIL,
+                                        arrayOf("ibrahimohamed81@outlook.com")
+                                    )
+                                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback")
+
+                                    val chooser = Intent.createChooser(sendIntent, "Send Email")
+                                    ContextCompat.startActivity(ctx, chooser, null)
+                                }
+                                .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Filled.Email, contentDescription = "email icon")
+                                Text(text = "Send Feedback", style = MaterialTheme.typography.titleSmall)
+                            }
+                            Divider()
+                            //row 2 rate app
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 20.dp)
+                                .clickable {
+                                    val openPlayStore = Intent(Intent.ACTION_VIEW)
+                                    openPlayStore.data =
+                                        Uri.parse("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                                    ctx.startActivity(openPlayStore)
+                                }, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Filled.ThumbUp, contentDescription = "email icon")
+                                Text(text = "Rate this app")
+                            }
+                            Divider()
+                            //row 3 share app
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 20.dp)
+                                .clickable {
+                                    ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
+                                },
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Filled.Share, contentDescription = "email icon")
+                                Text(text = "Share this app", style = MaterialTheme.typography.titleMedium)
+                            }
+                            Divider()
+                        }
                     }
-                    Divider()
-                    //row 3 share app
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 20.dp)
-                        .clickable {
-                            ctx.shareApp("https://play.google.com/store/apps/details?id=com.moemaair.lictionary")
-                        },
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Filled.Share, contentDescription = "email icon")
-                        Text(text = "Share this app", style = MaterialTheme.typography.titleMedium)
+                    //other
+                    item {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
+                            .padding(top = 15.dp)) {
+                            Text(text = "OTHER", style = MaterialTheme.typography.titleMedium)
+                            Row(modifier = Modifier.padding(0.dp, 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Filled.Info, contentDescription = "dark mode")
+                                Text(text = "App version 1.2.2", style = MaterialTheme.typography.titleMedium )
+                            }
+                            Divider()
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(enabled = true, onClick = {
+                                    onClickLogOut()
+                                    navController.navigate(Screen.Authentication.route)
+                                }
+                                )
+                                .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Filled.Info, tint = AngryColor, contentDescription = "log out")
+                                Text(text = "Log out", color = AngryColor , style = MaterialTheme.typography.titleMedium)
+                            }
+                            Divider()
+                        }
                     }
-                    Divider()
+                }
+
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 5.dp), contentAlignment = Alignment.BottomCenter){
+                    Text(text = "Unlock the power of words", style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White,
+                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                    )
                 }
             }
-            //other
-            item {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-                    .padding(top = 15.dp)) {
-                    Text(text = "OTHER", style = MaterialTheme.typography.titleMedium)
-                    Row(modifier = Modifier.padding(0.dp, 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Filled.Info, contentDescription = "dark mode")
-                        Text(text = "App version 1.2.2", style = MaterialTheme.typography.titleMedium )
-                    }
-                    Divider()
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = true, onClick = {
-                            onClickLogOut()
-                            navController.navigate(Screen.Authentication.route)
-                        }
-                        )
-                        .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Filled.Info, tint = AngryColor, contentDescription = "log out")
-                        Text(text = "Log out", color = AngryColor , style = MaterialTheme.typography.titleMedium)
-                    }
-                    Divider()
-                }
-            }
-        }
+        },
+        gesturesEnabled = true,
+        content = {
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 5.dp), contentAlignment = Alignment.BottomCenter){
-            Text(text = "Unlock the power of words", style = MaterialTheme.typography.bodyMedium,
-                color = Color.White,
-                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-            )
         }
-    }
+    )
+
 }
 
 
@@ -540,13 +518,18 @@ fun AppBar(
         ,
         navigationIcon = {
             IconButton(onClick = { onMenuClick() }) {
-                Icon(Icons.Filled.Menu, tint = MaterialTheme.colorScheme.background, contentDescription = null)
+                Icon(
+                    Icons.Filled.Menu,
+                    tint = MaterialTheme.colorScheme.background,
+
+                    contentDescription = null
+                )
             }
         },
         actions = {
             IconButton(onClick = {
-                //onClickLogOut()
-                //navController.navigate(Screen.Authentication.route)
+                onClickLogOut()
+                navController.navigate(Screen.Authentication.route)
 
             }) {
                 Icon(

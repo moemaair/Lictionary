@@ -32,7 +32,7 @@ fun LegoLottie(
     LottieAnimation(
         compositionResult.value,
         progress,
-        modifier = Modifier.height(100.dp)
+        modifier = Modifier.size(100.dp)
     )
 
 

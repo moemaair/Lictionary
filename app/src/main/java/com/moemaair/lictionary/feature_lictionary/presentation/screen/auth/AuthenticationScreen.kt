@@ -58,6 +58,7 @@ fun AuthenticationScreen(     // where we have tokenid
                DataStoreOperationsImpl(context).getEmailofUser(getUserFromTokenId(it).email.toString())
                DataStoreOperationsImpl(context).getFullnameofUser(getUserFromTokenId(it).fullName.toString())
                DataStoreOperationsImpl(context).getGivenNameofUser(getUserFromTokenId(it).givenName.toString())
+               DataStoreOperationsImpl(context).getUserPic(getUserFromTokenId(it).picture.toString())
            }
         },
         onDialogDismissed = {message->
