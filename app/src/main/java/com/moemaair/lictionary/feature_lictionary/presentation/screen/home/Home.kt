@@ -262,11 +262,15 @@ fun Home(
                        contentAlignment = Alignment.Center
                    ) {
                        if (state.isLoading) {
-                           CircularProgressIndicator(
-                               modifier = Modifier
-                                   .height(15.dp),
-                               trackColor = md_theme_light_tertiaryContainer
-                           )
+                           Column{
+                               CircularProgressIndicator(
+                                   modifier = Modifier
+                                       .height(15.dp),
+                                   trackColor = md_theme_light_tertiaryContainer
+                               )
+                               Spacer(modifier = Modifier.height(25.dp))
+                               Text(text = "Please wait...", fontSize = 12.sp)
+                           }
                        }
                        if (!isVisible) {
                            Column(
@@ -288,7 +292,7 @@ fun Home(
                            }
                        } else {
                            LazyColumn(
-                               modifier = Modifier.padding(20.dp)
+                               modifier = Modifier.padding(horizontal = 20.dp)
                            )
                            {
                                items(state.wordInfoItems.size) { i ->

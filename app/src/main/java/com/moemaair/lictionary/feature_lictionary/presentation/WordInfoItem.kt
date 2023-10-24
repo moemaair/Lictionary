@@ -66,17 +66,15 @@ fun WordInfoItem(
                 mediaPlayer.setDataSource(audioUrl.toString())
                 mediaPlayer.prepare()
                 mediaPlayer.start()
-            }
+            }) {
 
-
-            ) {
-
-               if((audioUrl?.isNotEmpty() == true)){
-                   Icon(imageVector = audioIcon, contentDescription ="" )
-               }
+                if ((audioUrl?.isNotEmpty() == true)) {
+                    Icon(imageVector = audioIcon, contentDescription = "")
+                }
 
             }
         }
+
 
 
         Text(text = phonetic.toString(), color = Color.Green, fontWeight = FontWeight.Normal)
@@ -88,7 +86,9 @@ fun WordInfoItem(
                 Text(text = "${definition.definition}")
                 Spacer(modifier = Modifier.height(8.dp))
                 definition.example?.let { example ->
-                    Text(text = "Example: $example", fontWeight = FontWeight.Light,  color = Color.Blue, fontStyle = FontStyle.Italic)
+                    Text(text = "Example: $example",
+                        fontWeight = FontWeight.Light,
+                        color = Color.Gray, fontStyle = FontStyle.Italic)
                 }
                 definition
                 Spacer(modifier = Modifier.height(8.dp))
