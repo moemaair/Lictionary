@@ -1,6 +1,7 @@
 package com.moemaair.lictionary.feature_lictionary.presentation.screen.home
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
@@ -9,6 +10,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +24,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -34,6 +41,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
@@ -42,16 +50,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -85,6 +96,8 @@ import com.moemaair.lictionary.feature_lictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.ui.theme.AngryColor
+import com.moemaair.lictionary.ui.theme.md_theme_dark_errorContainer
+import com.moemaair.lictionary.ui.theme.md_theme_light_error
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -414,11 +427,19 @@ fun ModalNavigationDrawer(
     val fullname_ by DataStoreOperationsImpl(ctx).readFullnameofUser().collectAsState(initial = Constants.FULLNAME)
     val fullname = fullname_.replaceFirstChar { it.uppercase() }
 
+    var isHovered by remember { mutableStateOf(false) }
+
+    val interactionSource = remember { MutableInteractionSource() }
+
+    val backgroundColor = if (isHovered) MaterialTheme.colorScheme.primary else Color.Transparent
+
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             Column(modifier = Modifier
-                .fillMaxWidth(0.7f)
+                .fillMaxWidth(0.8f)
+                .shadow(elevation = 12.dp, ambientColor = Color.LightGray)
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxHeight(),
             ) {
@@ -428,7 +449,6 @@ fun ModalNavigationDrawer(
                 ) {
                     item {
                         Spacer(modifier = Modifier.height(50.dp))
-                        //Toast.makeText(ctx, "pic: $userpic", Toast.LENGTH_SHORT).show()
                     }
                     //icon image
                     item {
@@ -442,19 +462,20 @@ fun ModalNavigationDrawer(
                                     )
                                 )
                             )
-                            .padding(top = 15.dp),
+                            .padding(15.dp),
                             horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
-                            Image(painter = painterResource(id = R.drawable.man), contentDescription = "", modifier = Modifier
-                                .height(70.dp)
-                                .scale(0.8f))
+                            Image(imageVector = Icons.Filled.Person, contentDescription = "",
+                                    modifier = Modifier
+                                        .size(50.dp)
+                            )
 
-                            Spacer(modifier = Modifier.height(30.dp))
-                            Column {
+                            Spacer(modifier = Modifier.height(50.dp))
+                            Column(modifier = Modifier.padding(start = 15.dp)) {
                                 Text(text = fullname, style = MaterialTheme.typography.titleSmall)
                                 Text(text = email, style = MaterialTheme.typography.labelSmall)
                             }
                         }
-                        Divider()
+
                         Spacer(modifier = Modifier.height(7.dp))
                     }
                     //support
@@ -462,18 +483,16 @@ fun ModalNavigationDrawer(
                         Column(modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(horizontal = 8.dp)
-                            .padding(top = 15.dp),
+                            .padding(20.dp),
                             verticalArrangement = Arrangement.SpaceAround
                         ) {
-                            Text(text = "SUPPORT", style = MaterialTheme.typography.titleMedium)
                             //row 1 (send feedback)
                             Row(modifier = Modifier
+                                .hoverable(interactionSource = interactionSource)
                                 .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.onPrimary)
+                                .background(backgroundColor)
                                 .clip(shape = RoundedCornerShape(12.dp))
-                                .padding(10.dp, 20.dp)
-
+                                .padding(0.dp, 20.dp)
                                 .clickable {
                                     val sendIntent = Intent(Intent.ACTION_SEND)
                                     sendIntent.type = "text/plain"
@@ -486,9 +505,10 @@ fun ModalNavigationDrawer(
                                     val chooser = Intent.createChooser(sendIntent, "Send Email")
                                     ContextCompat.startActivity(ctx, chooser, null)
                                 }
-                               , horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                Icon(imageVector = Icons.Filled.Email, contentDescription = "email icon")
-                                Text(text = "Send Feedback", style = MaterialTheme.typography.titleSmall)
+                                ,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Icon(imageVector = Icons.Filled.Email, tint = MaterialTheme.colorScheme.onBackground, contentDescription = "email icon")
+                                Text(text = "Help and Support", style = MaterialTheme.typography.titleSmall)
                             }
 
                             //row 2 rate app
@@ -519,28 +539,31 @@ fun ModalNavigationDrawer(
 
                         }
                     }
+
+                    item {
+                        Spacer(modifier = Modifier.height(100.dp))
+                    }
+
                     //other
                     item {
                         Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                            .padding(top = 15.dp)) {
-                            Text(text = "OTHER", style = MaterialTheme.typography.titleMedium)
-                            Row(modifier = Modifier.padding(0.dp, 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                Icon(imageVector = Icons.Filled.Info, contentDescription = "dark mode")
-                                Text(text = "App version 1.2.2", style = MaterialTheme.typography.titleMedium )
-                            }
+                            .fillMaxSize()
+                            .padding(20.dp),
+                            verticalArrangement = Arrangement.SpaceBetween
+                        )
+                        {
 
-                            Row(modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(enabled = true, onClick = {
+                            TextButton(
+                                modifier = Modifier
+                                    .shadow(10.dp)
+                                    .background(md_theme_dark_errorContainer),
+                                onClick = {
                                     onClickLogOut()
-                                    navController.navigate(Screen.Authentication.route)
-                                }
-                                )
-                                .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                Icon(imageVector = Icons.Filled.Info, tint = AngryColor, contentDescription = "log out")
-                                Text(text = "Log out", color = AngryColor , style = MaterialTheme.typography.titleMedium)
+                                },
+                                shape = RoundedCornerShape(20.dp)
+                            ){
+                                Text(text = "Log out", textAlign = TextAlign.Center, modifier = Modifier
+                                    .fillMaxWidth(), color = Color.White , style = MaterialTheme.typography.titleMedium)
                             }
 
                         }
@@ -578,10 +601,9 @@ fun AppBar(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(canScroll = { true })
     var vm: MainVm = viewModel()
+    val openDialog = remember { mutableStateOf(false)  }
 
     CenterAlignedTopAppBar(
-        //elevation = 7.dp,
-        //backgroundColor = backgroundColor
         title = { 
                 Text(text = title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.background)
         },
@@ -599,8 +621,7 @@ fun AppBar(
         },
         actions = {
             IconButton(onClick = {
-                onClickLogOut()
-                navController.navigate(Screen.Authentication.route)
+                openDialog.value = true
 
             }) {
                 Icon(
@@ -615,5 +636,51 @@ fun AppBar(
         ),
         scrollBehavior = scrollBehavior
     )
+    if (openDialog.value) {
+       AlertDialog(
+           onDismissRequest = {
+               openDialog.value = false
+           },
+           confirmButton = {
+               Button(onClick = {
+                   openDialog.value = false
+               }) {
+                   Text(text = "Ok")
+               }
+           },
+           dismissButton = {
+               Button(onClick = {
+                   openDialog.value = false
+               }) {
+                   Text(text = "Cancel")
+               }
+           } ,
+           icon = {
+               Icon(
+                   painter = painterResource(R.drawable.baseline_info_24),
+                   contentDescription = "print"
+               )
+           },
+
+           title = {
+               Column {
+                   Text(text = "Welcome to Lictionary", textAlign = TextAlign.Center, fontSize = 17.sp)
+                   Text(text = "Language: en",  color = Color.Gray,
+                       textAlign = TextAlign.Center, fontSize = 12.sp)
+               }
+           },
+           text = {
+               Column{
+                   Text(text = "version 1.2.2 ",
+                       textAlign = TextAlign.Center, fontSize = 14.sp)
+                   Text(text = "Copyright © by Mohamed Ibrahim. All rights reserved. ",
+
+                       textAlign = TextAlign.Center, fontSize = 10.sp)
+               }
+           },
+
+       )
+    }
+
 }
 
