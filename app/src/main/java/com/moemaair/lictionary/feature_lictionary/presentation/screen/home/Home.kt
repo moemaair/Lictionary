@@ -490,7 +490,7 @@ fun ModalNavigationDrawer(
                                 Icon(imageVector = Icons.Filled.Email, contentDescription = "email icon")
                                 Text(text = "Send Feedback", style = MaterialTheme.typography.titleSmall)
                             }
-                            Divider()
+
                             //row 2 rate app
                             Row(modifier = Modifier
                                 .fillMaxWidth()
@@ -504,7 +504,7 @@ fun ModalNavigationDrawer(
                                 Icon(imageVector = Icons.Filled.ThumbUp, contentDescription = "email icon")
                                 Text(text = "Rate this app")
                             }
-                            Divider()
+
                             //row 3 share app
                             Row(modifier = Modifier
                                 .fillMaxWidth()
@@ -516,7 +516,7 @@ fun ModalNavigationDrawer(
                                 Icon(imageVector = Icons.Filled.Share, contentDescription = "email icon")
                                 Text(text = "Share this app", style = MaterialTheme.typography.titleMedium)
                             }
-                            Divider()
+
                         }
                     }
                     //other
@@ -530,7 +530,7 @@ fun ModalNavigationDrawer(
                                 Icon(imageVector = Icons.Filled.Info, contentDescription = "dark mode")
                                 Text(text = "App version 1.2.2", style = MaterialTheme.typography.titleMedium )
                             }
-                            Divider()
+
                             Row(modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable(enabled = true, onClick = {
@@ -542,7 +542,7 @@ fun ModalNavigationDrawer(
                                 Icon(imageVector = Icons.Filled.Info, tint = AngryColor, contentDescription = "log out")
                                 Text(text = "Log out", color = AngryColor , style = MaterialTheme.typography.titleMedium)
                             }
-                            Divider()
+
                         }
                     }
                 }
