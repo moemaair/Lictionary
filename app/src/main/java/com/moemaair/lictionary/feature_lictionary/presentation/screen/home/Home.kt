@@ -12,7 +12,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -47,6 +49,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
@@ -63,6 +66,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 
@@ -80,6 +86,7 @@ import com.moemaair.lictionary.feature_lictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.ui.theme.AngryColor
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 /*...........................Home....................................................*/
@@ -121,7 +128,10 @@ fun Home(
     val mainVm: MainVm = viewModel()
 
     val firstname = firstname_.replaceFirstChar { it.uppercase() }
-    var isDrawerOpen by remember { mutableStateOf(false) }
+    var isDrawerOpen by remember { mutableStateOf(false) } // state of drawer is false in default
+    var lifecycleOwner = LocalLifecycleOwner.current
+    val greeting = mainVm.greeting.collectAsStateWithLifecycle()
+
 
 
     LaunchedEffect(key1 = true) {
@@ -136,31 +146,51 @@ fun Home(
             }
         }
     }
-    val homeText = buildAnnotatedString {
+
+
+    var homeText = buildAnnotatedString {
         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
             append("Hi, $firstname")
         }
         append("\n")
-       withStyle(
-           style = SpanStyle( fontWeight = FontWeight.Bold, fontSize = 17.sp)
-       ){
-           append(mainVm.Times())
-       }
+        withStyle(
+            style = SpanStyle( fontWeight = FontWeight.Bold, fontSize = 17.sp)
+        ){
+            DisposableEffect(key1 = lifecycleOwner){
+                val eventObserver = LifecycleEventObserver{ _, event ->
+                    when(event){
+                        Lifecycle.Event.ON_RESUME -> {
+                            mainVm.setGreeting()
+                        }
+                        else -> {}
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(eventObserver)
+
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(eventObserver)
+                }
+            }
+            append(
+               greeting.value.toString()
+            )
+        }
     }
+
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AppBar("Lictionary",
                 backgroundColor = MaterialTheme.colorScheme.inversePrimary,
                 onMenuClick = {
-                    isDrawerOpen = true
+                    isDrawerOpen = !isDrawerOpen
                 },
                 onClickLogOut = { onClickLogOut()},
                 navController = navController
             )
+
         },
         content = {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -192,52 +222,14 @@ fun Home(
                         contentAlignment = Alignment.BottomCenter
                     ) {
                         Column {
-                            Text(text = homeText,
+                            Text(text = homeText,   // here
                                 modifier = Modifier.padding(10.dp, 0.dp),
                                 color = MaterialTheme.colorScheme.background,
                             )
 
                             Spacer(modifier = Modifier.height(30.dp))
-                            OutlinedTextField(
-                                value = viewModel.searchQuery.value.trim(),
-                                onValueChange = viewModel::onSearch,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(shape = RoundedCornerShape(12.dp))
-                                    .background(Color.White)
-                                    .padding(10.dp, 2.dp),
-                                placeholder = {
-                                    Text(
-                                        text = "Search for words...",
-                                        color = Color.Black, style = MaterialTheme.typography.labelLarge
-                                    )
-                                },
-                                leadingIcon = {
-                                    IconButton(onClick = { /*TODO*/ }) {
-                                        Icon(imageVector = Icons.Default.Search, contentDescription = "")
-                                    }
-                                },
-                                trailingIcon = {
-                                    if (isVisible) {
-                                        IconButton(onClick = {
-                                            viewModel._searchQuery.value = ""
-                                        }) {
-                                            Icon(imageVector = Icons.Default.Close, contentDescription = "")
-                                        }
-                                    }
-                                },
-
-                                keyboardOptions = KeyboardOptions(
-                                    autoCorrect = true,
-                                    imeAction = ImeAction.Search
-
-                                ),
-                                singleLine = true,
-                                maxLines = 1,
-                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                    textColor = Color.Black,
-                                    focusedBorderColor = Color.Transparent,
-                                    unfocusedBorderColor = Color.Transparent)
+                            WordTextBox(
+                                isVisible = isVisible
                             )
                         }
 
@@ -262,14 +254,19 @@ fun Home(
                        contentAlignment = Alignment.Center
                    ) {
                        if (state.isLoading) {
-                           Column{
+                           Column( modifier = Modifier.fillMaxWidth(),
+                               horizontalAlignment = Alignment.CenterHorizontally){
+                               LaunchedEffect(Unit){
+                                   delay(1000)
+
+                               }
                                CircularProgressIndicator(
                                    modifier = Modifier
                                        .height(15.dp),
                                    trackColor = md_theme_light_tertiaryContainer
                                )
                                Spacer(modifier = Modifier.height(25.dp))
-                               Text(text = "Please wait...", fontSize = 12.sp)
+                               Text(text = "Please wait...",  textAlign = TextAlign.Center, fontSize = 12.sp)
                            }
                        }
                        if (!isVisible) {
@@ -313,31 +310,97 @@ fun Home(
 
 
             }
+
             if (isDrawerOpen) {
+                drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
                 ModalNavigationDrawer(
                     onClickLogOut = {
+                          onClickLogOut()
                     },
                     navController = navController,
+                    drawerState = drawerState
+                )
 
-                    )
-                drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
             }
 
-
         }
+
     )
 
 
 
+
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WordTextBox(
+    isVisible: Boolean
+) {
+    val viewModel: MainViewModel = viewModel()
+    val value = viewModel.searchQuery.value.trim()
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = viewModel::onSearch,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape = RoundedCornerShape(12.dp))
+            .background(Color.White)
+            .padding(10.dp, 2.dp),
+
+        placeholder = {
+            Text(
+                text = "Search for words...",
+                color = Color.Black, style = MaterialTheme.typography.labelLarge
+            )
+        },
+
+        leadingIcon = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "")
+            }
+        },
+        trailingIcon = {
+            if (isVisible) {
+                IconButton(onClick = {
+                    viewModel._searchQuery.value = ""
+                }) {
+                    Icon(imageVector = Icons.Default.Close, contentDescription = "")
+                }
+            }
+        },
+
+        keyboardOptions = KeyboardOptions(
+            autoCorrect = true,
+            imeAction = ImeAction.Search
+
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+            viewModel.onSearch(value)
+        }
+        ),
+        singleLine = true,
+        maxLines = 1,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = Color.Black,
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent)
+    )
+}
+
+
 
 /*...........................ModalNavigationDrawer....................................................*/
 @Composable
 fun ModalNavigationDrawer(
     onClickLogOut: () -> Unit,
     navController: NavHostController,
+    drawerState: DrawerState
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     var viewModel = viewModel<MainViewModel>()
@@ -407,6 +470,10 @@ fun ModalNavigationDrawer(
                             //row 1 (send feedback)
                             Row(modifier = Modifier
                                 .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.onPrimary)
+                                .clip(shape = RoundedCornerShape(12.dp))
+                                .padding(10.dp, 20.dp)
+
                                 .clickable {
                                     val sendIntent = Intent(Intent.ACTION_SEND)
                                     sendIntent.type = "text/plain"
@@ -419,7 +486,7 @@ fun ModalNavigationDrawer(
                                     val chooser = Intent.createChooser(sendIntent, "Send Email")
                                     ContextCompat.startActivity(ctx, chooser, null)
                                 }
-                                .padding(0.dp, 20.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                               , horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                 Icon(imageVector = Icons.Filled.Email, contentDescription = "email icon")
                                 Text(text = "Send Feedback", style = MaterialTheme.typography.titleSmall)
                             }

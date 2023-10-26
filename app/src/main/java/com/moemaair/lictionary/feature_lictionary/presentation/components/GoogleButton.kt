@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -38,45 +39,65 @@ fun GoogleButton(
             buttonText = if (loadingState) secondaryText else primaryText
         }
 
-        Surface(
-            modifier = Modifier.clickable(enabled = !loadingState) { onClick() },
-            shape = shape,
-            border = BorderStroke(width = borderStrokeWidth, color = borderColor),
-            color = backgroundColor
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-                    .animateContentSize(
-                        animationSpec = tween(
-                            durationMillis = 300,
-                            easing = LinearOutSlowInEasing
-                        )
-                    ),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+        Column {
+
+            Surface(
+                modifier = Modifier.clickable(enabled = !loadingState) { onClick() },
+                shape = shape,
+                border = BorderStroke(width = borderStrokeWidth, color = borderColor),
+                color = backgroundColor,
+                shadowElevation = 6.dp
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.google_icon),
-                    contentDescription = "Google Logo",
-                    modifier = modifier.height(32.dp),
-                    tint = Color.Unspecified
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp)
+                        .animateContentSize(
+                            animationSpec = tween(
+                                durationMillis = 300,
+                                easing = LinearOutSlowInEasing
+                            )
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.google_icon),
+                        contentDescription = "Google Logo",
+                        modifier = modifier.height(32.dp),
+                        tint = Color.Unspecified
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Google",
+                        style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
+                    )
+                    if (loadingState) {
+                        Spacer(modifier = Modifier.width(16.dp))
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(16.dp),
+                            strokeWidth = 2.dp,
+                            color = progressIndicatorColor
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.size(30.dp))
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+                contentAlignment = Alignment.Center
+            ){
+                Spacer(modifier = Modifier.fillMaxWidth().height(1.dp ).background(Color.LightGray))
                 Text(
                     text = buttonText,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                    color = Color.Gray,
                     style = TextStyle(fontSize = MaterialTheme.typography.bodyMedium.fontSize)
                 )
-                if (loadingState) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(16.dp),
-                        strokeWidth = 2.dp,
-                        color = progressIndicatorColor
-                    )
-                }
+
             }
         }
 
