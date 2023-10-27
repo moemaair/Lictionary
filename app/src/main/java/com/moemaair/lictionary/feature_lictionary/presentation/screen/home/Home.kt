@@ -559,6 +559,7 @@ fun ModalNavigationDrawer(
                                 onClick = {
                                     showProgress = !showProgress
                                     onClickLogOut()
+                                    navController.navigate(Screen.Authentication.route)
                                 },
                                 modifier = Modifier
                                     .shadow(10.dp)
@@ -570,16 +571,19 @@ fun ModalNavigationDrawer(
                             }
                         }
                     }
+                   item{
+                       Box(modifier = Modifier
+                           .fillMaxSize()
+                           .padding(bottom = 5.dp), contentAlignment = Alignment.BottomCenter){
+                           Text(text = "Unlock the power of words", style = MaterialTheme.typography.bodyMedium,
+                               color = Color.White,
+                               fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
+                           )
+                       }
+                   }
                 }
 
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 5.dp), contentAlignment = Alignment.BottomCenter){
-                    Text(text = "Unlock the power of words", style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White,
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
-                    )
-                }
+
             }
         },
         gesturesEnabled = true,

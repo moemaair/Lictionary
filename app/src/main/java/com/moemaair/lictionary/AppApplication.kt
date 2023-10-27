@@ -7,7 +7,4 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @HiltAndroidApp
-class AppApplication: Application(){
-
-
-}
+class AppApplication: Application()

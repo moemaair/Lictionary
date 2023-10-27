@@ -21,4 +21,7 @@ interface WordInfoDao {
     @Query("DELETE FROM wordinfoentity")
     fun deleteAllWordInfos()
 
+    @Query("SELECT * FROM wordinfoentity")
+    fun getAll(): List<WordInfoEntity>
+
 }
