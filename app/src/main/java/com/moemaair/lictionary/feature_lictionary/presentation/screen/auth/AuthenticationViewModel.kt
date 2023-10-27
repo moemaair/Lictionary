@@ -34,16 +34,12 @@ class AuthenticationViewModel : ViewModel() {
         context: Context
     ) {
         viewModelScope.launch {
-
             try {
                 val result = withContext(Dispatchers.IO) {
                     App.create(APP_ID).login(
                       Credentials.jwt(tokenId)
                     ).loggedIn
                 }
-
-                //Log.i("LOG2", "tokenid: ${DataStoreOperationsImpl(context).getTokenId(tokenId)}")
-
                 withContext(Dispatchers.Main) {
                     if (result) {
                         onSuccess(result)

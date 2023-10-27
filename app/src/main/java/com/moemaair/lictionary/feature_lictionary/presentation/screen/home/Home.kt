@@ -433,6 +433,10 @@ fun ModalNavigationDrawer(
 
     val backgroundColor = if (isHovered) MaterialTheme.colorScheme.primary else Color.Transparent
 
+    var showProgress by remember {
+        mutableStateOf(false)
+    }
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -507,7 +511,7 @@ fun ModalNavigationDrawer(
                                 }
                                 ,
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                Icon(imageVector = Icons.Filled.Email, tint = MaterialTheme.colorScheme.onBackground, contentDescription = "email icon")
+                                Icon(imageVector = ImageVector.vectorResource(R.drawable.baseline_headphones_24) , tint = MaterialTheme.colorScheme.onBackground, contentDescription = "email icon")
                                 Text(text = "Help and Support", style = MaterialTheme.typography.titleSmall)
                             }
 
@@ -539,12 +543,10 @@ fun ModalNavigationDrawer(
 
                         }
                     }
-
                     item {
                         Spacer(modifier = Modifier.height(100.dp))
                     }
-
-                    //other
+                    //Log out
                     item {
                         Column(modifier = Modifier
                             .fillMaxSize()
@@ -552,20 +554,20 @@ fun ModalNavigationDrawer(
                             verticalArrangement = Arrangement.SpaceBetween
                         )
                         {
-
+                            Divider(modifier = Modifier.padding(bottom = 40.dp))
                             TextButton(
+                                onClick = {
+                                    showProgress = !showProgress
+                                    onClickLogOut()
+                                },
                                 modifier = Modifier
                                     .shadow(10.dp)
                                     .background(md_theme_dark_errorContainer),
-                                onClick = {
-                                    onClickLogOut()
-                                },
-                                shape = RoundedCornerShape(20.dp)
+                                shape = MaterialTheme.shapes.medium,
                             ){
                                 Text(text = "Log out", textAlign = TextAlign.Center, modifier = Modifier
                                     .fillMaxWidth(), color = Color.White , style = MaterialTheme.typography.titleMedium)
                             }
-
                         }
                     }
                 }
@@ -586,8 +588,15 @@ fun ModalNavigationDrawer(
         }
     )
 
-}
+    if(showProgress){
+        CircularProgressIndicator(
+            modifier = Modifier
+                .height(15.dp),
+            trackColor = md_theme_light_tertiaryContainer
+        )
+    }
 
+}
 
 /*...........................TOPAPPBAR....................................................*/
 @OptIn(ExperimentalMaterial3Api::class)
@@ -599,7 +608,7 @@ fun AppBar(
     onClickLogOut: () -> Unit,
     navController: NavHostController
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(canScroll = { true })
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(canScroll = { false })
     var vm: MainVm = viewModel()
     val openDialog = remember { mutableStateOf(false)  }
 
