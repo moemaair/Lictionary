@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.moemaair.lictionary.feature_lictionary.domain.model.WordInfo
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
@@ -50,7 +51,9 @@ fun WordInfoItem(
 
     Column(modifier = Modifier) {
 
-        Row(modifier = Modifier.fillMaxSize().padding(top = 10.dp),
+        Row(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start) {
             //word
@@ -83,7 +86,9 @@ fun WordInfoItem(
         wordInfo.meanings.forEach { meaning ->
             Text(text = meaning.partOfSpeech,color = Color.Red, fontWeight = FontWeight.Bold)
             meaning.definitions.forEachIndexed { i, definition ->
-                Text(text = "${definition.definition}")
+               SelectionContainer {
+                   Text(text = "${definition.definition}")
+               }
                 Spacer(modifier = Modifier.height(8.dp))
                 definition.example?.let { example ->
                     Text(text = "Example: $example",
