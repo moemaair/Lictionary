@@ -15,18 +15,14 @@ class WordInfoRepoImpl(
     private val dao:WordInfoDao
 ) : WordInfoRepo {
 
-
-
     override fun getWordInfo(word: String): Flow<Resource<List<WordInfo>>> = flow {
         emit(Resource.Loading())
-
         val wordInfos = dao.getWordInfos(word).map { it.toWordInfo()}
         emit(Resource.Loading(data = wordInfos))
 
         try {
             val remoteWordInfos = api.getWordInfo(word)
             dao.insertWordInfos(remoteWordInfos.map { it.toWordInfoEntity() })
-
         } catch(e: HttpException) {
             emit(Resource.Error(
                 message = "Sorry pal, we couldn't find definitions for the word you were looking for.",
@@ -43,9 +39,7 @@ class WordInfoRepoImpl(
         emit(Resource.Success(newWordInfos))
     }
 
-    override fun deleteAll(){
-        dao.deleteAllWordInfos()
-    }
+
 
 
 

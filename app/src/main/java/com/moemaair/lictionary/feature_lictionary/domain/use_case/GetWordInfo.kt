@@ -15,8 +15,4 @@ class GetWordInfo (
         }
         return repo.getWordInfo(word)
     }
-
-
-
-
 }

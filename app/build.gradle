@@ -4,7 +4,6 @@ plugins {
     id 'io.realm.kotlin'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-//    id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
@@ -14,10 +13,11 @@ android {
 
     defaultConfig {
         applicationId "com.moemaair.lictionary"
-        minSdk 26
-        targetSdk 33
-        versionCode 1
-        versionName "1.2.2"
+        minSdk 21
+        //noinspection EditedTargetSdkVersion
+        targetSdk  34
+        versionCode 56
+        versionName "1.2.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -26,7 +26,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             minifyEnabled = true
             shrinkResources = true
             proguardFiles(
@@ -114,19 +114,6 @@ dependencies {
 //    implementation("io.coil-kt:coil:2.4.0")
 //    implementation("io.coil-kt:coil-compose:2.4.0")
 
-
-    // Pager - Accompanist
-    implementation "com.google.accompanist:accompanist-pager:0.27.0"
-
-    // Date-Time Picker
-    implementation 'com.maxkeppeler.sheets-compose-dialogs:core:1.0.2'
-
-    // CALENDAR
-    implementation "com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2"
-
-    // CLOCK
-    implementation "com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2"
-
     // Message Bar Compose
     implementation 'com.github.stevdza-san:MessageBarCompose:1.0.5'
 
@@ -139,8 +126,6 @@ dependencies {
     // JWT Decoder
     implementation("com.auth0.android:jwtdecode:2.0.2")
 
-    // Google Auth
-    implementation "com.google.android.gms:play-services-auth:20.6.0"
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     //testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1"

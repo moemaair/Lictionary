@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -99,8 +100,10 @@ import com.moemaair.lictionary.ui.theme.AngryColor
 import com.moemaair.lictionary.ui.theme.md_theme_dark_errorContainer
 import com.moemaair.lictionary.ui.theme.md_theme_light_error
 import com.moemaair.lictionary.ui.theme.md_theme_light_tertiaryContainer
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /*...........................Home....................................................*/
 @OptIn(ExperimentalMaterial3Api::class)
@@ -271,7 +274,6 @@ fun Home(
                                horizontalAlignment = Alignment.CenterHorizontally){
                                LaunchedEffect(Unit){
                                    delay(1000)
-
                                }
                                CircularProgressIndicator(
                                    modifier = Modifier
@@ -290,7 +292,7 @@ fun Home(
                                horizontalAlignment = Alignment.CenterHorizontally,
                                verticalArrangement = Arrangement.Center
                            ) {
-                               LegoLottie()
+                              // LegoLottie()
                                Text(
                                    text = "Try searching for a word ",
                                    modifier = Modifier
@@ -436,8 +438,6 @@ fun ModalNavigationDrawer(
     var showProgress by remember {
         mutableStateOf(false)
     }
-
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -612,7 +612,7 @@ fun AppBar(
     onClickLogOut: () -> Unit,
     navController: NavHostController
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(canScroll = { false })
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var vm: MainVm = viewModel()
     val openDialog = remember { mutableStateOf(false)  }
 

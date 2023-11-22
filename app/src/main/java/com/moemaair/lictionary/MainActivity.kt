@@ -40,5 +40,4 @@ private fun getStartDestination(): String{
         Screen.Home.route else
         Screen.Authentication.route
 
-
 }

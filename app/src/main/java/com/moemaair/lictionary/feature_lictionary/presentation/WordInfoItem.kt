@@ -58,7 +58,7 @@ fun WordInfoItem(
             horizontalArrangement = Arrangement.Start) {
             //word
             Text(
-                text = wordInfo.word,
+                text = wordInfo.word!!,
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier
             )

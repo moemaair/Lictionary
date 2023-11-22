@@ -72,9 +72,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun deleteAll(){
-        repo.deleteAll()
-    }
+
     sealed class UIEvent {
         data class ShowSnackbar(val message: String): UIEvent()
     }
