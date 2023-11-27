@@ -1,5 +1,6 @@
 package com.moemaair.lictionary.feature_dictionary.presentation.screen.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.graphics.fonts.FontStyle
@@ -50,6 +51,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Home(
     icon: Int,

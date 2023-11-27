@@ -3,18 +3,18 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'io.realm.kotlin'
+    //id 'io.realm.kotlin'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
     namespace 'com.moemaair.lictionary'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.moemaair.lictionary"
-        minSdk 21
-        targetSdk 33
+        minSdk 26
+        targetSdk 34
         versionCode 2
         versionName "1.1.2"
 
@@ -41,7 +41,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.3.2'
+        kotlinCompilerExtensionVersion '1.4.0'
     }
     packagingOptions {
         resources {
@@ -87,25 +87,22 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
 
     // Compose Navigation
-    implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation "androidx.navigation:navigation-compose:2.7.5"
 
     //lottie library
     implementation "com.airbnb.android:lottie-compose:4.1.0"
 
-    // Firebase
-    implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
-
     // Room components
-    implementation "androidx.room:room-runtime:2.5.0"
-    kapt "androidx.room:room-compiler:2.5.0"
-    implementation "androidx.room:room-ktx:2.5.0"
+    implementation "androidx.room:room-runtime:2.6.0"
+
+    kapt "androidx.room:room-compiler:2.6.0"
+    implementation "androidx.room:room-ktx:2.6.0"
 
     // Runtime Compose
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.7.0-rc01"
 
     // Splash API
-    implementation "androidx.core:core-splashscreen:1.0.0"
+    implementation "androidx.core:core-splashscreen:1.0.1"
 
     // Mongo DB Realm
     implementation ('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt') {
@@ -116,17 +113,17 @@ dependencies {
     implementation "io.realm.kotlin:library-sync:1.0.2"
 
     // Dagger Hilt
-    implementation "com.google.dagger:hilt-android:2.44.2"
+    implementation "com.google.dagger:hilt-android:2.48"
     kapt "com.google.dagger:hilt-compiler:2.44.2"
-    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation "androidx.hilt:hilt-navigation-compose:1.1.0"
 
     // Message Bar Compose
     implementation 'com.github.stevdza-san:MessageBarCompose:1.0.5'
 
     // One-Tap Compose
-    implementation 'com.github.stevdza-san:OneTapCompose:1.0.0'
+    implementation 'com.github.stevdza-san:OneTapCompose:1.0.8'
 
     // Desugar JDK
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
 }
