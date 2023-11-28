@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.core.util.shareApp
+import com.moemaair.lictionary.feature_dictionary.presentation.LegoLottie
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
@@ -96,6 +97,7 @@ fun Home(
         topBar = {
             AppBar("Lictionary",
                 backgroundColor = MaterialTheme.colors.primaryVariant
+
             ) {
                 coroutineScope.launch {
                     scaffoldState.drawerState.open()
@@ -114,13 +116,17 @@ fun Home(
                             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                         }
                         if(!isVisible){
-                            Text(text = "Try searching for a word",
-                                color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.LightGray,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .align(Alignment.TopCenter)
-                                    .padding(top = 150.dp),
-                                textAlign = TextAlign.Center, fontSize = 14.sp)
+                            Column (
+                                modifier = Modifier.align(Alignment.Center)
+                            ){
+                                LegoLottie()
+                                Text(text = "Try searching for a word",
+                                    color = if(isSystemInDarkTheme()) MaterialTheme.colors.primary else Color.Gray,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 10.dp),
+                                    textAlign = TextAlign.Center, fontSize = 14.sp)
+                            }
                         }
                         else{
                             LazyColumn(modifier = Modifier
@@ -165,7 +171,7 @@ fun Home(
                                 .offset(0.dp, (30).dp)
                                 .padding(10.dp, 6.dp)
                                 .shadow(5.dp),
-                            placeholder = { Text(text = "Search for words...", color = Color.LightGray) },
+                            placeholder = { Text(text = "Search for words...", color = Color.Gray) },
                             leadingIcon = { IconButton(onClick = { /*TODO*/ }) {
                                 Icon(imageVector = Icons.Default.Search, contentDescription = "")
                             }
@@ -184,7 +190,7 @@ fun Home(
                                 textColor = Color.Black,
                                 trailingIconColor = MaterialTheme.colors.primaryVariant,
                                 leadingIconColor = MaterialTheme.colors.primaryVariant,
-                                focusedIndicatorColor = Color.LightGray,
+                                focusedIndicatorColor = Color.Transparent,
                                 cursorColor = Color.Black
                             ),
 
@@ -222,18 +228,21 @@ fun DrawerContent(
     var viewModel = viewModel<MainViewModel>()
     var ctx = LocalContext.current
     val scope = rememberCoroutineScope()
-    Column(modifier = Modifier
-        .background(brush = Brush.verticalGradient(backgroundColor))
-        .padding(start = 10.dp),
+    Column(modifier = Modifier,
     verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             //icon image
             item {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(brush = Brush.verticalGradient(backgroundColor))
+                    ,
+                    horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
                     Image(painter = painterResource(id = icon), contentDescription = "", modifier = Modifier
-                        .height(100.dp)
+                        .height(60.dp)
                         .scale(0.8f))
+
                     Spacer(modifier = Modifier.height(30.dp))
                     Text(text = "Account Owner", style = MaterialTheme.typography.subtitle1)
                 }
@@ -245,6 +254,7 @@ fun DrawerContent(
                 Column(modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
+                    .padding(start = 10.dp)
                     .padding(top = 20.dp),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
@@ -300,14 +310,12 @@ fun DrawerContent(
             //other
             item {
                 Column(modifier = Modifier
+                    .padding(start = 10.dp)
                     .fillMaxWidth()
-                    .padding(top = 20.dp)) {
-                    Text(text = "Other", style = MaterialTheme.typography.h4)
-                    Row(modifier = Modifier.padding(0.dp, 30.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.Info, contentDescription = "dark mode")
-                        Text(text = "App version 1.1.2" )
-                    }
-                    Divider()
+                    .padding(top = 20.dp),
+
+                    verticalArrangement = Arrangement.Bottom
+                ) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .clickable(enabled = true, onClick = {
@@ -316,8 +324,8 @@ fun DrawerContent(
                         }
                         )
                         .padding(0.dp, 30.dp),horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Icon(imageVector = Icons.Default.PowerSettingsNew, contentDescription = "log out")
-                        Text(text = "Log out")
+                        Icon(imageVector = Icons.Default.Logout, contentDescription = "log out", tint = Color.Red)
+                        Text(text = "Log out", color = Color.Red)
                     }
                     Divider()
 
@@ -358,7 +366,7 @@ fun AppBar(
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
             }
             Text(text = title,
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.h5,
                 color = if(!isSystemInDarkTheme()) Color.White else Color.Black
             )
             Spacer(modifier = Modifier.size(24.dp))
