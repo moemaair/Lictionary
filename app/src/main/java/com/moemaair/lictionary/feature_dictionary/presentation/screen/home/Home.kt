@@ -17,6 +17,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,6 +82,9 @@ fun Home(
             viewModel.searchQuery.value.isNotBlank()
         }
     }
+    var isDrawerOpen by remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -96,13 +102,15 @@ fun Home(
         scaffoldState = scaffoldState,
         topBar = {
             AppBar("Lictionary",
-                backgroundColor = MaterialTheme.colors.primaryVariant
-
-            ) {
-                coroutineScope.launch {
-                    scaffoldState.drawerState.open()
-                }
-            }
+                backgroundColor = MaterialTheme.colors.primaryVariant,
+                onMenuClick = {
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                },
+                onClickLogOut = { onClickLogOut()},
+                navController = navController
+            )
         },
         content = {
             Column{
@@ -344,34 +352,100 @@ fun DrawerContent(
         }
     }
 }
+/*...........................TOPAPPBAR....................................................*/
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     title : String,
     backgroundColor: Color,
-    onMenuClick : () -> Unit) {
+    onMenuClick : () -> Unit,
+    onClickLogOut: () -> Unit,
+    navController: NavHostController
+) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    var vm: MainViewModel = viewModel()
+    val openDialog = remember { mutableStateOf(false)  }
 
-    TopAppBar(
-        elevation = 7.dp,
-        backgroundColor = backgroundColor
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = { onMenuClick()}) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+    CenterAlignedTopAppBar(
+        title = {
+            Text(text = title, style = MaterialTheme.typography.subtitle2,
+                color = MaterialTheme.colors.background)
+        },
+        modifier = Modifier.fillMaxWidth().shadow(30.dp)
+        ,
+        navigationIcon = {
+            IconButton(onClick = { onMenuClick() }) {
+                Icon(
+                    Icons.Filled.Menu,
+                    tint = MaterialTheme.colors.background,
+                    contentDescription = null
+                )
             }
-            Text(text = title,
-                style = MaterialTheme.typography.h5,
-                color = if(!isSystemInDarkTheme()) Color.White else Color.Black
-            )
-            Spacer(modifier = Modifier.size(24.dp))
-        }
+        },
+        actions = {
+            IconButton(onClick = {
+                openDialog.value = true
+            }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Localized description",
+                    tint = MaterialTheme.colors.background
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor
+        ),
+        scrollBehavior = scrollBehavior
+    )
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            confirmButton = {
+                Button(onClick = {
+                    openDialog.value = false
+                }) {
+                    Text(text = "Ok")
+                }
+            },
+//            dismissButton = {
+//                Button(onClick = {
+//                    openDialog.value = false
+//                }) {
+//                    Text(text = "Cancel")
+//                }
+//            },
 
+            title = {
+                Column {
+                    Text(
+                        text = "Welcome to Lictionary",
+                        textAlign = TextAlign.Center,
+                        fontSize = 17.sp
+                    )
+                    Text(
+                        text = "Language: en", color = Color.Gray,
+                        textAlign = TextAlign.Center, fontSize = 12.sp
+                    )
+                }
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "version 1.2.9 ",
+                        textAlign = TextAlign.Center, fontSize = 14.sp
+                    )
+                    Text(
+                        text = "Copyright © by Mohamed Ibrahim. All rights reserved. ",
+
+                        textAlign = TextAlign.Center, fontSize = 10.sp
+                    )
+                }
+            }
+        )
     }
 }
 

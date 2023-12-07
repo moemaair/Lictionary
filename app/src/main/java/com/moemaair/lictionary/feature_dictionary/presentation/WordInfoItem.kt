@@ -1,7 +1,9 @@
 package com.moemaair.lictionary.feature_dictionary.presentation
 
 import android.annotation.SuppressLint
+import android.content.res.Resources.Theme
 import android.media.MediaPlayer
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.ui.Alignment
@@ -52,9 +54,9 @@ fun WordInfoItem(
             horizontalArrangement = Arrangement.Start) {
             //word
             Text(
-                text = wordInfo.word!!,
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier
+                text = wordInfo.word,
+                color = if(!isSystemInDarkTheme()) Color.Black else Color.White,
+                style = MaterialTheme.typography.headlineMedium
             )
 
             //audio icon
@@ -81,7 +83,7 @@ fun WordInfoItem(
             Text(text = meaning.partOfSpeech,color = Color.Red, fontWeight = FontWeight.Bold)
             meaning.definitions.forEachIndexed { i, definition ->
                 SelectionContainer {
-                    Text(text = "${definition.definition}")
+                    Text(text = "${definition.definition}" , color = if(!isSystemInDarkTheme()) Color.Black else Color.White)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 definition.example?.let { example ->

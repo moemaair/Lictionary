@@ -61,7 +61,6 @@ import io.realm.kotlin.mongodb.App
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +83,7 @@ class MainActivity : ComponentActivity() {
 private fun getStartDestination(): String{
     val user = App.create(APP_ID).currentUser
     return if(user != null && user.loggedIn)
-        Screen.Home.route else
-        Screen.Authentication.route
+        Screen.Authentication.route else
+        Screen.Home.route
 
 }
