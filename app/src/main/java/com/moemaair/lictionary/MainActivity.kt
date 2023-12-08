@@ -50,7 +50,6 @@ import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.core.util.shareApp
 import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
-import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreenContent
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.navigation.ScreenNavGraph
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
@@ -83,7 +82,7 @@ class MainActivity : ComponentActivity() {
 private fun getStartDestination(): String{
     val user = App.create(APP_ID).currentUser
     return if(user != null && user.loggedIn)
-        Screen.Authentication.route else
-        Screen.Home.route
+        Screen.Home.route else
+        Screen.Authentication.route
 
 }

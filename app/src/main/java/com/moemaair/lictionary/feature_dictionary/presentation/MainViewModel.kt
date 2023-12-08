@@ -78,6 +78,8 @@ class MainViewModel @Inject constructor(
                                 isLoading = true
                             )
                         }
+
+                        else -> {}
                     }
                 }.launchIn(this)
         }

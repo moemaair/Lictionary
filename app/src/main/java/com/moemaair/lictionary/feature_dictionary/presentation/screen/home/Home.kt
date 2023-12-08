@@ -372,7 +372,7 @@ fun AppBar(
             Text(text = title, style = MaterialTheme.typography.subtitle2,
                 color = MaterialTheme.colors.background)
         },
-        modifier = Modifier.fillMaxWidth().shadow(30.dp)
+        modifier = Modifier.fillMaxWidth()
         ,
         navigationIcon = {
             IconButton(onClick = { onMenuClick() }) {
