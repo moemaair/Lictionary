@@ -14,6 +14,7 @@ fun LegoLottie() {
     val compositionResult: LottieCompositionResult =
         rememberLottieComposition(LottieCompositionSpec.Asset("lottie/Lottie_Lego.json"))
 
+
     val progress by animateLottieCompositionAsState(
         compositionResult.value,
         isPlaying = true,
@@ -24,8 +25,11 @@ fun LegoLottie() {
     LottieAnimation(
         compositionResult.value,
         progress,
-        modifier = Modifier.fillMaxWidth().size(100.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(100.dp)
     )
+
 
 
 }

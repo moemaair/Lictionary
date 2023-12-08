@@ -14,6 +14,10 @@ import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreen
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationViewModel
+import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.onboarding.HorizontalPagerComponent
+import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.onboarding.Page
+import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.onboarding.PagerScreen
+import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.onboarding.pages
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.home.Home
 import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
@@ -38,8 +42,23 @@ fun ScreenNavGraph(
         home(
             navController = navController
         )
+        onBoarding(
+            navController = navController
+        )
 
     }
+}
+
+fun NavGraphBuilder.onBoarding(
+    navController: NavHostController
+){
+
+   composable(route = Screen.Onboarding.route){
+       HorizontalPagerComponent(
+           navHostController = navController
+       )
+   }
+
 }
 
 
