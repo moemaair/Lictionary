@@ -7,6 +7,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,21 +30,23 @@ fun HorizontalPagerComponent(
         pageCount
     }
 
-    Column {
-        HorizontalPager(
-            state = pageState,
-            userScrollEnabled = true,
-            reverseLayout = false,
-            //beyondBoundsPageCount = 0,
-            //flingBehavior = PagerDefaults.flingBehavior(state = pageState),
-           // key = null,
+    androidx.compose.material.Surface {
+        Column {
+            HorizontalPager(
+                state = pageState,
+                userScrollEnabled = true,
+                reverseLayout = false,
+                //beyondBoundsPageCount = 0,
+                //flingBehavior = PagerDefaults.flingBehavior(state = pageState),
+                // key = null,
 
-        ){
-            PagerScreen(
-                page = pages[it],
-                pagerState = pageState,
-                navHostController = navHostController
+            ){
+                PagerScreen(
+                    page = pages[it],
+                    pagerState = pageState,
+                    navHostController = navHostController
                 )
+            }
         }
     }
 }

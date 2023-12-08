@@ -31,7 +31,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
+import com.moemaair.lictionary.feature_dictionary.presentation.Defination_lottie
 import com.moemaair.lictionary.feature_dictionary.presentation.LegoLottie
+import com.moemaair.lictionary.feature_dictionary.presentation.Pronunciation
 import com.moemaair.lictionary.feature_dictionary.presentation.Search_with_ease_lottie
 import com.moemaair.lictionary.navigation.Screen
 import kotlinx.coroutines.launch
@@ -44,12 +46,12 @@ fun PagerScreen(page: Page, pagerState: PagerState, navHostController:NavHostCon
     var current = pagerState.currentPage
     val scope = rememberCoroutineScope()
     val navHostController =
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center){
         //------- section lottie and des
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -58,14 +60,14 @@ fun PagerScreen(page: Page, pagerState: PagerState, navHostController:NavHostCon
             ){
                 when(current){
                     0 -> Search_with_ease_lottie()
-                    1 -> Search_with_ease_lottie()
-                    2 -> Search_with_ease_lottie()
+                    1 -> Defination_lottie()
+                    2 -> Pronunciation()
                 }
 
             }
             Text(text = page.description,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(20.dp),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium

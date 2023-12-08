@@ -1,5 +1,8 @@
 package com.moemaair.lictionary.feature_dictionary.presentation
 
+// Pronunciation
+
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -15,10 +18,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.moemaair.lictionary.R
 
 @Composable
-fun Search_with_ease_lottie() {
+fun Pronunciation() {
     val preloaderLottieComposition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(
-           R.raw.searchwithease_lottie
+            R.raw.pronunciation
         )
     )
 

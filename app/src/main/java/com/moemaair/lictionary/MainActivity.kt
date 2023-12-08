@@ -45,6 +45,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.core.util.shareApp
@@ -52,6 +53,7 @@ import com.moemaair.lictionary.feature_dictionary.presentation.MainViewModel
 import com.moemaair.lictionary.feature_dictionary.presentation.WordInfoItem
 import com.moemaair.lictionary.navigation.Screen
 import com.moemaair.lictionary.navigation.ScreenNavGraph
+import com.moemaair.lictionary.navigation.onBoarding
 import com.moemaair.lictionary.ui.theme.LictionaryTheme
 import com.moemaair.lictionary.ui.theme.playfair_display_font
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,6 +71,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LictionaryTheme {
                 val navController = rememberNavController()
+
                 ScreenNavGraph(
                     startDestination = getStartDestination(),
                     navController = navController
@@ -81,7 +84,7 @@ class MainActivity : ComponentActivity() {
 
 private fun getStartDestination(): String{
     val user = App.create(APP_ID).currentUser
-    return if(user != null && user.loggedIn)
+    return if(user !== null && user.loggedIn)
         Screen.Home.route else
         Screen.Onboarding.route
 

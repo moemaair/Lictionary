@@ -33,10 +33,12 @@ fun AuthenticationScreen(
                 successContainerColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary,
                 successContentColor = Color.Black
             ) {
-                AuthenticationScreenContent(
-                    loadingState = loadingState,
-                    onButtonClick = onButtonClick
-                )
+                androidx.compose.material.Surface {
+                    AuthenticationScreenContent(
+                        loadingState = loadingState,
+                        onButtonClick = onButtonClick
+                    )
+                }
             }
         }
     )

@@ -10,6 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.moemaair.lictionary.AppApplication
 import com.moemaair.lictionary.R
 import com.moemaair.lictionary.core.util.Constants.APP_ID
 import com.moemaair.lictionary.feature_dictionary.presentation.screen.auth.AuthenticationScreen
@@ -45,6 +46,7 @@ fun ScreenNavGraph(
         onBoarding(
             navController = navController
         )
+
 
     }
 }

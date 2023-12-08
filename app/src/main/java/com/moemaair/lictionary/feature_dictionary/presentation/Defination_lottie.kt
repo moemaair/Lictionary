@@ -1,13 +1,9 @@
 package com.moemaair.lictionary.feature_dictionary.presentation
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionResult
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -15,10 +11,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.moemaair.lictionary.R
 
 @Composable
-fun Search_with_ease_lottie() {
+fun Defination_lottie() {
     val preloaderLottieComposition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(
-           R.raw.searchwithease_lottie
+            R.raw.definations_lottie
         )
     )
 
