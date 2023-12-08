@@ -435,7 +435,7 @@ fun AppBar(
             text = {
                 Column {
                     Text(
-                        text = "version 1.2.9 ",
+                        text = "version 1.2.10 ",
                         textAlign = TextAlign.Center, fontSize = 14.sp
                     )
                     Text(
